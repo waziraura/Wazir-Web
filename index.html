@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wazir Aura | Free Tools, Games & Converters</title>
+  <meta name="description" content="Free online tools by Murad Wazir (Wazir Aura). Convert images to PDF/PNG, play fun games, no signup needed.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="theme-dark">
+
+  <!-- Background Music (auto play after first click) -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Sticky Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <span class="mw-logo">MW</span>
+      <div>
+        <strong>Wazir Aura</strong>
+        <small>by Murad Wazir</small>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button id="musicToggle" class="icon-btn" title="Music On/Off"><i class="fas fa-music"></i></button>
+      <div class="theme-selector">
+        <button class="theme-btn" data-theme="dark" title="Dark">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Light">☀️</button>
+        <button class="theme-btn" data-theme="green" title="Green">🟢</button>
+        <button class="theme-btn" data-theme="red" title="Red">🔴</button>
+        <button class="theme-btn" data-theme="blue" title="Blue">🔵</button>
+        <button class="theme-btn" data-theme="purple" title="Purple">🟣</button>
+      </div>
+      <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <div class="mw-big">MW</div>
+      <h1>Wazir Aura</h1>
+      <p class="tagline">Free Tools • Fun Games • No Signup • No Deposit</p>
+      <p class="sub">Murad Wazir ka premium free platform. Convert images, play games, enjoy music — sab free.</p>
+      <div class="hero-btns">
+        <a href="#tools" class="btn primary">Start Converting</a>
+        <a href="#games" class="btn secondary">Play Games</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Section -->
+  <section id="tools" class="section">
+    <h2 class="section-title">Free Image Converter</h2>
+    <p class="section-desc">Multiple images select karo → PDF, PNG, JPG me convert karo. Bilkul free, no limit.</p>
+
+    <div class="converter-box">
+      <div class="upload-area" id="uploadArea">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Click or Drag & Drop images here</p>
+        <p class="small">Multiple images allowed (PNG, JPG, WEBP)</p>
+        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+      </div>
+
+      <div class="preview-grid" id="previewGrid"></div>
+
+      <div class="convert-actions" id="convertActions" style="display:none;">
+        <button class="btn primary" id="toPdfBtn"><i class="fas fa-file-pdf"></i> Convert to PDF</button>
+        <button class="btn secondary" id="toPngBtn"><i class="fas fa-file-image"></i> Download as PNG</button>
+        <button class="btn secondary" id="toJpgBtn"><i class="fas fa-file-image"></i> Download as JPG</button>
+        <button class="btn danger" id="clearBtn"><i class="fas fa-trash"></i> Clear All</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Games Section -->
+  <section id="games" class="section">
+    <h2 class="section-title">Time Pass Games</h2>
+    <p class="section-desc">5 simple games. Background me chalte rahenge. Fun ke liye banaye gaye hain.</p>
+
+    <div class="games-grid">
+      <!-- Game 1: Tic Tac Toe -->
+      <div class="game-card">
+        <h3>Tic Tac Toe</h3>
+        <div id="ticTacToe" class="game-board"></div>
+        <p id="tttStatus">Player X turn</p>
+        <button class="btn small" onclick="resetTicTacToe()">Reset</button>
+      </div>
+
+      <!-- Game 2: Memory Match -->
+      <div class="game-card">
+        <h3>Memory Match</h3>
+        <div id="memoryGame" class="memory-board"></div>
+        <p>Moves: <span id="memoryMoves">0</span></p>
+        <button class="btn small" onclick="resetMemory()">Reset</button>
+      </div>
+
+      <!-- Game 3: Click Counter -->
+      <div class="game-card">
+        <h3>Click Speed</h3>
+        <div class="click-area" id="clickArea">
+          <span id="clickCount">0</span>
+          <p>Clicks</p>
+        </div>
+        <p>Time left: <span id="clickTimer">10</span>s</p>
+        <button class="btn small" id="startClickGame">Start 10s Challenge</button>
+      </div>
+
+      <!-- Game 4: Color Guess -->
+      <div class="game-card">
+        <h3>Color Guess</h3>
+        <div id="colorBox" class="color-box"></div>
+        <div class="color-options" id="colorOptions"></div>
+        <p id="colorResult"></p>
+        <button class="btn small" onclick="newColorRound()">New Round</button>
+      </div>
+
+      <!-- Game 5: Number Guess -->
+      <div class="game-card">
+        <h3>Guess the Number</h3>
+        <p>1 se 100 ke beech number socho</p>
+        <input type="number" id="guessInput" min="1" max="100" placeholder="Enter number">
+        <button class="btn small" id="guessBtn">Guess</button>
+        <p id="guessResult"></p>
+        <button class="btn small" onclick="resetGuess()">New Game</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <h2 class="section-title">About Wazir Aura</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <p>Assalam o Alaikum! Main <strong>Murad Wazir</strong> hoon, username <strong>Wazir Aura</strong>.</p>
+        <p>Yeh website maine banayi hai taake log freely tools use kar saken aur thoda timepass bhi kar saken. Koi signup, koi deposit, koi verification nahi.</p>
+        <p>Logo: <span class="mw-logo small">MW</span></p>
+        <p>
+          <a href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank" class="social-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+          <a href="mailto:zuhaibwazir558@gmail.com" class="social-link"><i class="fas fa-envelope"></i> Email</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-box">
+      <p>Email: <a href="mailto:zuhaibwazir558@gmail.com">zuhaibwazir558@gmail.com</a></p>
+      <p>LinkedIn: <a href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank">murad-wazir-bbb0b541a</a></p>
+      <p>Koi suggestion ya business query ho to email kar dena.</p>
+    </div>
+  </section>
+
+  <!-- Privacy & Terms -->
+  <section id="legal" class="section legal">
+    <div class="legal-grid">
+      <div>
+        <h3>Privacy Policy</h3>
+        <p>Yeh website koi personal data collect nahi karti. Images sirf aapke browser me process hoti hain, server pe nahi jaati. Cookies sirf theme ke liye use hoti hain.</p>
+      </div>
+      <div>
+        <h3>Terms of Use</h3>
+        <p>Yeh tools free hain personal use ke liye. Commercial use ke liye permission len. Website ka misuse nahi karna. Murad Wazir / Wazir Aura iske liye responsible nahi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="mw-logo">MW</div>
+      <p>© 2026 Wazir Aura by Murad Wazir. All rights reserved.</p>
+      <p class="small">Made with ❤️ for free users</p>
+    </div>
+  </footer>
+
+  <!-- Floating Music Indicator -->
+  <div id="musicIndicator" class="music-indicator">🎵 Music Playing</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
