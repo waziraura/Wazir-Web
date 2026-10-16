@@ -4,380 +4,280 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090b18">
-  <meta name="description" content="Wazir Aura by Murad Wazir — digital services, creative projects, web development and gaming.">
-  <title>Wazir Aura | Murad Wazir</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
-</head>
-<body>
+  <meta name="theme-color" content="#050713">
+  <meta name="description" content="Wazir Aura — digital experiences crafted beyond the ordinary.">
+  <title>Wazir Aura | Enter the Extraordinary</title>
 
-  <!-- Welcome Intro -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-logo">MW</div>
-    <h1>WAZIR AURA</h1>
-    <p id="welcomeText">Welcome to a world of creativity</p>
-    <button id="skipIntro" type="button">Enter Website →</button>
-    <button id="soundToggle" type="button" aria-pressed="false">
-      🔇 Sound Off
-    </button>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Cinematic intro -->
+  <div class="intro-screen" id="introScreen">
+    <div class="intro-universe" aria-hidden="true">
+      <div class="intro-nebula"></div>
+      <div class="intro-stars" id="introStars"></div>
+      <div class="intro-orbit orbit-one"></div>
+      <div class="intro-orbit orbit-two"></div>
+      <div class="intro-light"></div>
+    </div>
+
+    <div class="intro-content">
+      <div class="intro-emblem" id="introEmblem" aria-label="MW logo">
+        <span class="emblem-ring"></span>
+        <span class="emblem-letter">MW</span>
+        <span class="emblem-flare"></span>
+      </div>
+
+      <p class="intro-eyebrow">A NEW DIGITAL UNIVERSE</p>
+      <h1 class="intro-title">WAZIR <span>AURA</span></h1>
+      <p class="intro-tagline">Crafting experiences beyond the ordinary.</p>
+
+      <button class="intro-enter" id="enterAura" type="button">
+        <span>ENTER WAZIR AURA</span>
+        <span class="button-arrow" aria-hidden="true">↗</span>
+      </button>
+    </div>
+
+    <div class="intro-footer">
+      <span>DESIGNED TO INSPIRE</span>
+      <button class="intro-sound" id="soundToggle" type="button"
+        aria-pressed="false" aria-label="Turn intro sound on or off">
+        <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span id="soundLabel">SOUND OFF</span>
+      </button>
+      <button class="intro-skip" id="skipIntro" type="button">SKIP INTRO ↗</button>
+    </div>
   </div>
 
-  <!-- Navigation -->
-  <header class="site-header">
-    <a class="brand" href="#home" aria-label="Wazir Aura Home">
-      <span class="brand-mark">MW</span>
-      <span>WAZIR <strong>AURA</strong></span>
-    </a>
+  <!-- Main website -->
+  <div class="site-shell" id="siteShell">
+    <header class="site-header">
+      <a href="#home" class="brand" data-page="home" aria-label="Wazir Aura home">
+        <span class="brand-mark">MW</span>
+        <span class="brand-name">WAZIR <b>AURA</b></span>
+      </a>
 
-    <button class="menu-toggle" id="menuToggle"
-      type="button" aria-label="Open navigation" aria-expanded="false">
-      ☰
-    </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-link active" type="button" data-page="home">Home</button>
+        <button class="nav-link" type="button" data-page="services">Services</button>
+        <button class="nav-link" type="button" data-page="marketplace">Marketplace</button>
+        <button class="nav-link" type="button" data-page="about">About</button>
+        <button class="nav-link" type="button" data-page="contact">Contact</button>
+      </nav>
 
-    <nav class="main-nav" id="mainNav">
-      <a href="#home" data-en="Home" data-ur="ہوم">Home</a>
-      <a href="#services" data-en="Services" data-ur="خدمات">Services</a>
-      <a href="#marketplace" data-en="Marketplace" data-ur="مارکیٹ پلیس">Marketplace</a>
-      <a href="#games" data-en="Games" data-ur="گیمز">Games</a>
-      <a href="#about" data-en="About" data-ur="تعارف">About</a>
-      <a href="#contact" data-en="Contact" data-ur="رابطہ">Contact</a>
-    </nav>
+      <div class="header-actions">
+        <button class="icon-button" id="themeToggle" type="button"
+          aria-label="Switch theme" title="Switch theme">☼</button>
+        <button class="menu-toggle" id="menuToggle" type="button"
+          aria-label="Open navigation" aria-expanded="false">☰</button>
+      </div>
+    </header>
 
-    <div class="header-actions">
-      <button id="languageToggle" type="button" aria-label="Change language">
-        اردو
-      </button>
-      <button id="themeToggle" type="button" aria-label="Change theme">
-        ☀️
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero section" id="home">
-      <div class="hero-content reveal">
-        <span class="eyebrow">WELCOME TO WAZIR AURA</span>
-        <h1>
-          Ideas into <span class="gradient-text">Digital Reality.</span>
-        </h1>
-        <p>
-          I'm Murad Wazir. I create digital experiences, provide online
-          services and explore innovative ideas through technology.
-        </p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#services">Explore Services</a>
-          <a class="btn btn-outline" href="#contact">Contact Me</a>
+    <main id="mainContent">
+      <!-- HOME -->
+      <section class="page-section active" id="page-home" data-section="home">
+        <div class="home-universe" aria-hidden="true">
+          <div class="home-nebula"></div>
+          <div class="home-grid"></div>
+          <div class="home-orb orb-a"></div>
+          <div class="home-orb orb-b"></div>
+          <div class="home-stars"></div>
         </div>
-        <div class="hero-note">
-          <span class="status-dot"></span>
-          Building something extraordinary
+
+        <div class="hero-content">
+          <div class="hero-badge"><span class="status-dot"></span> YOUR NEXT CHAPTER STARTS HERE</div>
+          <p class="hero-kicker">INNOVATION MEETS IMAGINATION</p>
+          <h2 class="hero-title">Make Your<br><span>Digital Aura.</span></h2>
+          <p class="hero-description">
+            We transform ambitious ideas into beautiful digital experiences,
+            powerful websites, and opportunities built for what comes next.
+          </p>
+
+          <div class="hero-actions">
+            <button class="primary-button" type="button" data-page="services">
+              Explore Services <span aria-hidden="true">↗</span>
+            </button>
+            <button class="secondary-button" type="button" data-page="about">
+              Discover Our Story
+            </button>
+          </div>
+
+          <div class="hero-proof">
+            <span class="proof-line"></span>
+            <span>CREATIVE THINKING</span>
+            <span class="proof-separator">✦</span>
+            <span>DIGITAL EXCELLENCE</span>
+          </div>
         </div>
-      </div>
 
-      <div class="hero-visual reveal" aria-label="Wazir Aura logo artwork">
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="hero-logo">MW</div>
-        <span class="floating-tag tag-top">CREATIVE</span>
-        <span class="floating-tag tag-bottom">DIGITAL FUTURE</span>
-      </div>
-    </section>
-
-    <!-- Services -->
-    <section class="section" id="services">
-      <div class="section-heading reveal">
-        <span class="eyebrow">WHAT I DO</span>
-        <h2>My <span class="gradient-text">Services</span></h2>
-        <p>Practical digital solutions to help turn your ideas into results.</p>
-      </div>
-
-      <div class="services-grid">
-        <article class="service-card reveal">
-          <span class="service-icon">⌨️</span>
-          <h3>Data Entry</h3>
-          <p>Accurate data entry, copy-paste tasks and organized digital records.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">📊</span>
-          <h3>Microsoft Excel</h3>
-          <p>Spreadsheets, data formatting, tables and basic data organization.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">📝</span>
-          <h3>Word & Typing</h3>
-          <p>Document formatting, typing, proofreading and professional layouts.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">🎨</span>
-          <h3>Graphic Design</h3>
-          <p>Social media banners, promotional graphics and creative visuals.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">🌐</span>
-          <h3>Web Development</h3>
-          <p>Responsive websites and polished interfaces for online projects.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">🔎</span>
-          <h3>Web Research</h3>
-          <p>Online research, information gathering and lead-list preparation.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">📽️</span>
-          <h3>PowerPoint</h3>
-          <p>Clean presentations with organized content and professional slides.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">🎮</span>
-          <h3>2D Game Development</h3>
-          <p>Creative concepts and browser-based gaming experiences.</p>
-          <a href="#games">Explore Games ↗</a>
-        </article>
-
-        <article class="service-card reveal">
-          <span class="service-icon">📱</span>
-          <h3>Social Media Support</h3>
-          <p>Digital content assistance and simple promotional materials.</p>
-          <a href="#contact">Request Service ↗</a>
-        </article>
-      </div>
-    </section>
-
-    <!-- Marketplace -->
-    <section class="section marketplace-section" id="marketplace">
-      <div class="section-heading reveal">
-        <span class="eyebrow">CONNECT & COLLABORATE</span>
-        <h2>Digital <span class="gradient-text">Marketplace</span></h2>
-        <p>A vision for bringing clients, freelancers and companies together.</p>
-      </div>
-
-      <div class="marketplace-grid">
-        <article class="feature-card reveal">
-          <span class="feature-icon">💼</span>
-          <h3>Hire for a Project</h3>
-          <p>Clients can describe their project needs and find suitable talent.</p>
-          <a class="btn btn-outline" href="#contact">Discuss a Project</a>
-        </article>
-
-        <article class="feature-card reveal">
-          <span class="feature-icon">🚀</span>
-          <h3>Offer Your Skills</h3>
-          <p>Freelancers can showcase their expertise and work opportunities.</p>
-          <a class="btn btn-outline" href="#contact">Get in Touch</a>
-        </article>
-
-        <article class="feature-card reveal">
-          <span class="feature-icon">🏢</span>
-          <h3>Business Collaboration</h3>
-          <p>Companies can explore services and discuss digital partnerships.</p>
-          <a class="btn btn-outline" href="#contact">Contact Wazir Aura</a>
-        </article>
-      </div>
-
-      <p class="notice">
-        Marketplace accounts, project posting, proposals, hiring and online
-        payments require a secure backend before they can operate live.
-      </p>
-    </section>
-
-    <!-- Games -->
-    <section class="section" id="games">
-      <div class="section-heading reveal">
-        <span class="eyebrow">TAKE A BREAK</span>
-        <h2>Mini <span class="gradient-text">Games</span></h2>
-        <p>Enjoy a quick game right in your browser.</p>
-      </div>
-
-      <div class="games-grid">
-        <article class="game-card reveal">
-          <div class="game-art game-art-one">⭕ × ❌</div>
-          <h3>Tic-Tac-Toe</h3>
-          <p>Challenge a friend on the same device.</p>
-          <a class="btn btn-primary" href="#ticTacToe">Play Now</a>
-        </article>
-
-        <article class="game-card reveal">
-          <div class="game-art game-art-two">🧠 ✦ 🧩</div>
-          <h3>Memory Match</h3>
-          <p>Test your memory by matching the hidden pairs.</p>
-          <a class="btn btn-primary" href="#memoryGame">Play Now</a>
-        </article>
-      </div>
-
-      <!-- Tic-Tac-Toe Game -->
-      <div class="playable-game reveal" id="ticTacToe">
-        <h3>Tic-Tac-Toe</h3>
-        <p>Two players · Same device</p>
-        <div class="ttt-board" id="tttBoard" aria-label="Tic-Tac-Toe board">
-          <button type="button" class="ttt-cell" data-cell="0" aria-label="Cell 1"></button>
-          <button type="button" class="ttt-cell" data-cell="1" aria-label="Cell 2"></button>
-          <button type="button" class="ttt-cell" data-cell="2" aria-label="Cell 3"></button>
-          <button type="button" class="ttt-cell" data-cell="3" aria-label="Cell 4"></button>
-          <button type="button" class="ttt-cell" data-cell="4" aria-label="Cell 5"></button>
-          <button type="button" class="ttt-cell" data-cell="5" aria-label="Cell 6"></button>
-          <button type="button" class="ttt-cell" data-cell="6" aria-label="Cell 7"></button>
-          <button type="button" class="ttt-cell" data-cell="7" aria-label="Cell 8"></button>
-          <button type="button" class="ttt-cell" data-cell="8" aria-label="Cell 9"></button>
-        </div>
-        <p id="tttStatus" aria-live="polite">Player X's turn</p>
-        <button class="btn btn-outline" id="tttReset" type="button">New Game</button>
-      </div>
-
-      <!-- Memory Match Game -->
-      <div class="playable-game reveal" id="memoryGame">
-        <h3>Memory Match</h3>
-        <p>Find all matching pairs.</p>
-        <div class="memory-board" id="memoryBoard"></div>
-        <p id="memoryStatus" aria-live="polite">Moves: 0</p>
-        <button class="btn btn-outline" id="memoryReset" type="button">
-          Restart Game
+        <button class="scroll-cue" type="button" data-page="services">
+          <span class="scroll-cue-line"></span>
+          <span>EXPLORE THE UNIVERSE</span>
+          <span aria-hidden="true">↓</span>
         </button>
-      </div>
+      </section>
 
-      <p class="notice">
-        These are casual browser games. User accounts, online leaderboards
-        and public ratings require backend integration.
-      </p>
-    </section>
-
-    <!-- About -->
-    <section class="section about-section" id="about">
-      <div class="about-visual reveal">
-        <div class="about-logo">MW</div>
-        <span>WAZIR AURA</span>
-      </div>
-
-      <div class="about-content reveal">
-        <span class="eyebrow">ABOUT THE CREATOR</span>
-        <h2>Meet <span class="gradient-text">Murad Wazir</span></h2>
-        <p>
-          Wazir Aura is a digital brand focused on creative services,
-          technology, web experiences and new opportunities.
-        </p>
-        <p>
-          The goal is to build a platform where clients can access useful
-          digital services and, over time, connect with independent talent.
-        </p>
-
-        <div class="stats-row">
-          <div><strong>01</strong><span>Creative Vision</span></div>
-          <div><strong>02</strong><span>Digital Skills</span></div>
-          <div><strong>∞</strong><span>New Ideas</span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Process -->
-    <section class="section" id="process">
-      <div class="section-heading reveal">
-        <span class="eyebrow">HOW IT WORKS</span>
-        <h2>A Simple <span class="gradient-text">Process</span></h2>
-      </div>
-
-      <div class="process-grid">
-        <article class="process-card reveal">
-          <span>01</span>
-          <h3>Share Your Idea</h3>
-          <p>Tell me what you need and describe your goals.</p>
-        </article>
-        <article class="process-card reveal">
-          <span>02</span>
-          <h3>Plan the Work</h3>
-          <p>Discuss scope, delivery expectations and pricing.</p>
-        </article>
-        <article class="process-card reveal">
-          <span>03</span>
-          <h3>Create & Deliver</h3>
-          <p>Work toward a clear result and agreed deliverables.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="section contact-section" id="contact">
-      <div class="section-heading reveal">
-        <span class="eyebrow">LET'S CONNECT</span>
-        <h2>Start Something <span class="gradient-text">Great</span></h2>
-        <p>Have a project or question? Send an inquiry.</p>
-      </div>
-
-      <div class="contact-grid">
-        <div class="contact-info reveal">
-          <h3>Contact Details</h3>
-          <p>For service inquiries and collaborations, reach out by email.</p>
-          <a href="mailto:zuhaibwazir558@gmail.com">
-            ✉️ zuhaibwazir558@gmail.com
-          </a>
-          <a href="mailto:wazirlab@proton.me">
-            ✉️ wazirlab@proton.me
-          </a>
-          <p class="small-note">
-            Please don't include passwords or sensitive financial information.
-          </p>
+      <!-- SERVICES -->
+      <section class="page-section inner-page" id="page-services" data-section="services">
+        <div class="section-heading">
+          <span class="section-kicker">WHAT WE CREATE</span>
+          <h2>Services That <span>Move You Forward.</span></h2>
+          <p>Thoughtful digital solutions, designed around your goals.</p>
         </div>
 
-        <form class="contact-form reveal" id="contactForm">
-          <label for="contactName">Your Name</label>
-          <input id="contactName" name="name" type="text"
-            placeholder="Enter your name" required>
+        <div class="service-grid">
+          <article class="service-card">
+            <div class="card-icon">⌘</div>
+            <span class="card-number">01 / DIGITAL</span>
+            <h3>Website Development</h3>
+            <p>Responsive, modern websites built to look beautiful and work smoothly across devices.</p>
+            <button class="text-button" type="button" data-page="contact">Discuss a project ↗</button>
+          </article>
 
-          <label for="contactEmail">Email Address</label>
-          <input id="contactEmail" name="email" type="email"
-            placeholder="you@example.com" required>
+          <article class="service-card">
+            <div class="card-icon">✳</div>
+            <span class="card-number">02 / DESIGN</span>
+            <h3>UI & UX Design</h3>
+            <p>Clear interfaces, considered details, and user experiences that feel effortless.</p>
+            <button class="text-button" type="button" data-page="contact">Discuss a project ↗</button>
+          </article>
 
-          <label for="contactSubject">Subject</label>
-          <input id="contactSubject" name="subject" type="text"
-            placeholder="How can I help?" required>
+          <article class="service-card">
+            <div class="card-icon">◇</div>
+            <span class="card-number">03 / IDENTITY</span>
+            <h3>Brand Identity</h3>
+            <p>Distinctive visual direction that helps your brand stand out with confidence.</p>
+            <button class="text-button" type="button" data-page="contact">Discuss a project ↗</button>
+          </article>
 
-          <label for="contactMessage">Your Message</label>
-          <textarea id="contactMessage" name="message" rows="5"
-            placeholder="Tell me about your project..." required></textarea>
+          <article class="service-card">
+            <div class="card-icon">⌁</div>
+            <span class="card-number">04 / SOLUTIONS</span>
+            <h3>Digital Consulting</h3>
+            <p>Practical guidance to shape your idea, plan your product, and choose the right tools.</p>
+            <button class="text-button" type="button" data-page="contact">Discuss a project ↗</button>
+          </article>
+        </div>
+      </section>
 
-          <button class="btn btn-primary" type="submit">Prepare Email ↗</button>
-          <p class="form-status" id="contactStatus" aria-live="polite">
-            This form opens your email application; it does not store messages.
-          </p>
-        </form>
-      </div>
-    </section>
-  </main>
+      <!-- MARKETPLACE -->
+      <section class="page-section inner-page" id="page-marketplace" data-section="marketplace">
+        <div class="section-heading">
+          <span class="section-kicker">OPPORTUNITY AWAITS</span>
+          <h2>The Digital <span>Marketplace.</span></h2>
+          <p>A space for clients and talented creators to find each other.</p>
+        </div>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <a class="brand footer-brand" href="#home">
-      <span class="brand-mark">MW</span>
-      <span>WAZIR <strong>AURA</strong></span>
-    </a>
+        <div class="marketplace-grid">
+          <article class="marketplace-card">
+            <div class="marketplace-icon">↗</div>
+            <span class="card-number">FOR CLIENTS</span>
+            <h3>Bring Your Idea to Life</h3>
+            <p>Describe your project, explore opportunities, and connect with people who can help make it real.</p>
+            <button class="primary-button" type="button" data-page="contact">Start a Project</button>
+          </article>
 
-    <p>Creating possibilities through digital experiences.</p>
+          <article class="marketplace-card">
+            <div class="marketplace-icon">✧</div>
+            <span class="card-number">FOR FREELANCERS</span>
+            <h3>Show What You Can Do</h3>
+            <p>Prepare your profile, share your expertise, and get ready to connect with potential clients.</p>
+            <button class="secondary-button" type="button" data-page="contact">Get in Touch</button>
+          </article>
+        </div>
 
-    <div class="social-links">
-      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
-      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
-      <a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
-    </div>
+        <p class="notice-text">
+          Marketplace accounts, project posting, proposals, hiring, and payments require a secure backend
+          and will not be presented as active until those features are connected.
+        </p>
+      </section>
 
-    <p class="copyright">
-      © <span id="currentYear"></span> Wazir Aura. Created by Murad Wazir.
-    </p>
-  </footer>
+      <!-- ABOUT -->
+      <section class="page-section inner-page" id="page-about" data-section="about">
+        <div class="about-layout">
+          <div class="about-visual">
+            <div class="about-orbit orbit-one"></div>
+            <div class="about-orbit orbit-two"></div>
+            <div class="about-monogram">MW</div>
+            <span class="about-caption">IDEAS INTO EXPERIENCE</span>
+          </div>
 
+          <div class="about-copy">
+            <span class="section-kicker">THE VISION BEHIND THE AURA</span>
+            <h2>Built on Ideas.<br><span>Driven by Possibility.</span></h2>
+            <p>
+              Wazir Aura is a creative digital vision focused on thoughtful design,
+              modern technology, and meaningful online experiences.
+            </p>
+            <p>
+              The goal is simple: bring creative services, digital opportunities,
+              and useful tools together in one welcoming destination.
+            </p>
+            <button class="primary-button" type="button" data-page="services">Explore What We Do ↗</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="page-section inner-page" id="page-contact" data-section="contact">
+        <div class="section-heading">
+          <span class="section-kicker">LET'S MAKE SOMETHING GREAT</span>
+          <h2>Your Idea Starts <span>With a Conversation.</span></h2>
+          <p>Tell us what you have in mind and what you want to build.</p>
+        </div>
+
+        <div class="contact-layout">
+          <div class="contact-info">
+            <div class="contact-info-card">
+              <span class="contact-symbol">✉</span>
+              <div><span class="card-number">EMAIL</span><p>zuhaibwazir558@gmail.com</p></div>
+            </div>
+            <div class="contact-info-card">
+              <span class="contact-symbol">✧</span>
+              <div><span class="card-number">STUDIO</span><p>Wazir Aura Digital Studio</p></div>
+            </div>
+          </div>
+
+          <form class="contact-form" id="contactForm">
+            <label for="contactName">Your name</label>
+            <input id="contactName" name="name" type="text" placeholder="Enter your name" required>
+
+            <label for="contactEmail">Email address</label>
+            <input id="contactEmail" name="email" type="email" placeholder="you@example.com" required>
+
+            <label for="contactSubject">What can we help with?</label>
+            <select id="contactSubject" name="subject" required>
+              <option value="">Choose a service</option>
+              <option>Website Development</option>
+              <option>UI & UX Design</option>
+              <option>Brand Identity</option>
+              <option>Digital Consulting</option>
+              <option>Marketplace Enquiry</option>
+              <option>Something Else</option>
+            </select>
+
+            <label for="contactMessage">Project details</label>
+            <textarea id="contactMessage" name="message" rows="4"
+              placeholder="Tell us a little about your idea..." required></textarea>
+
+            <button class="primary-button form-submit" type="submit">Prepare Message ↗</button>
+            <p class="form-note">This form opens your email application; it does not send messages directly from this website.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a href="#home" class="footer-brand" data-page="home">MW <span>WAZIR AURA</span></a>
+      <p>Creating digital experiences with purpose.</p>
+      <span class="footer-copy">© <span id="currentYear"></span> Wazir Aura</span>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
