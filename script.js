@@ -5,6 +5,19 @@
 
 (() => {
   "use strict";
+   
+  // Supabase connection for Wazir Aura
+  const SUPABASE_URL = "https://azjmjotzysprjecydomg.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_FHgg_rr679vsEzBGtAMygg_Ug-pLfms";
+
+  const supabaseClient = window.supabase?.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  if (!supabaseClient) {
+    console.error("Supabase library did not load. Please check the connection.");
+  }
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) =>
