@@ -1,435 +1,532 @@
-/* =========================================================
-   WAZIR AURA — WEBSITE INTERACTIONS
-   Matches index.html and style.css
-   No music, audio, or sound effects.
-   ========================================================= */
+"use strict";
 
-(() => {
-  "use strict";
+/* ==========================================
+   WAZIR AURA — WEBSITE CONFIGURATION
+   Replace these with your own Supabase values.
+   Never put a service_role/secret key here.
+========================================== */
 
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) =>
-    Array.from(root.querySelectorAll(selector));
+const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-  const intro = $("#introScreen");
-  const site = $("#siteShell");
-  const enterButton = $("#enterAura");
-  const skipButton = $("#skipIntro");
-  const nav = $("#mainNav");
-  const menuToggle = $("#menuToggle");
-  const themeToggle = $("#themeToggle");
-  const themeIcon = $("#themeIcon");
-  const contactForm = $("#contactForm");
-  const formStatus = $("#formStatus");
-  const currentYear = $("#currentYear");
-  const backToTop = $("#backToTop");
+let supabaseClient = null;
 
-  const validPages = new Set([
-    "home",
-    "services",
-    "portfolio",
-    "marketplace",
-    "about",
-    "faq",
-    "contact"
-  ]);
+const isSupabaseConfigured =
+  SUPABASE_URL.startsWith("https://") &&
+  !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+  SUPABASE_PUBLISHABLE_KEY.length > 20 &&
+  !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_SUPABASE");
 
-  let introFinished = false;
-  let revealObserver = null;
+if (isSupabaseConfigured && window.supabase) {
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+}
 
-  /* ---------------------------------------------------------
-     INTRO STARFIELD
-     --------------------------------------------------------- */
+/* ---------- Helpers ---------- */
 
-  function createIntroStars() {
-    const starfield = $("#introStars");
-    if (!starfield) return;
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-    starfield.replaceChildren();
+let toastTimer;
 
-    const count = Math.min(
-      150,
-      Math.max(55, Math.floor((window.innerWidth * window.innerHeight) / 8500))
+function showToast(message) {
+  const toast = $("#toast");
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+/* ---------- Animated space canvas ---------- */
+
+function initializeSpace() {
+  const canvas = $("#spaceCanvas");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  let width = 0;
+  let height = 0;
+  let stars = [];
+  let shootingStars = [];
+  let frameId = 0;
+  let lastFrame = 0;
+  let paused = document.hidden;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const starCount = Math.min(
+      360,
+      Math.max(100, Math.round((width * height) / 3500))
     );
 
-    const fragment = document.createDocumentFragment();
-
-    for (let i = 0; i < count; i += 1) {
-      const star = document.createElement("span");
-      star.className = "intro-star";
-      star.setAttribute("aria-hidden", "true");
-
-      const size = Math.random() < 0.13 ? 3 : Math.random() < 0.4 ? 2 : 1;
-
-      star.style.left = `${Math.random() * 100}%`;
-      star.style.top = `${Math.random() * 100}%`;
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.animationDelay = `${Math.random() * 4}s`;
-      star.style.animationDuration = `${2 + Math.random() * 4}s`;
-
-      fragment.appendChild(star);
-    }
-
-    starfield.appendChild(fragment);
+    stars = Array.from({ length: starCount }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.25 + 0.25,
+      alpha: Math.random() * 0.65 + 0.2,
+      speed: Math.random() * 0.6 + 0.15,
+      phase: Math.random() * Math.PI * 2,
+      color: Math.random() > 0.78 ? "120,245,229" : "208,218,255"
+    }));
   }
 
-  /* ---------------------------------------------------------
-     THEME
-     --------------------------------------------------------- */
+  function draw(timestamp = 0) {
+    if (paused) return;
 
-  function readSavedTheme() {
-    try {
-      const saved = localStorage.getItem("wazir-aura-theme");
-      return saved === "light" || saved === "dark" ? saved : "dark";
-    } catch {
-      return "dark";
+    if (timestamp - lastFrame < 30) {
+      frameId = requestAnimationFrame(draw);
+      return;
     }
-  }
+    lastFrame = timestamp;
 
-  function applyTheme(theme, save = true) {
-    const safeTheme = theme === "light" ? "light" : "dark";
+    ctx.clearRect(0, 0, width, height);
 
-    document.documentElement.dataset.theme = safeTheme;
+    for (const star of stars) {
+      const twinkle = reducedMotion
+        ? 0.85
+        : 0.62 + Math.sin(timestamp * 0.001 * star.speed + star.phase) * 0.3;
 
-    const isLight = safeTheme === "light";
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${star.color},${Math.max(0.08, star.alpha * twinkle)})`;
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
-    if (themeToggle) {
-      themeToggle.setAttribute(
-        "aria-label",
-        isLight ? "Switch to dark mode" : "Switch to light mode"
+    if (!reducedMotion && Math.random() < 0.008 && shootingStars.length < 2) {
+      shootingStars.push({
+        x: Math.random() * width * 0.8,
+        y: Math.random() * height * 0.45,
+        length: Math.random() * 90 + 45,
+        velocity: Math.random() * 5 + 5,
+        life: 1
+      });
+    }
+
+    shootingStars = shootingStars.filter((star) => star.life > 0);
+
+    for (const star of shootingStars) {
+      const gradient = ctx.createLinearGradient(
+        star.x, star.y,
+        star.x - star.length, star.y + star.length * 0.55
       );
+      gradient.addColorStop(0, `rgba(120,245,229,${star.life})`);
+      gradient.addColorStop(1, "rgba(120,245,229,0)");
 
-      themeToggle.setAttribute(
-        "title",
-        isLight ? "Switch to dark mode" : "Switch to light mode"
-      );
-    }
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(star.x, star.y);
+      ctx.lineTo(star.x - star.length, star.y + star.length * 0.55);
+      ctx.stroke();
 
-    if (themeIcon) {
-      themeIcon.textContent = isLight ? "☾" : "☼";
-    }
-
-    const themeColor = document.querySelector('meta[name="theme-color"]');
-
-    if (themeColor) {
-      themeColor.setAttribute("content", isLight ? "#f5f8f5" : "#050817");
-    }
-
-    if (save) {
-      try {
-        localStorage.setItem("wazir-aura-theme", safeTheme);
-      } catch {
-        // The theme still works for the current page if storage is unavailable.
-      }
-    }
-  }
-
-  /* ---------------------------------------------------------
-     PAGE NAVIGATION
-     --------------------------------------------------------- */
-
-  function closeMobileMenu() {
-    if (!nav || !menuToggle) return;
-
-    nav.classList.remove("is-open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-  }
-
-  function showPage(pageName, options = {}) {
-    const page = validPages.has(pageName) ? pageName : "home";
-    const { updateHash = true, scroll = true } = options;
-
-    $$(".page-section").forEach((section) => {
-      const isActive = section.dataset.section === page;
-
-      section.classList.toggle("active", isActive);
-
-      if (isActive) {
-        section.removeAttribute("aria-hidden");
+      if (!reducedMotion) {
+        star.x += star.velocity;
+        star.y -= star.velocity * 0.55;
+        star.life -= 0.018;
       } else {
-        section.setAttribute("aria-hidden", "true");
-      }
-    });
-
-    $$(".nav-link").forEach((link) => {
-      const isActive = link.dataset.page === page;
-
-      link.classList.toggle("active", isActive);
-
-      if (isActive) {
-        link.setAttribute("aria-current", "page");
-      } else {
-        link.removeAttribute("aria-current");
-      }
-    });
-
-    closeMobileMenu();
-
-    if (updateHash) {
-      const nextHash = `#${page}`;
-
-      if (window.location.hash !== nextHash) {
-        try {
-          window.history.replaceState(null, "", nextHash);
-        } catch {
-          window.location.hash = nextHash;
-        }
+        star.life = 0;
       }
     }
 
-    if (scroll) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    refreshRevealAnimations();
+    frameId = requestAnimationFrame(draw);
   }
 
-  /* ---------------------------------------------------------
-     INTRO EXIT
-     --------------------------------------------------------- */
+  function setPaused(value) {
+    paused = value;
 
-  function finishIntro() {
-    if (introFinished) return;
-    introFinished = true;
-
-    if (intro) {
-      intro.classList.add("is-leaving");
-      intro.setAttribute("aria-hidden", "true");
-    }
-
-    if (site) {
-      site.classList.add("is-visible");
-      site.removeAttribute("aria-hidden");
-    }
-
-    document.body.classList.remove("intro-active");
-
-    const hashPage = window.location.hash.replace("#", "");
-
-    if (validPages.has(hashPage)) {
-      showPage(hashPage, { updateHash: false, scroll: false });
+    if (paused) {
+      cancelAnimationFrame(frameId);
+      ctx.clearRect(0, 0, width, height);
     } else {
-      showPage("home", { updateHash: false, scroll: false });
+      frameId = requestAnimationFrame(draw);
     }
-
-    window.setTimeout(() => {
-      if (intro) {
-        intro.hidden = true;
-      }
-
-      refreshRevealAnimations();
-    }, 1000);
   }
 
-  /* ---------------------------------------------------------
-     SCROLL REVEAL
-     --------------------------------------------------------- */
+  resize();
+  setPaused(document.hidden);
 
-  function refreshRevealAnimations() {
-    if (!site || !site.classList.contains("is-visible")) return;
+  window.addEventListener("resize", resize, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    setPaused(document.hidden);
+  });
+}
 
-    const activePage = $(".page-section.active");
-    if (!activePage) return;
+/* ---------- Mobile navigation ---------- */
 
-    const elements = $$("[data-reveal]", activePage);
+function initializeNavigation() {
+  const menuButton = $("#menuToggle");
+  const nav = $("#mainNav");
 
-    if (!("IntersectionObserver" in window)) {
-      elements.forEach((element) => element.classList.add("revealed"));
-      return;
-    }
+  if (!menuButton || !nav) return;
 
-    if (!revealObserver) {
-      revealObserver = new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("revealed");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        {
-          threshold: 0.08,
-          rootMargin: "0px 0px -35px 0px"
-        }
-      );
-    }
-
-    elements.forEach((element) => {
-      if (!element.classList.contains("revealed")) {
-        revealObserver.observe(element);
-      }
-    });
+  function closeMenu() {
+    nav.classList.remove("open");
+    menuButton.setAttribute("aria-expanded", "false");
   }
 
-  /* ---------------------------------------------------------
-     CONTACT FORM
-     This prepares an email; it does not send through a server.
-     --------------------------------------------------------- */
+  menuButton.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    menuButton.setAttribute("aria-expanded", String(open));
+  });
 
-  function handleContactForm(event) {
-    event.preventDefault();
-
-    if (!contactForm || !formStatus) return;
-
-    formStatus.textContent = "";
-
-    if (!contactForm.reportValidity()) {
-      formStatus.textContent = "Please check the form and complete the required fields.";
-      return;
-    }
-
-    const formData = new FormData(contactForm);
-
-    const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const subject = String(formData.get("subject") || "").trim();
-    const message = String(formData.get("message") || "").trim();
-
-    if (!name || !email || !subject || !message) {
-      formStatus.textContent = "Please complete every field before preparing your email.";
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailPattern.test(email)) {
-      formStatus.textContent = "Please enter a valid email address.";
-      return;
-    }
-
-    const recipient = "zuhaibwazir558@gmail.com";
-    const emailSubject = `Wazir Aura Enquiry: ${subject}`;
-
-    const emailBody = [
-      "Wazir Aura — Project Enquiry",
-      "",
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Topic: ${subject}`,
-      "",
-      "Project details:",
-      message
-    ].join("\n");
-
-    const mailtoUrl =
-      `mailto:${recipient}` +
-      `?subject=${encodeURIComponent(emailSubject)}` +
-      `&body=${encodeURIComponent(emailBody)}`;
-
-    formStatus.textContent =
-      "Your email draft is being opened. Review it in your email application before sending.";
-
-    window.location.href = mailtoUrl;
-  }
-
-  /* ---------------------------------------------------------
-     EVENT LISTENERS
-     --------------------------------------------------------- */
-
-  if (enterButton) {
-    enterButton.addEventListener("click", finishIntro);
-  }
-
-  if (skipButton) {
-    skipButton.addEventListener("click", finishIntro);
-  }
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const currentTheme = document.documentElement.dataset.theme;
-      applyTheme(currentTheme === "light" ? "dark" : "light");
-    });
-  }
-
-  if (menuToggle && nav) {
-    menuToggle.addEventListener("click", () => {
-      const isOpen = nav.classList.toggle("is-open");
-
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.setAttribute(
-        "aria-label",
-        isOpen ? "Close navigation" : "Open navigation"
-      );
-    });
-  }
+  $$(".nav-link", nav).forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
 
   document.addEventListener("click", (event) => {
-    const trigger = event.target.closest("[data-page]");
-    if (!trigger) return;
-
-    const page = trigger.dataset.page;
-    if (!validPages.has(page)) return;
-
-    event.preventDefault();
-
-    if (!introFinished) {
-      finishIntro();
+    if (!nav.contains(event.target) && !menuButton.contains(event.target)) {
+      closeMenu();
     }
-
-    showPage(page);
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeMobileMenu();
-    }
+    if (event.key === "Escape") closeMenu();
   });
 
-  window.addEventListener("hashchange", () => {
-    if (!introFinished) return;
+  const sections = $$(".section[id]");
+  const links = $$(".nav-link");
 
-    const page = window.location.hash.replace("#", "");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-    if (validPages.has(page)) {
-      showPage(page, { updateHash: false });
-    }
-  });
+        links.forEach((link) => {
+          const active = link.getAttribute("href") === `#${entry.target.id}`;
+          link.classList.toggle("active", active);
+        });
+      });
+    }, { rootMargin: "-25% 0px -60% 0px" });
 
-  if (contactForm) {
-    contactForm.addEventListener("submit", handleContactForm);
+    sections.forEach((section) => observer.observe(section));
+  }
+}
+
+/* ---------- Dark / light theme ---------- */
+
+function initializeTheme() {
+  const button = $("#themeToggle");
+  if (!button) return;
+
+  let savedTheme = "dark";
+
+  try {
+    savedTheme = localStorage.getItem("wazir-aura-theme") || "dark";
+  } catch (error) {
+    console.warn("Theme preference storage is unavailable.");
   }
 
-  if (backToTop) {
-    backToTop.addEventListener("click", () => {
-      if (!introFinished) {
-        finishIntro();
+  function applyTheme(theme) {
+    const light = theme === "light";
+    document.body.classList.toggle("light-theme", light);
+    button.textContent = light ? "☾" : "☼";
+    button.setAttribute(
+      "aria-label",
+      light ? "Switch to dark theme" : "Switch to light theme"
+    );
+  }
+
+  applyTheme(savedTheme);
+
+  button.addEventListener("click", () => {
+    const next = document.body.classList.contains("light-theme")
+      ? "dark"
+      : "light";
+
+    applyTheme(next);
+
+    try {
+      localStorage.setItem("wazir-aura-theme", next);
+    } catch (error) {
+      console.warn("Could not save theme preference.");
+    }
+  });
+}
+
+/* ---------- Scroll reveal ---------- */
+
+function initializeReveal() {
+  const items = $$(".reveal");
+
+  if (!("IntersectionObserver" in window)) {
+    items.forEach((item) => item.classList.add("visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries, currentObserver) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        currentObserver.unobserve(entry.target);
       }
-
-      showPage("home");
     });
+  }, { threshold: 0.1 });
+
+  items.forEach((item) => observer.observe(item));
+}
+
+/* ---------- Project filters ---------- */
+
+function initializeProjectFilters() {
+  const filters = $("#projectFilters");
+  const grid = $("#projectGrid");
+  const count = $("#projectCount");
+
+  if (!filters || !grid) return;
+
+  filters.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+
+    $$(".filter-btn", filters).forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+
+    const category = button.dataset.filter;
+    let visible = 0;
+
+    $$(".project-card", grid).forEach((card) => {
+      const show = category === "all" || card.dataset.category === category;
+      card.hidden = !show;
+      if (show) visible++;
+    });
+
+    if (count) count.textContent = `${visible} project${visible === 1 ? "" : "s"}`;
+  });
+}
+
+/* ---------- FAQ accordion ---------- */
+
+function initializeFAQ() {
+  $$(".faq-question").forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = button.closest(".faq-item");
+      const willOpen = !item.classList.contains("open");
+
+      item.classList.toggle("open", willOpen);
+      button.setAttribute("aria-expanded", String(willOpen));
+    });
+  });
+}
+
+/* ---------- Supabase: load portfolio projects ---------- */
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+function validHttpUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+function renderDatabaseProjects(projects) {
+  const grid = $("#projectGrid");
+  const count = $("#projectCount");
+  if (!grid || !Array.isArray(projects)) return;
+
+  if (projects.length === 0) {
+    if (count) count.textContent = "Featured projects";
+    return; // Keep the concept cards if the database is empty.
   }
 
-  /* ---------------------------------------------------------
-     INITIALIZE
-     --------------------------------------------------------- */
+  grid.replaceChildren();
 
-  function initialize() {
-    applyTheme(readSavedTheme(), false);
-    createIntroStars();
+  projects.forEach((project, index) => {
+    const category = ["web", "ui", "creative"].includes(project.category)
+      ? project.category
+      : "web";
 
-    if (currentYear) {
-      currentYear.textContent = String(new Date().getFullYear());
+    const title = escapeHTML(project.title || "Untitled project");
+    const description = escapeHTML(project.description || "Digital project");
+    const imageUrl = validHttpUrl(project.image_url || "")
+      ? project.image_url
+      : "";
+
+    const card = document.createElement("article");
+    card.className = "project-card reveal visible";
+    card.dataset.category = category;
+
+    const art = document.createElement("div");
+    art.className = "project-art art-aurora";
+    art.setAttribute("aria-label", title);
+
+    if (imageUrl) {
+      art.style.backgroundImage =
+        `linear-gradient(0deg, rgba(7,9,20,.25), rgba(7,9,20,.05)), url("${imageUrl}")`;
+      art.style.backgroundSize = "cover";
+      art.style.backgroundPosition = "center";
+    } else {
+      art.innerHTML =
+        `<span class="project-art-label">PROJECT ${String(index + 1).padStart(2, "0")}</span>
+         <div class="prism-shape">WA<span>✦</span></div>`;
     }
 
-    document.body.classList.add("intro-active");
+    const info = document.createElement("div");
+    info.className = "project-info";
 
-    // Start with the main website hidden behind the intro.
-    if (site) {
-      site.classList.remove("is-visible");
-      site.setAttribute("aria-hidden", "true");
+    const text = document.createElement("div");
+    const heading = document.createElement("h3");
+    heading.textContent = project.title || "Untitled project";
+
+    const detail = document.createElement("p");
+    detail.textContent = project.description || "Digital project";
+
+    text.append(heading, detail);
+    info.append(text);
+
+    if (validHttpUrl(project.project_url || "")) {
+      const link = document.createElement("a");
+      link.className = "project-arrow";
+      link.href = project.project_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "↗";
+      link.setAttribute("aria-label", `Open ${project.title || "project"}`);
+      info.append(link);
     }
 
-    // Respect reduced-motion preferences by skipping the intro.
-    const reduceMotion = window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.append(art, info);
+    grid.append(card);
+  });
 
-    if (reduceMotion) {
-      finishIntro();
-    }
+  if (count) count.textContent = `${projects.length} live project${projects.length === 1 ? "" : "s"}`;
+}
+
+async function loadProjects() {
+  if (!supabaseClient) return;
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("projects")
+      .select("id, title, description, category, image_url, project_url, created_at")
+      .eq("published", true)
+      .order("created_at", { ascending: false })
+      .limit(30);
+
+    if (error) throw error;
+    renderDatabaseProjects(data || []);
+  } catch (error) {
+    console.error("Supabase projects could not load:", error.message);
+    // The static concept cards remain visible if the table is not ready.
   }
+}
 
-  initialize();
-})();
+/* ---------- Supabase: contact form ---------- */
+
+function initializeContactForm() {
+  const form = $("#contactForm");
+  const status = $("#formStatus");
+  const submitButton = $("#submitButton");
+
+  if (!form || !status || !submitButton) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!form.reportValidity()) return;
+
+    if (!supabaseClient) {
+      status.textContent =
+        "Supabase is not configured yet. Add your project URL and publishable key in script.js.";
+      showToast("Add your Supabase settings first.");
+      return;
+    }
+
+    const data = new FormData(form);
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      project_type: String(data.get("projectType") || "").trim(),
+      message: String(data.get("message") || "").trim()
+    };
+
+    if (
+      !payload.name || payload.name.length > 100 ||
+      !payload.email || payload.email.length > 254 ||
+      !payload.project_type || payload.project_type.length > 100 ||
+      !payload.message || payload.message.length > 5000
+    ) {
+      status.textContent = "Please check your details and try again.";
+      return;
+    }
+
+    submitButton.disabled = true;
+    submitButton.style.opacity = ".65";
+    submitButton.querySelector("span").textContent = "…";
+    status.textContent = "Sending your message securely…";
+
+    try {
+      const { error } = await supabaseClient
+        .from("contact_messages")
+        .insert([payload]);
+
+      if (error) throw error;
+
+      form.reset();
+      status.textContent = "Message sent successfully. Thank you for reaching out!";
+      showToast("Your message has been sent.");
+    } catch (error) {
+      console.error("Contact submission failed:", error.message);
+      status.textContent =
+        "Your message could not be saved. Please try again later or check the Supabase table and policies.";
+      showToast("Message not sent. Check the Supabase setup.");
+    } finally {
+      submitButton.disabled = false;
+      submitButton.style.opacity = "1";
+      submitButton.querySelector("span").textContent = "↗";
+    }
+  });
+}
+
+/* ---------- Startup ---------- */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const year = $("#currentYear");
+  if (year) year.textContent = new Date().getFullYear();
+
+  initializeSpace();
+  initializeNavigation();
+  initializeTheme();
+  initializeReveal();
+  initializeProjectFilters();
+  initializeFAQ();
+  initializeContactForm();
+  loadProjects();
+
+  if (!supabaseClient) {
+    console.info(
+      "Wazir Aura: add your Supabase project URL and publishable key to enable database features."
+    );
+  }
+});
