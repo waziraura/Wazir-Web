@@ -1,118 +1,84 @@
 
-/* =========================================
-   WAZIR AURA — CINEMATIC INTERACTIONS
-   ========================================= */
+/* ==========================================
+   WAZIR AURA — MAIN JAVASCRIPT
+   Cinematic • Responsive • Silent
+========================================== */
 
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
   "use strict";
-   // Supabase connection for Wazir Aura
-  const SUPABASE_URL = "https://azjmjotzysprjecydomg.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_FHgg_rr679vsEzBGtAMygg_Ug-pLfms";
 
-  const supabaseClient = window.supabase?.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
+
+  const $$ = (selector, root = document) =>
+    [...root.querySelectorAll(selector)];
+
+  // ------------------------------------------
+  // 1. ELEMENTS
+  // ------------------------------------------
+
+  const introScreen = $(
+    "#introScreen, .intro-screen"
   );
 
-  if (!supabaseClient) {
-    console.error("Supabase library did not load. Please check the connection.");
-  }
+  const siteShell = $(
+    "#siteShell, .site-shell"
+  );
 
-  const $ = (selector, root = document) => root.querySelector(selector);
-  const $$ = (selector, root = document) =>
-    Array.from(root.querySelectorAll(selector));
+  const enterButton = $(
+    "#enterAura, .intro-enter"
+  );
 
-  const body = document.body;
-  const intro = $("#introScreen");
-  const siteShell = $("#siteShell");
-  const enterButton = $("#enterAura");
-  const skipButton = $("#skipIntro");
-  const soundButton = $("#soundToggle");
-  const soundLabel = $("#soundLabel");
-  const themeButton = $("#themeToggle");
-  const menuButton = $("#menuToggle");
-  const navigation = $(".main-nav");
-  const year = $("#currentYear");
+  const skipButton = $(
+    "#skipIntro, .intro-skip"
+  );
 
-  let introFinished = false;
-  let soundEnabled = false;
-  let audioContext = null;
-  let masterGain = null;
-  let ambientNodes = [];
-  let transitionInProgress = false;
+  const themeToggle = $(
+    "#themeToggle, .theme-toggle"
+  );
 
-  // Respect visitors who prefer less animation.
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+  const menuToggle = $(
+    "#menuToggle, .menu-toggle"
+  );
 
-  /* =========================================
-     STAR PARTICLES
-     ========================================= */
+  const navigation = $(
+    ".main-nav, #mainNav, .site-nav"
+  );
 
-  function createStars() {
-    const starContainer = $("#introStars");
-    if (!starContainer || reducedMotion) return;
+  const navLinks = $$(
+    '.main-nav a, #mainNav a, .site-nav a, [data-page]'
+  );
 
-    const fragment = document.createDocumentFragment();
-    const count = window.innerWidth < 600 ? 35 : 75;
+  const pageSections = $$(
+    ".page-section, [id^='page-']"
+  );
 
-    for (let i = 0; i < count; i++) {
-      const star = document.createElement("span");
+  const contactForm = $("#contactForm");
 
-      const size = Math.random() * 2 + 0.5;
-      const duration = 3 + Math.random() * 6;
-      const delay = Math.random() * -8;
-
-      Object.assign(star.style, {
-        position: "absolute",
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "50%",
-        background: Math.random() > 0.7 ? "#a7eaff" : "#ffffff",
-        opacity: `${0.25 + Math.random() * 0.7}`,
-        boxShadow: `0 0 ${size * 5}px rgba(132, 220, 255, .8)`,
-        animation: `starTwinkle ${duration}s ${delay}s ease-in-out infinite alternate`,
-        pointerEvents: "none"
-      });
-
-      fragment.appendChild(star);
-    }
-
-    starContainer.appendChild(fragment);
-  }
-
-  /* =========================================
-     INTRO TRANSITION
-     ========================================= */
+  // ------------------------------------------
+  // 2. INTRO SCREEN
+  // ------------------------------------------
 
   function enterWebsite() {
-    if (introFinished || transitionInProgress) return;
+    if (introScreen) {
+      introScreen.classList.add("is-hidden");
+      introScreen.classList.add("intro-hidden");
+      introScreen.setAttribute("aria-hidden", "true");
+    }
 
-    transitionInProgress = true;
-    introFinished = true;
+    if (siteShell) {
+      siteShell.classList.add("is-visible");
+      siteShell.classList.add("site-ready");
+      siteShell.removeAttribute("aria-hidden");
+    }
 
-    // Fade the intro out and reveal the website.
-    body.classList.add("site-ready");
+    document.body.classList.add("intro-complete");
 
-    window.setTimeout(() => {
-      body.classList.add("intro-complete");
-
-      if (intro) {
-        intro.setAttribute("aria-hidden", "true");
-      }
-
-      // Remove the intro after the transition.
-      window.setTimeout(() => {
-        if (intro) intro.hidden = true;
-        transitionInProgress = false;
-      }, reducedMotion ? 50 : 1200);
-    }, 30);
-
-    // Sound is only started when a visitor explicitly enabled it.
-    if (soundEnabled) stopAmbientSound();
+    try {
+      sessionStorage.setItem("wazirAuraIntroSeen", "true");
+    } catch (_) {
+      // The website still works if storage is unavailable.
+    }
   }
 
   if (enterButton) {
@@ -123,225 +89,335 @@
     skipButton.addEventListener("click", enterWebsite);
   }
 
-  /* =========================================
-     ORIGINAL SYNTHESIZED AMBIENT SOUND
-     ========================================= */
-
-  function createAmbientSound() {
-    const AudioContextClass =
-      window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContextClass) {
-      if (soundLabel) soundLabel.textContent = "AUDIO UNSUPPORTED";
-      return false;
+  // Allow the intro to be skipped with the Escape key.
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && introScreen) {
+      enterWebsite();
     }
-
-    try {
-      audioContext = new AudioContextClass();
-      masterGain = audioContext.createGain();
-      masterGain.gain.value = 0.0001;
-      masterGain.connect(audioContext.destination);
-
-      // Soft, original synthesized atmospheric tones.
-      // No external audio file or copyrighted soundtrack is used.
-      const frequencies = [55, 82.41, 110, 164.81];
-
-      frequencies.forEach((frequency, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        const lowPass = audioContext.createBiquadFilter();
-
-        oscillator.type = index === 2 ? "sine" : "triangle";
-        oscillator.frequency.value = frequency;
-
-        lowPass.type = "lowpass";
-        lowPass.frequency.value = 350 + index * 120;
-
-        gain.gain.value = index === 0 ? 0.28 : 0.08;
-
-        oscillator.connect(lowPass);
-        lowPass.connect(gain);
-        gain.connect(masterGain);
-
-        oscillator.start();
-
-        ambientNodes.push({ oscillator, gain, lowPass });
-      });
-
-      return true;
-    } catch (error) {
-      console.warn("Ambient audio could not be initialized.", error);
-      return false;
-    }
-  }
-
-  async function startAmbientSound() {
-    if (introFinished) return;
-
-    if (!audioContext && !createAmbientSound()) return;
-
-    try {
-      if (audioContext.state === "suspended") {
-        await audioContext.resume();
-      }
-
-      if (!masterGain) return;
-
-      const now = audioContext.currentTime;
-
-      masterGain.gain.cancelScheduledValues(now);
-      masterGain.gain.setTargetAtTime(0.12, now, 1.5);
-
-      soundEnabled = true;
-      intro?.classList.add("sound-playing");
-
-      if (soundLabel) soundLabel.textContent = "SOUND ON";
-      soundButton?.setAttribute("aria-pressed", "true");
-    } catch (error) {
-      console.warn("Please interact with the page to enable audio.", error);
-    }
-  }
-
-  function stopAmbientSound() {
-    soundEnabled = false;
-    intro?.classList.remove("sound-playing");
-
-    if (soundLabel) soundLabel.textContent = "SOUND OFF";
-    soundButton?.setAttribute("aria-pressed", "false");
-
-    if (audioContext && masterGain) {
-      const now = audioContext.currentTime;
-      masterGain.gain.cancelScheduledValues(now);
-      masterGain.gain.setTargetAtTime(0.0001, now, 0.2);
-    }
-  }
-
-  if (soundButton) {
-    soundButton.addEventListener("click", () => {
-      if (soundEnabled) {
-        stopAmbientSound();
-      } else {
-        startAmbientSound();
-      }
-    });
-  }
-
-  /* =========================================
-     SECTION NAVIGATION
-     ========================================= */
-
-  function showPage(pageName) {
-    const target = $(`#page-${pageName}`);
-
-    if (!target) return;
-
-    $$(".page-section").forEach((section) => {
-      section.classList.remove("active");
-      section.setAttribute("aria-hidden", "true");
-    });
-
-    target.classList.add("active");
-    target.setAttribute("aria-hidden", "false");
-
-    $$(".nav-link").forEach((button) => {
-      const active = button.dataset.page === pageName;
-      button.classList.toggle("active", active);
-
-      if (active) {
-        button.setAttribute("aria-current", "page");
-      } else {
-        button.removeAttribute("aria-current");
-      }
-    });
-
-    closeMobileMenu();
-
-    window.scrollTo({
-      top: 0,
-      behavior: reducedMotion ? "auto" : "smooth"
-    });
-  }
-
-  $$("[data-page]").forEach((control) => {
-    control.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      const pageName = control.dataset.page;
-      if (!pageName) return;
-
-      showPage(pageName);
-    });
   });
 
-  /* =========================================
-     MOBILE MENU
-     ========================================= */
-
-  function closeMobileMenu() {
-    navigation?.classList.remove("menu-open");
-    menuButton?.setAttribute("aria-expanded", "false");
-    menuButton?.setAttribute("aria-label", "Open navigation");
+  // Do not leave visitors stuck behind the intro.
+  if (introScreen) {
+    try {
+      if (sessionStorage.getItem("wazirAuraIntroSeen") === "true") {
+        enterWebsite();
+      }
+    } catch (_) {
+      // Keep the intro available if storage is blocked.
+    }
   }
 
-  if (menuButton && navigation) {
-    menuButton.addEventListener("click", () => {
-      const isOpen = navigation.classList.toggle("menu-open");
+  // ------------------------------------------
+  // 3. DARK / LIGHT THEME
+  // ------------------------------------------
 
-      menuButton.setAttribute("aria-expanded", String(isOpen));
-      menuButton.setAttribute(
+  const THEME_KEY = "wazirAuraTheme";
+
+  function applyTheme(theme) {
+    const lightMode = theme === "light";
+
+    document.body.classList.toggle(
+      "light-mode",
+      lightMode
+    );
+
+    document.documentElement.dataset.theme =
+      lightMode ? "light" : "dark";
+
+    if (themeToggle) {
+      themeToggle.setAttribute(
         "aria-label",
-        isOpen ? "Close navigation" : "Open navigation"
+        lightMode
+          ? "Switch to dark mode"
+          : "Switch to light mode"
       );
+
+      themeToggle.setAttribute(
+        "title",
+        lightMode
+          ? "Switch to dark mode"
+          : "Switch to light mode"
+      );
+
+      const label = $(
+        "[data-theme-label], .theme-label",
+        themeToggle
+      );
+
+      if (label) {
+        label.textContent = lightMode
+          ? "Light Mode"
+          : "Dark Mode";
+      }
+
+      const icon = $(
+        "svg, i, .icon",
+        themeToggle
+      );
+
+      if (icon && !icon.classList.contains("icon")) {
+        icon.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+    }
+
+    try {
+      localStorage.setItem(
+        THEME_KEY,
+        lightMode ? "light" : "dark"
+      );
+    } catch (_) {
+      // Theme switching still works for this page.
+    }
+  }
+
+  let savedTheme = "dark";
+
+  try {
+    savedTheme = localStorage.getItem(THEME_KEY) || "dark";
+  } catch (_) {
+    // Use dark mode by default.
+  }
+
+  applyTheme(savedTheme);
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isLight =
+        document.body.classList.contains("light-mode");
+
+      applyTheme(isLight ? "dark" : "light");
+    });
+  }
+
+  // ------------------------------------------
+  // 4. MOBILE NAVIGATION
+  // ------------------------------------------
+
+  function closeMenu() {
+    if (menuToggle) {
+      menuToggle.classList.remove("active");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+
+    if (navigation) {
+      navigation.classList.remove("active");
+      navigation.classList.remove("is-open");
+    }
+
+    document.body.classList.remove("menu-open");
+  }
+
+  if (menuToggle && navigation) {
+    menuToggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen =
+        navigation.classList.contains("active") ||
+        navigation.classList.contains("is-open");
+
+      if (isOpen) {
+        closeMenu();
+      } else {
+        navigation.classList.add("active");
+        navigation.classList.add("is-open");
+        menuToggle.classList.add("active");
+        menuToggle.setAttribute("aria-expanded", "true");
+        document.body.classList.add("menu-open");
+      }
     });
 
     document.addEventListener("click", (event) => {
-      if (
-        !navigation.contains(event.target) &&
-        !menuButton.contains(event.target)
-      ) {
-        closeMobileMenu();
+      const clickedInsideMenu =
+        navigation.contains(event.target) ||
+        menuToggle.contains(event.target);
+
+      if (!clickedInsideMenu) {
+        closeMenu();
       }
     });
   }
 
-  /* =========================================
-     DARK / LIGHT THEME
-     ========================================= */
+  // ------------------------------------------
+  // 5. PAGE / SECTION NAVIGATION
+  // ------------------------------------------
 
-  function updateThemeButton() {
-    const isLight = body.classList.contains("light-mode");
+  function getPageTarget(link) {
+    const pageName = link.dataset.page;
 
-    if (themeButton) {
-      themeButton.textContent = isLight ? "☾" : "☼";
-      themeButton.setAttribute(
-        "aria-label",
-        isLight ? "Switch to dark space theme" : "Switch to light sky theme"
+    if (pageName) {
+      return (
+        document.getElementById(`page-${pageName}`) ||
+        document.getElementById(pageName)
       );
-      themeButton.title = isLight
-        ? "Switch to dark space theme"
-        : "Switch to light sky theme";
     }
 
-    const themeColor = document.querySelector('meta[name="theme-color"]');
-    if (themeColor) {
-      themeColor.setAttribute("content", isLight ? "#edf5ff" : "#050713");
+    const href = link.getAttribute("href");
+
+    if (href && href.startsWith("#")) {
+      return $(href);
     }
+
+    return null;
   }
 
-  if (themeButton) {
-    themeButton.addEventListener("click", () => {
-      body.classList.toggle("light-mode");
-      updateThemeButton();
+  function showPage(target, link) {
+    if (!target) return false;
+
+    const isPageLayout =
+      pageSections.length > 0 &&
+      (
+        target.classList.contains("page-section") ||
+        target.id.startsWith("page-")
+      );
+
+    if (isPageLayout) {
+      pageSections.forEach((section) => {
+        const active = section === target;
+
+        section.classList.toggle("active", active);
+        section.classList.toggle("is-active", active);
+
+        section.setAttribute(
+          "aria-hidden",
+          active ? "false" : "true"
+        );
+      });
+
+      target.classList.add("active", "is-active");
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    } else {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    navLinks.forEach((navLink) => {
+      const active =
+        navLink === link ||
+        (
+          link.dataset.page &&
+          navLink.dataset.page === link.dataset.page
+        );
+
+      navLink.classList.toggle("active", active);
+
+      if (active) {
+        navLink.setAttribute("aria-current", "page");
+      } else {
+        navLink.removeAttribute("aria-current");
+      }
+    });
+
+    closeMenu();
+    return true;
+  }
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const target = getPageTarget(link);
+
+      if (!target) return;
+
+      event.preventDefault();
+      showPage(target, link);
+    });
+  });
+
+  // ------------------------------------------
+  // 6. CURRENT YEAR
+  // ------------------------------------------
+
+  const currentYear = $("#currentYear");
+
+  if (currentYear) {
+    currentYear.textContent = new Date().getFullYear();
+  }
+
+  // Also support common footer year markup.
+  const footerYear = $("[data-current-year]");
+
+  if (footerYear) {
+    footerYear.textContent = new Date().getFullYear();
+  }
+
+  // ------------------------------------------
+  // 7. SCROLL REVEAL ANIMATIONS
+  // ------------------------------------------
+
+  const revealElements = $$(
+    ".feature-card, .service-card, .marketplace-card, " +
+    ".about-layout, .contact-method, .social-link, " +
+    ".hero-content, .hero-highlights, .section-heading, " +
+    "[data-reveal]"
+  );
+
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -35px 0px"
+      }
+    );
+
+    revealElements.forEach((element) => {
+      element.classList.add("reveal-ready");
+      revealObserver.observe(element);
+    });
+  } else {
+    revealElements.forEach((element) => {
+      element.classList.add("revealed", "is-visible");
     });
   }
 
-  updateThemeButton();
+  // ------------------------------------------
+  // 8. SUBTLE POINTER GLOW
+  // ------------------------------------------
 
-  /* =========================================
-     CONTACT FORM
-     ========================================= */
+  if (!reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+    const glowCards = $$(
+      ".feature-card, .service-card, .marketplace-card"
+    );
 
-  const contactForm = $("#contactForm");
+    glowCards.forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
+        const rect = card.getBoundingClientRect();
+
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        card.style.setProperty("--pointer-x", `${x}px`);
+        card.style.setProperty("--pointer-y", `${y}px`);
+      });
+    });
+  }
+
+  // ------------------------------------------
+  // 9. CONTACT FORM
+  // ------------------------------------------
 
   if (contactForm) {
     contactForm.addEventListener("submit", (event) => {
@@ -351,53 +427,132 @@
 
       const formData = new FormData(contactForm);
 
-      const name = String(formData.get("name") || "").trim();
-      const email = String(formData.get("email") || "").trim();
-      const subject = String(formData.get("subject") || "").trim();
-      const message = String(formData.get("message") || "").trim();
+      const name = String(
+        formData.get("name") || ""
+      ).trim();
 
-      const emailSubject = `Wazir Aura enquiry: ${subject}`;
+      const email = String(
+        formData.get("email") || ""
+      ).trim();
 
-      const emailBody = [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Service: ${subject}`,
-        "",
-        "Project details:",
-        message
-      ].join("\n");
+      const subject = String(
+        formData.get("subject") || "Website enquiry"
+      ).trim();
 
-      const mailto =
-        `mailto:zuhaibwazir558@gmail.com?subject=${encodeURIComponent(emailSubject)}` +
-        `&body=${encodeURIComponent(emailBody)}`;
+      const message = String(
+        formData.get("message") || ""
+      ).trim();
 
-      window.location.href = mailto;
+      if (!name || !email || !message) {
+        showFormMessage(
+          "Please complete your name, email and message.",
+          true
+        );
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailPattern.test(email)) {
+        showFormMessage(
+          "Please enter a valid email address.",
+          true
+        );
+        return;
+      }
+
+      const recipient = "zuhaibwazir558@gmail.com";
+
+      const mailSubject = encodeURIComponent(subject);
+
+      const mailBody = encodeURIComponent(
+        `Name: ${name}\n` +
+        `Email: ${email}\n\n` +
+        `Message:\n${message}`
+      );
+
+      showFormMessage(
+        "Opening your email app. Please send the message there."
+      );
+
+      window.location.href =
+        `mailto:${recipient}?subject=${mailSubject}&body=${mailBody}`;
     });
   }
 
-  /* =========================================
-     INITIALIZE
-     ========================================= */
+  function showFormMessage(message, isError = false) {
+    let status = $("#formStatus");
 
-  if (year) {
-    year.textContent = String(new Date().getFullYear());
+    if (!status && contactForm) {
+      status = document.createElement("p");
+      status.id = "formStatus";
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      contactForm.appendChild(status);
+    }
+
+    if (status) {
+      status.textContent = message;
+      status.classList.toggle("error", isError);
+      status.classList.toggle("success", !isError);
+    }
   }
 
-  createStars();
+  // ------------------------------------------
+  // 10. SOCIAL LINKS: OPEN EXTERNAL PROFILES
+  // ------------------------------------------
 
-  // Keep the intro on screen until the visitor chooses to enter or skip.
-  // No forced timeout, so the visitor can enjoy the complete opening.
-  if (intro) {
-    intro.hidden = false;
-    intro.setAttribute("aria-hidden", "false");
+  $$(
+    'a[href*="linkedin.com"], ' +
+    'a[href*="fiverr.com"], ' +
+    'a[href*="facebook.com"], ' +
+    'a[href*="instagram.com"], ' +
+    'a[href*="x.com"]'
+  ).forEach((link) => {
+    if (!link.hasAttribute("aria-label")) {
+      const label = link.textContent.trim();
+
+      if (label) {
+        link.setAttribute("aria-label", label);
+      }
+    }
+  });
+
+  // ------------------------------------------
+  // 11. KEYBOARD ACCESSIBILITY
+  // ------------------------------------------
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  // ------------------------------------------
+  // 12. INITIAL PAGE STATE
+  // ------------------------------------------
+
+  if (pageSections.length > 0) {
+    const hasActivePage = pageSections.some(
+      (section) =>
+        section.classList.contains("active") ||
+        section.classList.contains("is-active")
+    );
+
+    if (!hasActivePage) {
+      const home =
+        $("#page-home") ||
+        pageSections.find((section) =>
+          section.id === "home"
+        ) ||
+        pageSections[0];
+
+      if (home) {
+        home.classList.add("active", "is-active");
+        home.setAttribute("aria-hidden", "false");
+      }
+    }
   }
 
-  // Start with Home as the visible section.
-  showPage("home");
-
-  // Make the initial view accessible even when the visitor uses
-  // the Enter button or Skip Intro.
-  if (enterButton) {
-    enterButton.setAttribute("aria-label", "Enter Wazir Aura website");
-  }
-})();
+  console.log("Wazir Aura initialized successfully.");
+});
