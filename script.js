@@ -5,8 +5,7 @@
 
 (() => {
   "use strict";
-   
-  // Supabase connection for Wazir Aura
+   // Supabase connection for Wazir Aura
   const SUPABASE_URL = "https://azjmjotzysprjecydomg.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_FHgg_rr679vsEzBGtAMygg_Ug-pLfms";
 
