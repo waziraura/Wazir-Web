@@ -1,90 +1,41 @@
-/* =========================================
-   WAZIR AURA — WEBSITE JAVASCRIPT
-   Mobile menu, theme, forms, interactions
-========================================= */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const $ = (selector, parent = document) =>
-    parent.querySelector(selector);
-
+  const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) =>
     Array.from(parent.querySelectorAll(selector));
 
-  /* -----------------------------------------
-     Toast notifications
-  ----------------------------------------- */
-
-  const toastContainer = $("#toast-container");
-
-  function showToast(message, type = "success") {
-    if (!toastContainer) {
-      window.alert(message);
-      return;
-    }
-
-    const toast = document.createElement("div");
-    toast.className = `toast toast-${type}`;
-    toast.setAttribute("role", "status");
-    toast.textContent = message;
-
-    toastContainer.appendChild(toast);
-
-    window.setTimeout(() => {
-      toast.style.opacity = "0";
-      toast.style.transform = "translateY(8px)";
-
-      window.setTimeout(() => {
-        toast.remove();
-      }, 250);
-    }, 4000);
-  }
-
-  /* -----------------------------------------
-     Loading screen
-  ----------------------------------------- */
-
-  const splashScreen = $("#splash-screen");
-
-  function hideSplashScreen() {
-    if (splashScreen) {
-      splashScreen.classList.add("hidden");
-      splashScreen.setAttribute("aria-hidden", "true");
-    }
-  }
-
-  if (splashScreen) {
-    window.addEventListener("load", hideSplashScreen, { once: true });
-
-    // Keep the page usable if the load event takes longer than expected.
-    window.setTimeout(hideSplashScreen, 1800);
-  }
-
-  /* -----------------------------------------
-     Footer year
-  ----------------------------------------- */
-
-  const currentYear = $("#current-year");
-
-  if (currentYear) {
-    currentYear.textContent = String(new Date().getFullYear());
-  }
-
-  /* -----------------------------------------
-     Mobile navigation
-  ----------------------------------------- */
-
+  const body = document.body;
   const menuToggle = $("#menu-toggle");
   const navigation = $("#primary-navigation");
+  const themeToggle = $("#theme-toggle");
+  const themeIcon = $("#theme-icon");
+  const contactForm = $("#contact-form");
+  const contactStatus = $("#contact-status");
+  const splashScreen = $("#splash-screen");
 
-  function closeMenu() {
+  // Footer year
+  const year = $("#current-year");
+  if (year) year.textContent = new Date().getFullYear();
+
+  // Remove the intro screen after the page has initialized.
+  body.classList.add("js-ready");
+
+  if (splashScreen) {
+    window.setTimeout(() => {
+      splashScreen.style.display = "none";
+    }, 700);
+  }
+
+  // Mobile navigation
+  const closeMenu = () => {
     if (!menuToggle || !navigation) return;
 
     navigation.classList.remove("is-open");
     menuToggle.setAttribute("aria-expanded", "false");
     menuToggle.setAttribute("aria-label", "Open navigation");
-  }
+  };
 
   if (menuToggle && navigation) {
     menuToggle.addEventListener("click", () => {
@@ -101,12 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
       link.addEventListener("click", closeMenu);
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    });
-
     document.addEventListener("click", (event) => {
       if (
         navigation.classList.contains("is-open") &&
@@ -117,97 +62,72 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMenu();
+    });
+
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 760) {
-        closeMenu();
-      }
+      if (window.innerWidth > 760) closeMenu();
     });
   }
 
-  /* -----------------------------------------
-     Light and dark theme
-  ----------------------------------------- */
+  // Theme toggle with saved preference
+  const savedTheme = (() => {
+    try {
+      return localStorage.getItem("wazir-aura-theme");
+    } catch {
+      return null;
+    }
+  })();
 
-  const themeToggle = $("#theme-toggle");
-  const themeIcon = $("#theme-icon");
-  const savedThemeKey = "wazir-aura-theme";
+  const prefersLight = window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: light)").matches;
 
-  function applyTheme(theme) {
-    const isLight = theme === "light";
-
-    document.body.classList.toggle("light-theme", isLight);
+  const applyTheme = (light) => {
+    body.classList.toggle("light-theme", light);
 
     if (themeIcon) {
-      themeIcon.textContent = isLight ? "☾" : "☼";
+      themeIcon.textContent = light ? "☾" : "☼";
     }
 
     if (themeToggle) {
       themeToggle.setAttribute(
         "aria-label",
-        isLight ? "Switch to dark theme" : "Switch to light theme"
-      );
-
-      themeToggle.setAttribute(
-        "title",
-        isLight ? "Switch to dark theme" : "Switch to light theme"
+        light ? "Switch to dark theme" : "Switch to light theme"
       );
     }
 
-    const themeColor = $('meta[name="theme-color"]');
-
-    if (themeColor) {
-      themeColor.setAttribute("content", isLight ? "#f7f8fc" : "#0b0d12");
+    const themeMeta = $('meta[name="theme-color"]');
+    if (themeMeta) {
+      themeMeta.setAttribute("content", light ? "#f5f7ff" : "#080b16");
     }
-  }
+  };
 
-  let initialTheme = "dark";
-
-  try {
-    const savedTheme = window.localStorage.getItem(savedThemeKey);
-
-    if (savedTheme === "light" || savedTheme === "dark") {
-      initialTheme = savedTheme;
-    } else if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      initialTheme = "light";
-    }
-  } catch {
-    // The theme still works if browser storage is unavailable.
-  }
-
-  applyTheme(initialTheme);
+  applyTheme(savedTheme ? savedTheme === "light" : prefersLight);
 
   if (themeToggle) {
     themeToggle.addEventListener("click", () => {
-      const nextTheme = document.body.classList.contains("light-theme")
-        ? "dark"
-        : "light";
-
-      applyTheme(nextTheme);
+      const light = !body.classList.contains("light-theme");
+      applyTheme(light);
 
       try {
-        window.localStorage.setItem(savedThemeKey, nextTheme);
+        localStorage.setItem("wazir-aura-theme", light ? "light" : "dark");
       } catch {
-        // Theme switching remains functional for this page view.
+        // Theme still works for the current page if storage is unavailable.
       }
     });
   }
 
-  /* -----------------------------------------
-     Smooth in-page navigation
-  ----------------------------------------- */
-
+  // Smooth scrolling for internal links
   $$('a[href^="#"]').forEach((link) => {
     link.addEventListener("click", (event) => {
-      const href = link.getAttribute("href");
+      const targetId = link.getAttribute("href");
+      if (!targetId || targetId === "#") return;
 
-      if (!href || href === "#") return;
-
-      const target = $(href);
-
+      const target = $(targetId);
       if (!target) return;
 
       event.preventDefault();
-
       target.scrollIntoView({
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? "auto"
@@ -215,182 +135,98 @@ document.addEventListener("DOMContentLoaded", () => {
         block: "start"
       });
 
-      if (window.location.hash !== href) {
-        window.history.replaceState(null, "", href);
+      if (window.location.hash !== targetId) {
+        history.replaceState(null, "", targetId);
       }
     });
   });
 
-  /* -----------------------------------------
-     Service links preselect contact service
-  ----------------------------------------- */
-
-  const contactService = $("#contact-service");
-
+  // Service cards lead to the contact form where appropriate.
   $$("[data-service]").forEach((link) => {
     link.addEventListener("click", () => {
-      if (!contactService) return;
-
-      const requestedService = link.dataset.service;
-
-      const matchingOption = Array.from(contactService.options).find(
-        (option) => option.value === requestedService
-      );
-
-      if (matchingOption) {
-        contactService.value = requestedService;
+      const serviceSelect = $("#contact-service");
+      if (serviceSelect) {
+        serviceSelect.value = link.dataset.service;
       }
     });
   });
 
-  /* -----------------------------------------
-     Contact form
-     Opens the visitor's email application.
-     Does not silently claim to send or store data.
-  ----------------------------------------- */
-
-  const contactForm = $("#contact-form");
-  const contactStatus = $("#contact-status");
-
+  // Contact form: prepare an email; nothing is uploaded or stored.
   if (contactForm) {
     contactForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
       if (!contactForm.reportValidity()) return;
 
-      const formData = new FormData(contactForm);
+      const name = $("#contact-name")?.value.trim() || "";
+      const email = $("#contact-email")?.value.trim() || "";
+      const service = $("#contact-service")?.value || "";
+      const budget = $("#contact-budget")?.value || "Not specified";
+      const message = $("#contact-message")?.value.trim() || "";
 
-      const name = String(formData.get("name") || "").trim();
-      const email = String(formData.get("email") || "").trim();
-      const service = String(formData.get("service") || "").trim();
-      const budget = String(formData.get("budget") || "").trim();
-      const message = String(formData.get("message") || "").trim();
-
-      if (!name || !email || !service || !message) {
-        if (contactStatus) {
-          contactStatus.textContent = "Please complete all required fields.";
-        }
-        return;
-      }
-
-      const subject = `Wazir Aura Project Inquiry — ${service}`;
-
-      const body = [
-        "Hello Wazir Aura,",
+      const subject = `Wazir Aura project inquiry — ${service}`;
+      const emailBody = [
+        "Hello Murad Wazir,",
         "",
         "I would like to discuss a project.",
         "",
         `Name: ${name}`,
         `Email: ${email}`,
         `Service: ${service}`,
-        `Estimated budget: ${budget || "Not specified"}`,
+        `Budget: ${budget}`,
         "",
         "Project details:",
         message,
         "",
-        "Sent through the Wazir Aura website."
+        "Sent via the Wazir Aura website."
       ].join("\n");
 
-      const mailtoURL =
-        "mailto:zuhaibwazir558@gmail.com" +
-        `?subject=${encodeURIComponent(subject)}` +
-        `&body=${encodeURIComponent(body)}`;
+      const mailto =
+        `mailto:zuhaibwazir558@gmail.com?subject=${encodeURIComponent(subject)}` +
+        `&body=${encodeURIComponent(emailBody)}`;
 
       if (contactStatus) {
         contactStatus.textContent =
-          "Your email app should open. Review the message and press Send to submit your inquiry.";
+          "Your email app should open with the inquiry prepared. Please review and send it there.";
       }
 
-      showToast(
-        "Opening your email app. You still need to send the email.",
-        "success"
-      );
-
-      // Open the visitor's configured email application.
-      window.location.href = mailtoURL;
+      window.location.href = mailto;
     });
   }
 
-  /* -----------------------------------------
-     Feedback form
-     No fake submission or false success.
-     Backend integration is required to receive feedback.
-  ----------------------------------------- */
-
+  // Keep any optional feedback form honest: no backend is connected.
   const feedbackForm = $("#feedback-form");
-  const feedbackStatus = $("#feedback-status");
 
   if (feedbackForm) {
     feedbackForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      if (!feedbackForm.reportValidity()) return;
-
-      if (feedbackStatus) {
-        feedbackStatus.textContent =
-          "Feedback submission is not connected yet. Please email your feedback to zuhaibwazir558@gmail.com.";
+      const status = $("#feedback-status");
+      if (status) {
+        status.textContent =
+          "Online feedback is not enabled yet. Please contact Murad by email instead.";
       }
-
-      showToast(
-        "Feedback is not connected yet. Please use the email link.",
-        "error"
-      );
     });
   }
 
-  /* -----------------------------------------
-     FAQ behavior
-     Allow one answer open at a time.
-  ----------------------------------------- */
-
-  const faqItems = $$(".faq-item");
+  // Only one FAQ details element open at a time, if FAQs are added later.
+  const faqItems = $$("details");
 
   faqItems.forEach((item) => {
     item.addEventListener("toggle", () => {
       if (!item.open) return;
 
-      faqItems.forEach((otherItem) => {
-        if (otherItem !== item) {
-          otherItem.open = false;
-        }
+      faqItems.forEach((other) => {
+        if (other !== item) other.open = false;
       });
     });
   });
 
-  /* -----------------------------------------
-     External links safety
-  ----------------------------------------- */
-
+  // Add safe target attributes to external links.
   $$('a[target="_blank"]').forEach((link) => {
-    link.setAttribute("rel", "noopener noreferrer");
+    const relValues = new Set((link.getAttribute("rel") || "").split(/\s+/));
+    relValues.add("noopener");
+    relValues.add("noreferrer");
+    link.setAttribute("rel", Array.from(relValues).join(" ").trim());
   });
-
-  /* -----------------------------------------
-     Respect reduced-motion preferences
-  ----------------------------------------- */
-
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  );
-
-  function syncMotionPreference() {
-    document.documentElement.classList.toggle(
-      "reduced-motion",
-      reducedMotion.matches
-    );
-  }
-
-  syncMotionPreference();
-
-  if (typeof reducedMotion.addEventListener === "function") {
-    reducedMotion.addEventListener("change", syncMotionPreference);
-  }
-
-  /* -----------------------------------------
-     Initial page setup
-  ----------------------------------------- */
-
-  document.body.classList.add("js-ready");
-
-  console.info("Wazir Aura website initialized.");
 });
