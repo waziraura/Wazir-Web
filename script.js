@@ -6,8 +6,8 @@
    Never put a service_role/secret key here.
 ========================================== */
 
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+const SUPABASE_URL = "https://azjmjotzysprjecydomg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_FHgg_rr679vsEzBGtAMygg_Ug-pLfms";
 
 let supabaseClient = null;
 
