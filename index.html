@@ -3,1021 +3,1087 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080914">
-  <meta name="color-scheme" content="dark light">
 
-  <title>Wazir Aura — AI Tools, Digital Services & Creator Hub</title>
-  <meta name="description" content="Explore useful creator tools, digital services, templates and resources from Wazir Aura by Murad Wazir.">
+  <title>Wazir Aura — MW | Explore Your Digital Universe</title>
+
+  <meta
+    name="description"
+    content="Welcome to Wazir Aura by Murad Wazir — a digital universe for creativity, community, tools and future opportunities."
+  >
+  <meta name="theme-color" content="#080b18">
   <meta name="author" content="Murad Wazir">
-  <meta name="keywords" content="Wazir Aura, MW, AI tools, digital services, creator tools, freelance services">
-  <meta name="robots" content="index, follow">
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Wazir Aura — Create Beyond Limits">
-  <meta property="og:description" content="Discover creator tools, digital resources and services from Wazir Aura.">
-  <meta property="og:site_name" content="Wazir Aura">
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23080b18'/%3E%3Ctext x='50' y='65' font-size='39' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%239d7bff'%3EMW%3C/text%3E%3C/svg%3E"
+  >
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-
-  <!--
-    WAZIR AURA / MW
-    Frontend: HTML + CSS + JavaScript
-    Hosting: GitHub Pages
-    Planned backend: Supabase or compatible secure API
-    Never put secret API keys, service-role keys or payment secrets here.
-  -->
-
-  <script>
-    window.WAZIR_AURA_CONFIG = Object.freeze({
-      appName: "Wazir Aura",
-      brandInitials: "MW",
-      ownerName: "Murad Wazir",
-      username: "Wazir Aura",
-      apiBaseUrl: "",
-      backendConfigured: false,
-      paymentsConfigured: false,
-      analyticsConfigured: false
-    });
-  </script>
+  <script src="script.js" defer></script>
 </head>
 
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <!-- Animated intro / brand reveal -->
-  <div id="intro-screen" class="intro-screen" aria-label="Wazir Aura loading">
-    <div class="intro-stars" aria-hidden="true"></div>
-    <div class="intro-logo" aria-hidden="true">MW</div>
-    <p class="intro-name">WAZIR AURA</p>
-    <p class="intro-tagline">CREATE BEYOND LIMITS</p>
-    <div class="intro-loader" aria-hidden="true"><span></span></div>
-    <button id="skip-intro" class="intro-skip" type="button">Skip intro</button>
+  <!-- Animated intro / splash screen -->
+  <div class="splash-screen" id="splash-screen" aria-label="Wazir Aura loading">
+    <div class="splash-logo" aria-hidden="true">MW</div>
+    <p class="splash-title">WAZIR AURA</p>
+    <p class="splash-caption">Entering your digital universe...</p>
+    <div class="loading-track" aria-hidden="true">
+      <div class="loading-progress"></div>
+    </div>
   </div>
 
-  <div class="site-background" aria-hidden="true">
-    <div class="ambient-orb orb-one"></div>
-    <div class="ambient-orb orb-two"></div>
-    <div class="ambient-grid"></div>
-    <div id="particle-layer" class="particle-layer"></div>
+  <!-- Decorative background effects -->
+  <div class="space-background" aria-hidden="true">
+    <div class="space-glow space-glow-one"></div>
+    <div class="space-glow space-glow-two"></div>
+    <div class="space-stars"></div>
   </div>
 
   <!-- Site header -->
   <header class="site-header" id="top">
     <div class="container header-inner">
-      <a href="#home" class="brand" aria-label="Wazir Aura home">
+
+      <a class="brand" href="#home" aria-label="Wazir Aura home">
         <span class="brand-mark">MW</span>
         <span class="brand-copy">
           <strong>WAZIR AURA</strong>
-          <small>CREATE BEYOND LIMITS</small>
+          <small>YOUR DIGITAL UNIVERSE</small>
         </span>
       </a>
 
       <button
-        id="mobile-menu-toggle"
-        class="icon-button mobile-menu-toggle"
+        class="menu-toggle"
+        id="menu-toggle"
         type="button"
-        aria-label="Open navigation"
+        aria-label="Open navigation menu"
         aria-expanded="false"
-        aria-controls="primary-navigation">
-        <span class="icon" aria-hidden="true">☰</span>
+        aria-controls="primary-navigation"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
 
-      <nav id="primary-navigation" class="primary-navigation" aria-label="Main navigation">
-        <a href="#home" class="nav-link active">Home</a>
-        <a href="#tools" class="nav-link">Free Tools</a>
-        <a href="#services" class="nav-link">Services</a>
-        <a href="#pricing" class="nav-link">Membership</a>
-        <a href="#about" class="nav-link">About</a>
+      <nav class="primary-navigation" id="primary-navigation" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#features">Features</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#community">Community</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
       </nav>
 
       <div class="header-actions">
-        <button id="theme-toggle" class="icon-button" type="button" aria-label="Switch color theme" title="Switch theme">
+        <button
+          class="icon-button"
+          id="theme-toggle"
+          type="button"
+          aria-label="Switch color theme"
+          title="Switch theme"
+        >
           <span id="theme-icon" aria-hidden="true">☀</span>
         </button>
-        <button class="button button-ghost button-small" type="button" data-open-modal="login-modal">
-          Log in
-        </button>
-        <button class="button button-primary button-small" type="button" data-open-modal="signup-modal">
-          Get started <span aria-hidden="true">↗</span>
-        </button>
+
+        <a class="button button-small button-primary" href="#account">
+          Get Started
+        </a>
       </div>
+
     </div>
   </header>
 
   <main id="main-content">
-    <!-- Hero -->
-    <section id="home" class="hero-section section">
-      <div class="container hero-layout">
-        <div class="hero-copy">
-          <div class="status-pill">
+
+    <!-- Hero section -->
+    <section class="hero section" id="home">
+      <div class="container hero-grid">
+
+        <div class="hero-content">
+          <div class="eyebrow">
             <span class="status-dot"></span>
-            YOUR DIGITAL CREATOR UNIVERSE
+            WELCOME TO THE NEXT DIMENSION
           </div>
 
-          <p class="eyebrow">WELCOME TO WAZIR AURA</p>
-
           <h1>
-            Your ideas.<br>
-            Your universe.<br>
-            <span class="gradient-text">Your next level.</span>
+            Your Vision.<br>
+            Your Universe.<br>
+            <span class="gradient-text">Your Aura.</span>
           </h1>
 
           <p class="hero-description">
-            Discover useful creator tools, explore digital resources
-            and work with Murad Wazir to bring your next idea to life.
+            Welcome to Wazir Aura — a digital space built for creativity,
+            useful tools, community and new possibilities.
+            Explore the universe created by Murad Wazir.
           </p>
 
           <div class="hero-actions">
-            <a class="button button-primary button-large" href="#tools">
-              Explore free tools <span aria-hidden="true">→</span>
+            <a class="button button-primary" href="#features">
+              Explore Wazir Aura <span aria-hidden="true">↗</span>
             </a>
-            <a class="button button-secondary button-large" href="#services">
-              Explore services
+            <a class="button button-secondary" href="#about">
+              Discover Our Vision
             </a>
           </div>
 
-          <div class="hero-trust-row">
-            <span><span aria-hidden="true">✦</span> Creator-focused resources</span>
-            <span><span aria-hidden="true">◈</span> Free to explore</span>
+          <div class="hero-trust">
+            <div class="trust-avatar" aria-hidden="true">MW</div>
+            <div>
+              <strong>Created by Murad Wazir</strong>
+              <p>Built with ambition. Designed for possibilities.</p>
+            </div>
           </div>
         </div>
 
-        <div class="hero-visual" aria-label="Wazir Aura brand artwork">
-          <div class="cosmic-ring ring-outer"></div>
-          <div class="cosmic-ring ring-middle"></div>
-          <div class="cosmic-ring ring-inner"></div>
+        <div class="hero-visual">
+          <div class="orbit orbit-outer"></div>
+          <div class="orbit orbit-inner"></div>
 
-          <div class="hero-orbit orbit-one"><span>✦</span></div>
-          <div class="hero-orbit orbit-two"><span>✧</span></div>
-
-          <div class="hero-core">
-            <div class="hero-core-glow"></div>
-            <span class="hero-core-logo">MW</span>
-            <span class="hero-core-name">WAZIR AURA</span>
-            <span class="hero-core-caption">DIGITAL INNOVATION</span>
+          <div class="planet-card">
+            <div class="planet-glow"></div>
+            <div class="planet-logo">MW</div>
+            <p class="planet-name">WAZIR AURA</p>
+            <p class="planet-caption">DREAM • CREATE • EVOLVE</p>
           </div>
 
           <div class="floating-card floating-card-top">
-            <span class="floating-icon">✧</span>
-            <span><strong>Create</strong><small>Bring ideas to life</small></span>
+            <span class="floating-icon" aria-hidden="true">✦</span>
+            <span>
+              <strong>Explore</strong>
+              <small>New possibilities</small>
+            </span>
           </div>
 
           <div class="floating-card floating-card-bottom">
-            <span class="floating-icon">↗</span>
-            <span><strong>Grow your brand</strong><small>One step at a time</small></span>
+            <span class="floating-icon" aria-hidden="true">◎</span>
+            <span>
+              <strong>Your next chapter</strong>
+              <small>Starts with an idea</small>
+            </span>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- Quick features -->
-    <section class="quick-features">
-      <div class="container quick-feature-grid">
-        <a href="#tools" class="quick-feature">
-          <span class="feature-icon" aria-hidden="true">✧</span>
-          <span><strong>Free Tools</strong><small>Useful everyday utilities</small></span>
-          <span class="feature-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a href="#services" class="quick-feature">
-          <span class="feature-icon" aria-hidden="true">◈</span>
-          <span><strong>Digital Services</strong><small>Work with a creator</small></span>
-          <span class="feature-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a href="#resources" class="quick-feature">
-          <span class="feature-icon" aria-hidden="true">▤</span>
-          <span><strong>Resources</strong><small>Templates and guides</small></span>
-          <span class="feature-arrow" aria-hidden="true">↗</span>
-        </a>
+    <!-- Highlights -->
+    <section class="highlights section-compact" aria-label="Website highlights">
+      <div class="container highlight-grid">
+        <article class="highlight-item">
+          <span class="highlight-icon" aria-hidden="true">✧</span>
+          <div>
+            <strong>Creative Space</strong>
+            <p>A home for fresh ideas</p>
+          </div>
+        </article>
+
+        <article class="highlight-item">
+          <span class="highlight-icon" aria-hidden="true">⌘</span>
+          <div>
+            <strong>Digital Tools</strong>
+            <p>Useful features in one place</p>
+          </div>
+        </article>
+
+        <article class="highlight-item">
+          <span class="highlight-icon" aria-hidden="true">♧</span>
+          <div>
+            <strong>Community</strong>
+            <p>Connect and share</p>
+          </div>
+        </article>
+
+        <article class="highlight-item">
+          <span class="highlight-icon" aria-hidden="true">↗</span>
+          <div>
+            <strong>Future Ready</strong>
+            <p>Designed to grow</p>
+          </div>
+        </article>
       </div>
     </section>
 
-    <!-- Free tools -->
-    <section id="tools" class="section">
-      <div class="container">
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="container about-grid">
+
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">YOUR CREATOR TOOLKIT</p>
-            <h2>Small tools. <span class="gradient-text">Big ideas.</span></h2>
-            <p>Explore simple utilities designed to make everyday digital work easier.</p>
+          <span class="eyebrow">THE STORY BEHIND THE AURA</span>
+          <h2>A small idea.<br><span class="gradient-text">A bigger vision.</span></h2>
+        </div>
+
+        <div class="about-content">
+          <p>
+            Wazir Aura is a personal digital project by Murad Wazir.
+            Its goal is to bring a distinctive design, helpful online
+            experiences and a growing digital community together.
+          </p>
+          <p>
+            The project will evolve over time. New tools, services and
+            community features can be introduced as they are built,
+            tested and connected to the services they require.
+          </p>
+
+          <div class="about-signature">
+            <span class="signature-mark">MW</span>
+            <span>
+              <strong>Murad Wazir</strong>
+              <small>Founder of Wazir Aura</small>
+            </span>
           </div>
-          <span class="section-count">01 / TOOLS</span>
         </div>
 
-        <div class="tool-search-row">
-          <label class="search-box" for="tool-search">
-            <span aria-hidden="true">⌕</span>
-            <input id="tool-search" type="search" placeholder="Search creator tools..." autocomplete="off">
-          </label>
-
-          <label class="visually-hidden" for="tool-category">Filter tools</label>
-          <select id="tool-category" class="select-control">
-            <option value="all">All tools</option>
-            <option value="writing">Writing</option>
-            <option value="social">Social media</option>
-            <option value="utility">Utilities</option>
-          </select>
-        </div>
-
-        <div id="tool-grid" class="tool-grid">
-          <article class="tool-card" data-category="writing" data-search="bio generator profile description about">
-            <div class="tool-card-top">
-              <span class="tool-icon">✎</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Bio Generator</h3>
-            <p>Create a profile bio for your personal brand or creator page.</p>
-            <button class="text-button" type="button" data-open-tool="bio-generator">Open tool <span>→</span></button>
-          </article>
-
-          <article class="tool-card" data-category="social" data-search="caption generator instagram facebook social">
-            <div class="tool-card-top">
-              <span class="tool-icon">▤</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Caption Studio</h3>
-            <p>Draft engaging social captions for your next post.</p>
-            <button class="text-button" type="button" data-open-tool="caption-studio">Open tool <span>→</span></button>
-          </article>
-
-          <article class="tool-card" data-category="social" data-search="hashtag helper discover hashtags">
-            <div class="tool-card-top">
-              <span class="tool-icon">#</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Hashtag Helper</h3>
-            <p>Build a starter list of relevant hashtags for your topic.</p>
-            <button class="text-button" type="button" data-open-tool="hashtag-helper">Open tool <span>→</span></button>
-          </article>
-
-          <article class="tool-card" data-category="writing" data-search="text counter words characters writing">
-            <div class="tool-card-top">
-              <span class="tool-icon">≡</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Text Analyzer</h3>
-            <p>Count words, characters and sentences in your text.</p>
-            <button class="text-button" type="button" data-open-tool="text-analyzer">Open tool <span>→</span></button>
-          </article>
-
-          <article class="tool-card" data-category="utility" data-search="percentage calculator calculations">
-            <div class="tool-card-top">
-              <span class="tool-icon">％</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Percentage Calculator</h3>
-            <p>Calculate percentages quickly for everyday tasks.</p>
-            <button class="text-button" type="button" data-open-tool="percentage-calculator">Open tool <span>→</span></button>
-          </article>
-
-          <article class="tool-card" data-category="writing" data-search="username ideas brand name generator">
-            <div class="tool-card-top">
-              <span class="tool-icon">✧</span><span class="free-tag">FREE</span>
-            </div>
-            <h3>Username Ideas</h3>
-            <p>Generate starter ideas for a memorable creator username.</p>
-            <button class="text-button" type="button" data-open-tool="username-ideas">Open tool <span>→</span></button>
-          </article>
-        </div>
-
-        <p id="tools-empty-state" class="empty-state" hidden>No tools match your search. Try another keyword.</p>
-        <p class="section-note">The tools will become interactive when the JavaScript file is installed.</p>
       </div>
     </section>
 
-    <!-- Service offerings -->
-    <section id="services" class="section section-alt">
+    <!-- Features -->
+    <section class="section section-surface" id="features">
       <div class="container">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">LET'S BUILD SOMETHING</p>
-            <h2>Digital services for <span class="gradient-text">your next move.</span></h2>
-            <p>Explore service ideas and contact Murad about a project.</p>
-          </div>
-          <span class="section-count">02 / SERVICES</span>
+
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">EXPLORE THE ECOSYSTEM</span>
+          <h2>One universe.<br><span class="gradient-text">Many possibilities.</span></h2>
+          <p>
+            Discover the experiences planned for Wazir Aura.
+            Features that need a server will be activated when their
+            backend integration is ready.
+          </p>
         </div>
 
-        <div class="service-grid">
-          <article class="service-card">
-            <div class="service-icon">⌘</div>
-            <p class="service-kicker">01 — WEB</p>
-            <h3>Website Design</h3>
-            <p>Landing pages, personal portfolios and polished web experiences.</p>
-            <a class="text-button" href="https://www.fiverr.com/s/YLLj0Al" target="_blank" rel="noopener noreferrer">View Fiverr profile ↗</a>
+        <div class="feature-grid">
+
+          <article class="feature-card">
+            <div class="feature-icon">✦</div>
+            <h3>Digital Discovery</h3>
+            <p>Explore resources, creative ideas and useful digital experiences.</p>
+            <a href="#resources">Explore resources <span aria-hidden="true">→</span></a>
           </article>
 
-          <article class="service-card service-card-featured">
-            <div class="service-icon">✧</div>
-            <p class="service-kicker">02 — CONTENT</p>
-            <h3>Content & AI Assistance</h3>
-            <p>Content ideas, caption drafts and creative workflow assistance.</p>
-            <a class="text-button" href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank" rel="noopener noreferrer">Connect on LinkedIn ↗</a>
+          <article class="feature-card">
+            <div class="feature-icon">⌘</div>
+            <h3>Smart Tools</h3>
+            <p>A planned collection of practical tools to make online tasks easier.</p>
+            <a href="#resources">View resources <span aria-hidden="true">→</span></a>
           </article>
 
-          <article class="service-card">
-            <div class="service-icon">◈</div>
-            <p class="service-kicker">03 — BRAND</p>
-            <h3>Social Media Support</h3>
-            <p>Creative post concepts, profile improvements and brand resources.</p>
-            <a class="text-button" href="https://www.instagram.com/waziraura553/" target="_blank" rel="noopener noreferrer">Explore Instagram ↗</a>
+          <article class="feature-card">
+            <div class="feature-icon">♡</div>
+            <h3>Likes & Feedback</h3>
+            <p>Share your opinion and help guide the direction of the project.</p>
+            <a href="#feedback">Share feedback <span aria-hidden="true">→</span></a>
           </article>
-        </div>
 
-        <div class="service-cta">
-          <div>
-            <p class="eyebrow">HAVE A PROJECT IN MIND?</p>
-            <h3>Let's turn your idea into something real.</h3>
-            <p>Share your requirements and discuss scope, delivery and pricing before ordering.</p>
-          </div>
-          <a class="button button-primary" href="https://www.fiverr.com/s/YLLj0Al" target="_blank" rel="noopener noreferrer">Discuss a project ↗</a>
+          <article class="feature-card">
+            <div class="feature-icon">♧</div>
+            <h3>Community</h3>
+            <p>Find Wazir Aura across social platforms and follow future updates.</p>
+            <a href="#community">Meet the community <span aria-hidden="true">→</span></a>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">◈</div>
+            <h3>Member Dashboard</h3>
+            <p>A preview of the personal dashboard planned for registered members.</p>
+            <a href="#dashboard">Preview dashboard <span aria-hidden="true">→</span></a>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">✧</div>
+            <h3>Creator Opportunities</h3>
+            <p>Discover possible services, partnerships and future monetization options.</p>
+            <a href="#opportunities">Learn more <span aria-hidden="true">→</span></a>
+          </article>
+
         </div>
       </div>
     </section>
 
     <!-- Resources -->
-    <section id="resources" class="section">
+    <section class="section" id="resources">
       <div class="container">
+
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">LEARN AND CREATE</p>
-            <h2>Resources for <span class="gradient-text">your journey.</span></h2>
-            <p>A foundation for future downloadable guides, templates and creator resources.</p>
-          </div>
-          <span class="section-count">03 / RESOURCES</span>
+          <span class="eyebrow">YOUR DIGITAL TOOLKIT</span>
+          <h2>Explore the <span class="gradient-text">resources.</span></h2>
+          <p>
+            This section can grow as real tools and resources are developed.
+          </p>
         </div>
 
         <div class="resource-grid">
           <article class="resource-card">
-            <span class="resource-label">CREATOR GUIDE</span>
-            <span class="resource-illustration">✧</span>
-            <h3>Build Your Personal Brand</h3>
-            <p>Learn the basics of presenting your skills and work online.</p>
-            <a href="#about" class="text-button">Explore the platform →</a>
+            <span class="resource-label">PLANNED</span>
+            <h3>Productivity Tools</h3>
+            <p>Simple utilities for everyday digital tasks.</p>
+            <a href="#feedback">Suggest a tool →</a>
           </article>
 
           <article class="resource-card">
-            <span class="resource-label">PRODUCTIVITY</span>
-            <span class="resource-illustration">◷</span>
-            <h3>Work Smarter Online</h3>
-            <p>Discover simple ways to organize your digital workflow.</p>
-            <a href="#tools" class="text-button">Explore free tools →</a>
+            <span class="resource-label">PLANNED</span>
+            <h3>Creator Resources</h3>
+            <p>Guides and resources for people building online projects.</p>
+            <a href="#feedback">Request a resource →</a>
           </article>
 
           <article class="resource-card">
-            <span class="resource-label">TEMPLATES</span>
-            <span class="resource-illustration">▤</span>
-            <h3>Creator Template Library</h3>
-            <p>A planned home for useful templates and downloadable resources.</p>
-            <a href="#pricing" class="text-button">View membership →</a>
+            <span class="resource-label">COMING LATER</span>
+            <h3>Member Experiences</h3>
+            <p>Personalized features after secure account services are connected.</p>
+            <a href="#account">View account plans →</a>
           </article>
         </div>
+
       </div>
     </section>
 
-    <!-- Membership -->
-    <section id="pricing" class="section section-alt">
+    <!-- Dashboard preview -->
+    <section class="section section-surface" id="dashboard">
       <div class="container">
-        <div class="section-heading centered-heading">
-          <div>
-            <p class="eyebrow">SIMPLE MEMBERSHIP</p>
-            <h2>Start free. <span class="gradient-text">Grow when ready.</span></h2>
-            <p>Free access is the starting point. Paid features will only be activated after secure billing is configured.</p>
-          </div>
+
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">MEMBER EXPERIENCE</span>
+          <h2>Your future <span class="gradient-text">dashboard.</span></h2>
+          <p>
+            This is a visual preview only. The figures below are examples,
+            not real account balances, earnings or activity.
+          </p>
         </div>
 
-        <div class="pricing-grid">
-          <article class="pricing-card">
-            <p class="plan-label">EXPLORER</p>
-            <h3>Free</h3>
-            <p class="plan-description">For anyone getting started.</p>
-            <ul class="check-list">
-              <li>✓ Access to available free tools</li>
-              <li>✓ Explore public resources</li>
-              <li>✓ View digital services</li>
-              <li>✓ Submit feedback</li>
-            </ul>
-            <button class="button button-secondary button-full" type="button" data-open-modal="signup-modal">Get started free</button>
-          </article>
-
-          <article class="pricing-card pricing-card-popular">
-            <span class="popular-label">PLANNED PLAN</span>
-            <p class="plan-label">CREATOR</p>
-            <h3>Pro <span class="coming-soon">Coming soon</span></h3>
-            <p class="plan-description">For creators who need more.</p>
-            <ul class="check-list">
-              <li>✓ Planned premium resources</li>
-              <li>✓ Additional templates</li>
-              <li>✓ Enhanced creator utilities</li>
-              <li>✓ Membership support</li>
-            </ul>
-            <button class="button button-primary button-full" type="button" data-membership-interest="pro">Notify me about Pro</button>
-          </article>
-
-          <article class="pricing-card">
-            <p class="plan-label">POWER USER</p>
-            <h3>Premium <span class="coming-soon">Coming soon</span></h3>
-            <p class="plan-description">For a future expanded experience.</p>
-            <ul class="check-list">
-              <li>✓ Planned advanced resources</li>
-              <li>✓ Expanded template library</li>
-              <li>✓ Priority support options</li>
-              <li>✓ Member-only content</li>
-            </ul>
-            <button class="button button-secondary button-full" type="button" data-membership-interest="premium">Register interest</button>
-          </article>
-        </div>
-
-        <p class="section-note">No paid subscription is active until pricing, billing, access controls and cancellation processes are configured.</p>
-      </div>
-    </section>
-
-    <!-- Earnings / monetization disclosure -->
-    <section id="earn" class="section">
-      <div class="container">
-        <div class="earning-banner">
-          <div class="earning-copy">
-            <p class="eyebrow">BUILD REAL VALUE</p>
-            <h2>Turn your skills into <span class="gradient-text">opportunities.</span></h2>
-            <p>
-              Wazir Aura is designed to support freelance services, useful resources
-              and future affiliate partnerships. Earnings depend on real customers,
-              completed work and eligible transactions.
-            </p>
-            <a class="button button-primary" href="#services">Explore services ↗</a>
-          </div>
-
-          <div class="earning-visual">
-            <div class="earning-orbit"></div>
-            <div class="earning-symbol">↗</div>
-            <span>CREATE</span>
-            <span>DELIVER</span>
-            <span>GROW</span>
-          </div>
-        </div>
-
-        <div class="monetization-grid">
-          <article class="mini-info-card">
-            <span class="mini-info-icon">◈</span>
-            <h3>Freelance services</h3>
-            <p>Discuss projects and earn through work you actually deliver.</p>
-          </article>
-          <article class="mini-info-card">
-            <span class="mini-info-icon">↗</span>
-            <h3>Affiliate partnerships</h3>
-            <p>Future recommendations may earn commissions through approved programs.</p>
-          </article>
-          <article class="mini-info-card">
-            <span class="mini-info-icon">▤</span>
-            <h3>Digital products</h3>
-            <p>Future templates and resources may be offered as paid products.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Account dashboard preview -->
-    <section id="account" class="section section-alt">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">YOUR PERSONAL SPACE</p>
-            <h2>Creator <span class="gradient-text">dashboard.</span></h2>
-            <p>A preview of the account features planned for the connected backend.</p>
-          </div>
-          <button class="button button-secondary" type="button" data-open-modal="login-modal">Sign in</button>
-        </div>
-
-        <div class="dashboard-preview">
-          <div class="dashboard-welcome">
-            <div class="avatar-placeholder">MW</div>
+        <div class="dashboard-panel">
+          <div class="dashboard-header">
             <div>
-              <p class="dashboard-label">YOUR ACCOUNT</p>
+              <span class="dashboard-kicker">WAZIR AURA / OVERVIEW</span>
               <h3>Welcome to your space</h3>
-              <p>Sign in when accounts are enabled to access personal features.</p>
             </div>
+            <span class="preview-badge">DEMO PREVIEW</span>
           </div>
 
-          <div class="dashboard-stat-grid">
-            <article class="dashboard-stat">
-              <span class="stat-icon">◈</span>
-              <span class="stat-label">Wallet balance</span>
-              <strong>—</strong>
-              <small>Requires verified account</small>
+          <div class="dashboard-stats">
+            <article class="stat-card">
+              <span>Account status</span>
+              <strong>Preview</strong>
+              <small>Not a live account</small>
             </article>
-            <article class="dashboard-stat">
-              <span class="stat-icon">▤</span>
-              <span class="stat-label">Your orders</span>
-              <strong>—</strong>
-              <small>Backend not connected</small>
+
+            <article class="stat-card">
+              <span>Available balance</span>
+              <strong>PKR 0.00</strong>
+              <small>Real wallet not connected</small>
             </article>
-            <article class="dashboard-stat">
-              <span class="stat-icon">✧</span>
-              <span class="stat-label">Membership</span>
-              <strong>Free preview</strong>
-              <small>No payment processed</small>
+
+            <article class="stat-card">
+              <span>Member activity</span>
+              <strong>—</strong>
+              <small>Requires backend</small>
             </article>
           </div>
 
           <div class="dashboard-notice">
             <span aria-hidden="true">ⓘ</span>
-            <p>This is a visual preview, not a live account or real wallet. Personal balances and orders must come from a verified backend.</p>
+            <p>
+              No real money is stored or earned through this demo dashboard.
+              Secure authentication, a verified earnings system and payment
+              integrations must be implemented separately.
+            </p>
           </div>
+
+          <a class="button button-primary" href="#account">Explore account plans</a>
         </div>
+
       </div>
     </section>
 
-    <!-- Wallet and withdrawals -->
-    <section id="wallet" class="section">
+    <!-- Account and subscriptions -->
+    <section class="section" id="account">
       <div class="container">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">PAYMENTS & TRANSACTIONS</p>
-            <h2>Wallet and <span class="gradient-text">withdrawals.</span></h2>
-            <p>Planned payment options for eligible service earnings and approved transactions.</p>
-          </div>
-        </div>
 
-        <div class="wallet-layout">
-          <div class="wallet-card">
-            <div class="wallet-card-header">
-              <span class="wallet-brand">MW <span>WAZIR AURA</span></span>
-              <span class="wallet-status">DEMO PREVIEW</span>
-            </div>
-            <p class="wallet-balance-label">Available balance</p>
-            <h3>Not connected</h3>
-            <p class="wallet-description">A real balance will be shown only after secure backend verification.</p>
-            <div class="wallet-card-footer">
-              <span>Secure transaction records</span>
-              <span aria-hidden="true">◈</span>
-            </div>
-          </div>
-
-          <div class="payment-method-panel">
-            <h3>Planned withdrawal methods</h3>
-            <p>Availability depends on merchant access, provider support and account verification.</p>
-
-            <div class="payment-method-list">
-              <div class="payment-method">
-                <span class="payment-method-icon">E</span>
-                <span><strong>Easypaisa</strong><small>Manual or supported merchant integration</small></span>
-                <span class="method-status">Planned</span>
-              </div>
-              <div class="payment-method">
-                <span class="payment-method-icon">J</span>
-                <span><strong>JazzCash</strong><small>Manual or supported merchant integration</small></span>
-                <span class="method-status">Planned</span>
-              </div>
-              <div class="payment-method">
-                <span class="payment-method-icon">₨</span>
-                <span><strong>Bank transfer</strong><small>Subject to verification and approval</small></span>
-                <span class="method-status">Planned</span>
-              </div>
-            </div>
-
-            <button class="button button-secondary button-full" type="button" data-open-modal="login-modal">Sign in for future wallet access</button>
-            <p class="fine-print">No money is accepted, stored, transferred or withdrawn by this demo interface.</p>
-          </div>
-        </div>
-
-        <div class="section-subheading">
-          <h3>Transaction history</h3>
-          <p>Verified transactions will appear here once the backend is connected.</p>
-        </div>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th scope="col">Transaction</th>
-                <th scope="col">Date</th>
-                <th scope="col">Method</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody id="transaction-history">
-              <tr><td colspan="5" class="table-empty">No live transaction data available.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Social profiles -->
-    <section id="about" class="section section-alt">
-      <div class="container about-layout">
-        <div class="about-brand">
-          <div class="about-logo">MW</div>
-          <p class="eyebrow">THE PERSON BEHIND THE BRAND</p>
-          <h2>Meet <span class="gradient-text">Murad Wazir.</span></h2>
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">MEMBERSHIP</span>
+          <h2>Choose your <span class="gradient-text">next step.</span></h2>
           <p>
-            Wazir Aura is the digital identity of Murad Wazir, focused on
-            exploring creative tools, building useful digital experiences
-            and developing new opportunities online.
+            Start with the public website. Membership and payment features
+            will only become available after they are properly implemented.
           </p>
-          <p class="about-handle">Creator identity: <strong>@WazirAura</strong></p>
         </div>
 
-        <div class="social-panel">
-          <h3>Connect with Wazir Aura</h3>
-          <p>Visit my profiles to explore my work and get in touch.</p>
+        <div class="pricing-grid">
 
-          <div class="social-links">
-            <a href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank" rel="noopener noreferrer" class="social-link">
-              <span class="social-letter">in</span>
-              <span><strong>LinkedIn</strong><small>Professional network</small></span>
-              <span class="social-arrow">↗</span>
+          <article class="pricing-card">
+            <span class="pricing-label">START HERE</span>
+            <h3>Explorer</h3>
+            <p class="pricing-price">Free</p>
+            <p class="pricing-description">Explore the public Wazir Aura website.</p>
+            <ul>
+              <li>Access public pages</li>
+              <li>Explore available resources</li>
+              <li>Follow community updates</li>
+              <li>Submit feedback</li>
+            </ul>
+            <a class="button button-secondary button-full" href="#features">
+              Explore for free
             </a>
-            <a href="https://www.fiverr.com/s/YLLj0Al" target="_blank" rel="noopener noreferrer" class="social-link">
-              <span class="social-letter">Fi</span>
-              <span><strong>Fiverr</strong><small>Freelance services</small></span>
-              <span class="social-arrow">↗</span>
+          </article>
+
+          <article class="pricing-card pricing-card-featured">
+            <span class="featured-label">FUTURE PLAN</span>
+            <h3>Aura Plus</h3>
+            <p class="pricing-price">Not available yet</p>
+            <p class="pricing-description">
+              A possible future subscription for additional features.
+            </p>
+            <ul>
+              <li>Potential premium tools</li>
+              <li>Potential member benefits</li>
+              <li>Clearly stated subscription terms</li>
+              <li>Support options</li>
+            </ul>
+            <a class="button button-primary button-full" href="#feedback">
+              Suggest a benefit
             </a>
-            <a href="https://x.com/waziraura553" target="_blank" rel="noopener noreferrer" class="social-link">
-              <span class="social-letter">𝕏</span>
-              <span><strong>X / Twitter</strong><small>Updates and ideas</small></span>
-              <span class="social-arrow">↗</span>
-            </a>
-            <a href="https://www.facebook.com/profile.php?id=61578311048454" target="_blank" rel="noopener noreferrer" class="social-link">
-              <span class="social-letter">f</span>
-              <span><strong>Facebook</strong><small>Community and updates</small></span>
-              <span class="social-arrow">↗</span>
-            </a>
-            <a href="https://www.instagram.com/waziraura553/" target="_blank" rel="noopener noreferrer" class="social-link">
-              <span class="social-letter">◎</span>
-              <span><strong>Instagram</strong><small>Visual creator profile</small></span>
-              <span class="social-arrow">↗</span>
-            </a>
-          </div>
+          </article>
+
+        </div>
+
+        <p class="section-footnote">
+          No subscription is being sold through this page. Prices, benefits,
+          billing and cancellation terms must be defined before launch.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- Earning opportunities -->
+    <section class="section section-surface" id="opportunities">
+      <div class="container opportunities-grid">
+
+        <div class="section-heading">
+          <span class="eyebrow">BUILD REAL VALUE</span>
+          <h2>Turn your ideas into <span class="gradient-text">opportunities.</span></h2>
+          <p>
+            A website can support a business, but income depends on the
+            product, audience, costs and monetization method.
+          </p>
+          <a class="button button-primary" href="#community">Explore social links</a>
+        </div>
+
+        <div class="opportunity-list">
+
+          <article class="opportunity-item">
+            <span class="opportunity-number">01</span>
+            <div>
+              <h3>Offer a real service</h3>
+              <p>
+                Build a portfolio and use your social profiles to connect
+                with potential clients.
+              </p>
+            </div>
+          </article>
+
+          <article class="opportunity-item">
+            <span class="opportunity-number">02</span>
+            <div>
+              <h3>Create useful content</h3>
+              <p>
+                Publish original guides, tools or resources that give visitors
+                a reason to return.
+              </p>
+            </div>
+          </article>
+
+          <article class="opportunity-item">
+            <span class="opportunity-number">03</span>
+            <div>
+              <h3>Explore ethical monetization</h3>
+              <p>
+                Consider eligible advertising, affiliate partnerships or
+                paid services when the site meets their requirements.
+              </p>
+            </div>
+          </article>
+
+          <article class="opportunity-item">
+            <span class="opportunity-number">04</span>
+            <div>
+              <h3>Build before promising rewards</h3>
+              <p>
+                Any future reward or withdrawal program needs a real funding
+                model, fraud controls and clear eligibility rules.
+              </p>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
 
-    <!-- Rating and feedback -->
-    <section id="feedback" class="section">
-      <div class="container feedback-layout">
-        <div>
-          <p class="eyebrow">YOUR VOICE MATTERS</p>
-          <h2>Help us <span class="gradient-text">get better.</span></h2>
-          <p>Share your experience or suggest a feature you would like to see.</p>
-          <div class="feedback-promises">
-            <span>✧ Better tools</span>
-            <span>✧ Useful features</span>
-            <span>✧ Community ideas</span>
+    <!-- Withdraw interface preview -->
+    <section class="section" id="withdraw">
+      <div class="container">
+
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">FUTURE PAYMENT OPTIONS</span>
+          <h2>Designed for <span class="gradient-text">flexibility.</span></h2>
+          <p>
+            Payment methods can be considered when a legitimate payment
+            system and a supported provider are connected.
+          </p>
+        </div>
+
+        <div class="payment-grid">
+          <article class="payment-card">
+            <div class="payment-symbol">E</div>
+            <h3>Easypaisa</h3>
+            <p>Potential payment option, subject to provider support.</p>
+            <span class="payment-status">Not connected</span>
+          </article>
+
+          <article class="payment-card">
+            <div class="payment-symbol">J</div>
+            <h3>JazzCash</h3>
+            <p>Potential payment option, subject to provider support.</p>
+            <span class="payment-status">Not connected</span>
+          </article>
+
+          <article class="payment-card">
+            <div class="payment-symbol">₨</div>
+            <h3>Bank transfer</h3>
+            <p>Requires a supported payment or banking integration.</p>
+            <span class="payment-status">Not connected</span>
+          </article>
+        </div>
+
+        <div class="notice-panel">
+          <strong>Payment safety notice</strong>
+          <p>
+            This page does not accept withdrawal requests or hold funds.
+            Never enter a PIN, password, OTP or banking credentials into
+            an unverified website. A payment integration must be secured
+            and tested before real transactions are offered.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Community -->
+    <section class="section section-surface" id="community">
+      <div class="container">
+
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">CONNECT WITH WAZIR AURA</span>
+          <h2>Find us <span class="gradient-text">out there.</span></h2>
+          <p>
+            Follow the project and discover updates across social platforms.
+          </p>
+        </div>
+
+        <div class="social-grid">
+
+          <a
+            class="social-card"
+            href="https://linkedin.com/in/murad-wazir-bbb0b541a"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="social-icon">in</span>
+            <span>
+              <strong>LinkedIn</strong>
+              <small>Professional profile</small>
+            </span>
+            <span class="social-arrow">↗</span>
+          </a>
+
+          <a
+            class="social-card"
+            href="https://www.fiverr.com/s/YLLj0Al"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="social-icon">F</span>
+            <span>
+              <strong>Fiverr</strong>
+              <small>Services and freelance work</small>
+            </span>
+            <span class="social-arrow">↗</span>
+          </a>
+
+          <a
+            class="social-card"
+            href="https://x.com/waziraura553"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="social-icon">𝕏</span>
+            <span>
+              <strong>X / Twitter</strong>
+              <small>News and updates</small>
+            </span>
+            <span class="social-arrow">↗</span>
+          </a>
+
+          <a
+            class="social-card"
+            href="https://www.facebook.com/profile.php?id=61578311048454"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="social-icon">f</span>
+            <span>
+              <strong>Facebook</strong>
+              <small>Community updates</small>
+            </span>
+            <span class="social-arrow">↗</span>
+          </a>
+
+          <a
+            class="social-card"
+            href="https://www.instagram.com/waziraura553/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="social-icon">◎</span>
+            <span>
+              <strong>Instagram</strong>
+              <small>Visual updates</small>
+            </span>
+            <span class="social-arrow">↗</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Feedback and rating -->
+    <section class="section" id="feedback">
+      <div class="container feedback-grid">
+
+        <div class="section-heading">
+          <span class="eyebrow">YOUR VOICE MATTERS</span>
+          <h2>Help shape <span class="gradient-text">the future.</span></h2>
+          <p>
+            Tell us what you would like to see on Wazir Aura.
+            This form is a front-end preview until a submission service
+            is connected.
+          </p>
+
+          <div class="feedback-points">
+            <p><span aria-hidden="true">✓</span> Suggest new features</p>
+            <p><span aria-hidden="true">✓</span> Report a website issue</p>
+            <p><span aria-hidden="true">✓</span> Share your experience</p>
           </div>
         </div>
 
-        <form id="feedback-form" class="feedback-form">
-          <div class="form-group">
+        <form class="feedback-form" id="feedback-form">
+          <h3>Send your feedback</h3>
+
+          <div class="form-field">
             <label for="feedback-name">Your name (optional)</label>
-            <input id="feedback-name" name="name" type="text" maxlength="80" placeholder="Enter your name">
+            <input
+              type="text"
+              id="feedback-name"
+              name="name"
+              placeholder="Enter your name"
+              maxlength="80"
+              autocomplete="name"
+            >
           </div>
 
-          <fieldset class="rating-fieldset">
-            <legend>Your rating</legend>
-            <div class="rating-options" role="radiogroup" aria-label="Rate the website">
-              <label><input type="radio" name="rating" value="1" required><span aria-hidden="true">★</span><span class="visually-hidden">1 star</span></label>
-              <label><input type="radio" name="rating" value="2"><span aria-hidden="true">★</span><span class="visually-hidden">2 stars</span></label>
-              <label><input type="radio" name="rating" value="3"><span aria-hidden="true">★</span><span class="visually-hidden">3 stars</span></label>
-              <label><input type="radio" name="rating" value="4"><span aria-hidden="true">★</span><span class="visually-hidden">4 stars</span></label>
-              <label><input type="radio" name="rating" value="5"><span aria-hidden="true">★</span><span class="visually-hidden">5 stars</span></label>
-            </div>
-          </fieldset>
-
-          <div class="form-group">
+          <div class="form-field">
             <label for="feedback-type">Feedback type</label>
             <select id="feedback-type" name="type" required>
+              <option value="">Choose a category</option>
               <option value="suggestion">Feature suggestion</option>
-              <option value="bug">Report a problem</option>
-              <option value="experience">My experience</option>
+              <option value="problem">Report a problem</option>
+              <option value="experience">Website experience</option>
+              <option value="business">Business enquiry</option>
               <option value="other">Other</option>
             </select>
           </div>
 
-          <div class="form-group">
-            <label for="feedback-message">Your feedback</label>
-            <textarea id="feedback-message" name="message" rows="4" maxlength="2000" required placeholder="Tell us what you think..."></textarea>
+          <div class="form-field">
+            <label for="feedback-rating">Your rating</label>
+            <select id="feedback-rating" name="rating">
+              <option value="">Choose a rating</option>
+              <option value="5">★★★★★ — Excellent</option>
+              <option value="4">★★★★ — Very good</option>
+              <option value="3">★★★ — Good</option>
+              <option value="2">★★ — Needs improvement</option>
+              <option value="1">★ — Poor</option>
+            </select>
           </div>
 
-          <button type="submit" class="button button-primary button-full">Submit feedback</button>
-          <p id="feedback-status" class="form-status" role="status" aria-live="polite"></p>
-          <p class="fine-print">Backend connection is required for feedback to be stored or reviewed across devices.</p>
+          <div class="form-field">
+            <label for="feedback-message">Your message</label>
+            <textarea
+              id="feedback-message"
+              name="message"
+              rows="5"
+              placeholder="Share your thoughts..."
+              maxlength="2000"
+              required
+            ></textarea>
+          </div>
+
+          <button class="button button-primary button-full" type="submit">
+            Submit feedback
+          </button>
+
+          <p class="form-note">
+            Demo form: your message is not sent or stored yet.
+          </p>
+
+          <div class="form-status" id="feedback-status" role="status" aria-live="polite"></div>
         </form>
+
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" class="section section-alt">
-      <div class="container narrow-container">
-        <div class="section-heading centered-heading">
-          <div>
-            <p class="eyebrow">NEED TO KNOW</p>
-            <h2>Frequently asked <span class="gradient-text">questions.</span></h2>
-          </div>
+    <!-- Help center -->
+    <section class="section section-surface" id="help">
+      <div class="container help-grid">
+
+        <div class="section-heading">
+          <span class="eyebrow">NEED A HAND?</span>
+          <h2>We're building a <span class="gradient-text">better experience.</span></h2>
+          <p>
+            Find answers below or use the feedback form to suggest
+            improvements and report problems.
+          </p>
+          <a class="button button-secondary" href="#feedback">Visit feedback form</a>
+        </div>
+
+        <div class="help-card">
+          <div class="help-icon">?</div>
+          <h3>Help Center</h3>
+          <p>
+            Help articles, account support and troubleshooting can be added
+            as the project develops.
+          </p>
+          <a href="#faq">Browse common questions →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQs -->
+    <section class="section" id="faq">
+      <div class="container faq-container">
+
+        <div class="section-heading section-heading-centered">
+          <span class="eyebrow">GOOD QUESTIONS</span>
+          <h2>Frequently asked <span class="gradient-text">questions.</span></h2>
         </div>
 
         <div class="faq-list">
+
           <details class="faq-item">
             <summary>What is Wazir Aura?</summary>
-            <p>Wazir Aura is a creator-focused platform planned to offer useful digital tools, resources and freelance service information.</p>
+            <p>
+              Wazir Aura is a digital project created by Murad Wazir.
+              It is designed to bring together useful resources, creative
+              features and a community experience.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>Are the tools free?</summary>
-            <p>The listed starter tools are intended to be free to use. Features that require third-party paid APIs may need limits or a separate pricing plan.</p>
+            <summary>Is Wazir Aura free to use?</summary>
+            <p>
+              The public website is intended to be accessible without a
+              subscription. Any future paid service will need clearly
+              stated pricing and terms before it launches.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>Can I earn money using this website?</summary>
-            <p>The website can support freelance services, digital products and future affiliate opportunities. Earnings are not guaranteed and depend on customers, traffic, eligibility and actual work completed.</p>
+            <summary>Can I earn money by visiting the website?</summary>
+            <p>
+              No earnings are promised for visiting this website.
+              A real rewards program would need a legitimate funding source,
+              verified rules, fraud prevention and a functioning backend.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>Can I receive money through Easypaisa or JazzCash?</summary>
-            <p>Those methods are planned options. Real payments and withdrawals require an appropriate supported integration or a verified manual payment process, plus the necessary backend.</p>
+            <summary>Can I withdraw money through Easypaisa or JazzCash?</summary>
+            <p>
+              Not at present. These are planned possibilities only.
+              Real withdrawals require a supported payment integration,
+              sufficient funds, verification and secure transaction handling.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>Do I need to create an account?</summary>
-            <p>You can explore public information without an account. Account-only features will become available after authentication is connected.</p>
+            <summary>Can I create an account?</summary>
+            <p>
+              A secure registration and login system has not been connected
+              yet. The website currently provides a front-end structure.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>How can I order a digital service?</summary>
-            <p>Visit the services section and use the linked Fiverr profile to discuss a project and confirm the scope, price and delivery terms.</p>
+            <summary>Does this website collect or save my feedback?</summary>
+            <p>
+              The feedback form is a demo and does not send or store your
+              message. A submission service must be connected before it
+              can collect feedback.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>How can I contact support?</summary>
-            <p>Use the social profiles linked on this website or send a message through the contact form once a backend or supported contact service is configured.</p>
+            <summary>Does Wazir Aura play background music?</summary>
+            <p>
+              Background music is not configured yet. Browsers commonly
+              block autoplay with sound. A future music option should
+              use properly licensed audio and let visitors control playback.
+            </p>
           </details>
+
           <details class="faq-item">
-            <summary>Does this website guarantee income?</summary>
-            <p>No. A website cannot guarantee a specific income or timeline. We aim to provide useful features and clear ways to explore services and opportunities.</p>
+            <summary>When will new features be available?</summary>
+            <p>
+              Features will be introduced as they are built and tested.
+              A feature marked as planned or a preview should not be
+              understood as an available service.
+            </p>
           </details>
+
+          <details class="faq-item">
+            <summary>How can I contact Wazir Aura?</summary>
+            <p>
+              You can visit the social links on this page or use the
+              feedback form to prepare a suggestion. The form will need
+              a real submission service to deliver messages.
+            </p>
+          </details>
+
+          <details class="faq-item">
+            <summary>How can I report a security or privacy concern?</summary>
+            <p>
+              Do not submit passwords, payment PINs, OTPs or sensitive
+              financial details. Use a verified contact channel associated
+              with the project once a support channel has been established.
+            </p>
+          </details>
+
         </div>
       </div>
     </section>
 
-    <!-- Help / Contact -->
-    <section id="help" class="section">
-      <div class="container help-layout">
-        <div>
-          <p class="eyebrow">WE'RE HERE TO HELP</p>
-          <h2>Questions? <span class="gradient-text">Let's talk.</span></h2>
-          <p>For project enquiries, platform suggestions or support questions, use the contact form or visit one of the linked profiles.</p>
-          <div class="help-contact-links">
-            <a href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-            <a href="https://www.fiverr.com/s/YLLj0Al" target="_blank" rel="noopener noreferrer">Fiverr ↗</a>
-            <a href="https://x.com/waziraura553" target="_blank" rel="noopener noreferrer">X / Twitter ↗</a>
-          </div>
-        </div>
-
-        <form id="contact-form" class="contact-form">
-          <div class="form-group">
-            <label for="contact-name">Name</label>
-            <input id="contact-name" name="name" type="text" maxlength="100" autocomplete="name" required placeholder="Your name">
-          </div>
-          <div class="form-group">
-            <label for="contact-email">Email</label>
-            <input id="contact-email" name="email" type="email" maxlength="254" autocomplete="email" required placeholder="you@example.com">
-          </div>
-          <div class="form-group">
-            <label for="contact-subject">Subject</label>
-            <select id="contact-subject" name="subject" required>
-              <option value="project">Project enquiry</option>
-              <option value="support">Technical support</option>
-              <option value="billing">Billing question</option>
-              <option value="privacy">Privacy request</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="contact-message">Message</label>
-            <textarea id="contact-message" name="message" rows="4" maxlength="4000" required placeholder="How can we help?"></textarea>
-          </div>
-          <button class="button button-primary button-full" type="submit">Send enquiry</button>
-          <p id="contact-status" class="form-status" role="status" aria-live="polite"></p>
-          <p class="fine-print">Do not include passwords, bank details or payment PINs in messages.</p>
-        </form>
-      </div>
-    </section>
-
-    <!-- Legal -->
-    <section id="legal" class="section section-alt">
+    <!-- Policies -->
+    <section class="section section-surface" id="policies">
       <div class="container">
+
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">TRANSPARENCY & TRUST</p>
-            <h2>Policies and <span class="gradient-text">important information.</span></h2>
-            <p>Read the planned terms for using the platform. These drafts must be reviewed and completed before commercial launch.</p>
-          </div>
+          <span class="eyebrow">TRANSPARENCY & TRUST</span>
+          <h2>Policies that <span class="gradient-text">matter.</span></h2>
+          <p>
+            These starter notices describe the current demo. They are not
+            a substitute for complete legal documents reviewed for your
+            actual services and applicable laws.
+          </p>
         </div>
 
-        <div class="legal-grid">
-          <article class="legal-card" id="privacy-policy">
-            <span class="legal-icon">◈</span>
+        <div class="policy-grid">
+
+          <article class="policy-card" id="privacy">
+            <div class="policy-icon">◈</div>
             <h3>Privacy Policy</h3>
-            <p>Explains what information may be collected, how it is used, retention and user rights. Final details depend on the connected services.</p>
-            <button class="text-button" type="button" data-open-legal="privacy">Read policy →</button>
+            <p>
+              This static demo does not include its own account database
+              or feedback submission backend. Hosting providers and any
+              third-party services added later may process technical data.
+              Update this policy before collecting personal information.
+            </p>
+            <a href="#privacy-details">Read privacy details →</a>
           </article>
 
-          <article class="legal-card" id="terms-conditions">
-            <span class="legal-icon">▤</span>
+          <article class="policy-card" id="terms">
+            <div class="policy-icon">§</div>
             <h3>Terms & Conditions</h3>
-            <p>Sets out acceptable use, account responsibilities, service scope and platform limitations.</p>
-            <button class="text-button" type="button" data-open-legal="terms">Read terms →</button>
+            <p>
+              Use the site lawfully and do not attempt to disrupt its
+              operation. Future accounts, paid products, rewards and
+              transactions will require specific terms before launch.
+            </p>
+            <a href="#terms-details">Read terms details →</a>
           </article>
 
-          <article class="legal-card" id="refund-policy">
-            <span class="legal-icon">↩</span>
-            <h3>Refund Policy</h3>
-            <p>Explains how refund eligibility and disputes should be handled for paid products and services.</p>
-            <button class="text-button" type="button" data-open-legal="refund">Read policy →</button>
+          <article class="policy-card" id="cookies">
+            <div class="policy-icon">◉</div>
+            <h3>Cookies & Preferences</h3>
+            <p>
+              The theme preference may be handled by the front-end code
+              after it is implemented. Any future analytics or advertising
+              technologies should be disclosed and configured appropriately.
+            </p>
+            <a href="#cookies-details">Read preferences →</a>
           </article>
 
-          <article class="legal-card" id="cookies-policy">
-            <span class="legal-icon">◉</span>
-            <h3>Cookies & Data</h3>
-            <p>Describes essential browser storage and any optional analytics or third-party technologies after activation.</p>
-            <button class="text-button" type="button" data-open-legal="cookies">Read policy →</button>
+          <article class="policy-card" id="community-rules">
+            <div class="policy-icon">♧</div>
+            <h3>Community Guidelines</h3>
+            <p>
+              Be respectful, avoid harmful or fraudulent activity and
+              do not impersonate others. Additional rules can be added
+              if interactive community features are introduced.
+            </p>
+            <a href="#community-guidelines">Read guidelines →</a>
           </article>
 
-          <article class="legal-card" id="affiliate-disclosure">
-            <span class="legal-icon">↗</span>
-            <h3>Affiliate Disclosure</h3>
-            <p>Affiliate links, if enabled, will be disclosed clearly where applicable. Commissions are not guaranteed.</p>
-            <button class="text-button" type="button" data-open-legal="affiliate">Read disclosure →</button>
-          </article>
-
-          <article class="legal-card" id="acceptable-use">
-            <span class="legal-icon">✓</span>
-            <h3>Acceptable Use</h3>
-            <p>Prohibits abuse, fraudulent activity, harmful submissions and attempts to bypass security controls.</p>
-            <button class="text-button" type="button" data-open-legal="acceptable-use">Read guidelines →</button>
-          </article>
         </div>
 
-        <p class="legal-disclaimer">
-          These policy summaries are starting points, not final legal advice.
-          Before enabling accounts, payments, subscriptions, analytics or advertising,
-          publish complete policies appropriate to your services and applicable law.
-        </p>
+        <div class="policy-details" id="privacy-details">
+          <h3>Privacy details</h3>
+          <p>
+            Do not enter sensitive personal or financial information into
+            demo forms. Before launch, identify the data collected, its
+            purpose, retention period, service providers and a way for
+            users to raise privacy requests.
+          </p>
+        </div>
+
+        <div class="policy-details" id="terms-details">
+          <h3>Terms details</h3>
+          <p>
+            Website content is provided for general informational purposes.
+            Availability, future features and external services may change.
+            No income, reward, subscription benefit or withdrawal is
+            guaranteed by this demo.
+          </p>
+        </div>
+
+        <div class="policy-details" id="cookies-details">
+          <h3>Cookies and preferences</h3>
+          <p>
+            Explain any persistent storage, cookies, analytics or advertising
+            integrations here before enabling them. Give visitors appropriate
+            controls where required.
+          </p>
+        </div>
+
+        <div class="policy-details" id="community-guidelines">
+          <h3>Community guidelines</h3>
+          <p>
+            Respect others, share lawful content, protect private information
+            and report suspicious activity. Never share passwords, OTPs,
+            payment PINs or private financial details.
+          </p>
+        </div>
+
       </div>
     </section>
+
+    <!-- Music control preview -->
+    <section class="section" id="ambience">
+      <div class="container ambience-panel">
+        <div class="ambience-icon" aria-hidden="true">♫</div>
+
+        <div class="ambience-copy">
+          <span class="eyebrow">SET YOUR ATMOSPHERE</span>
+          <h2>Make it your <span class="gradient-text">universe.</span></h2>
+          <p>
+            An optional ambient music control can be added when properly
+            licensed audio is available. Playback should start only after
+            the visitor chooses to enable it.
+          </p>
+        </div>
+
+        <button class="button button-secondary" id="music-toggle" type="button">
+          <span aria-hidden="true">♫</span> Music unavailable
+        </button>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section section-surface" id="contact">
+      <div class="container contact-panel">
+        <div>
+          <span class="eyebrow">LET'S CONNECT</span>
+          <h2>Have an idea for <span class="gradient-text">Wazir Aura?</span></h2>
+          <p>
+            Follow the project or share your suggestions through the
+            feedback section.
+          </p>
+        </div>
+
+        <div class="contact-actions">
+          <a class="button button-primary" href="#feedback">Send feedback</a>
+          <a class="button button-secondary" href="#community">Social profiles</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
+
       <div class="footer-main">
+
         <div class="footer-brand">
-          <a href="#home" class="brand">
+          <a class="brand" href="#top" aria-label="Wazir Aura home">
             <span class="brand-mark">MW</span>
             <span class="brand-copy">
               <strong>WAZIR AURA</strong>
-              <small>CREATE BEYOND LIMITS</small>
+              <small>YOUR DIGITAL UNIVERSE</small>
             </span>
           </a>
-          <p>A digital creator hub for tools, resources and opportunities.</p>
-          <p class="footer-owner">Created by Murad Wazir · Pakistan</p>
+
+          <p>
+            A personal digital project by Murad Wazir.
+            Dream boldly. Create thoughtfully. Keep evolving.
+          </p>
         </div>
 
         <div class="footer-column">
           <h3>Explore</h3>
-          <a href="#tools">Free tools</a>
-          <a href="#services">Services</a>
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#features">Features</a>
           <a href="#resources">Resources</a>
-          <a href="#pricing">Membership</a>
-          <a href="#wallet">Wallet information</a>
+          <a href="#dashboard">Dashboard preview</a>
         </div>
 
         <div class="footer-column">
           <h3>Support</h3>
+          <a href="#help">Help center</a>
           <a href="#faq">FAQs</a>
-          <a href="#help">Help & contact</a>
-          <a href="#feedback">Feedback & rating</a>
-          <a href="#account">Account preview</a>
+          <a href="#feedback">Feedback</a>
+          <a href="#contact">Contact</a>
         </div>
 
         <div class="footer-column">
-          <h3>Policies</h3>
-          <a href="#privacy-policy">Privacy policy</a>
-          <a href="#terms-conditions">Terms & conditions</a>
-          <a href="#refund-policy">Refund policy</a>
-          <a href="#cookies-policy">Cookies & data</a>
-          <a href="#affiliate-disclosure">Affiliate disclosure</a>
+          <h3>Legal</h3>
+          <a href="#privacy">Privacy policy</a>
+          <a href="#terms">Terms & conditions</a>
+          <a href="#cookies">Cookies & preferences</a>
+          <a href="#community-rules">Community guidelines</a>
         </div>
+
       </div>
 
       <div class="footer-bottom">
-        <p>© <span id="current-year">2026</span> Wazir Aura / MW. All rights reserved.</p>
+        <p>
+          © <span id="current-year">2026</span> Wazir Aura. Created by Murad Wazir.
+        </p>
+        <p class="footer-note">A growing project. A universe of possibilities.</p>
         <a href="#top" class="back-to-top">Back to top ↑</a>
       </div>
+
     </div>
   </footer>
 
-  <!-- Login modal -->
-  <dialog id="login-modal" class="site-modal" aria-labelledby="login-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <p class="eyebrow">WELCOME BACK</p>
-          <h2 id="login-title">Sign in</h2>
-        </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="Close dialog">✕</button>
-      </div>
-      <p class="modal-description">Account authentication will be enabled after the backend is configured.</p>
-      <form id="login-form">
-        <div class="form-group">
-          <label for="login-email">Email</label>
-          <input id="login-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-          <label for="login-password">Password</label>
-          <input id="login-password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Enter your password">
-        </div>
-        <button type="submit" class="button button-primary button-full">Sign in</button>
-        <p id="login-status" class="form-status" role="status" aria-live="polite"></p>
-      </form>
-      <p class="modal-switch">New here? <button type="button" class="inline-button" data-switch-modal="signup-modal">Create an account</button></p>
-    </div>
-  </dialog>
+  <!-- Accessible notification area for JavaScript -->
+  <div
+    class="toast-container"
+    id="toast-container"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
 
-  <!-- Signup modal -->
-  <dialog id="signup-modal" class="site-modal" aria-labelledby="signup-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <p class="eyebrow">JOIN THE COMMUNITY</p>
-          <h2 id="signup-title">Create account</h2>
-        </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="Close dialog">✕</button>
-      </div>
-      <p class="modal-description">Create an account when secure authentication is available.</p>
-      <form id="signup-form">
-        <div class="form-group">
-          <label for="signup-name">Display name</label>
-          <input id="signup-name" name="name" type="text" maxlength="80" autocomplete="name" required placeholder="Your name">
-        </div>
-        <div class="form-group">
-          <label for="signup-email">Email</label>
-          <input id="signup-email" name="email" type="email" maxlength="254" autocomplete="email" required placeholder="you@example.com">
-        </div>
-        <div class="form-group">
-          <label for="signup-password">Password</label>
-          <input id="signup-password" name="password" type="password" minlength="8" autocomplete="new-password" required placeholder="At least 8 characters">
-        </div>
-        <label class="checkbox-label">
-          <input id="signup-terms" name="terms" type="checkbox" required>
-          <span>I agree to the <a href="#terms-conditions">Terms & Conditions</a> and have read the Privacy Policy.</span>
-        </label>
-        <button type="submit" class="button button-primary button-full">Create account</button>
-        <p id="signup-status" class="form-status" role="status" aria-live="polite"></p>
-      </form>
-      <p class="modal-switch">Already registered? <button type="button" class="inline-button" data-switch-modal="login-modal">Sign in</button></p>
-    </div>
-  </dialog>
-
-  <!-- Reusable tool dialog -->
-  <dialog id="tool-modal" class="site-modal" aria-labelledby="tool-modal-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <p class="eyebrow">WA CREATOR TOOLKIT</p>
-          <h2 id="tool-modal-title">Creator tool</h2>
-        </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="Close dialog">✕</button>
-      </div>
-
-      <div id="tool-modal-body">
-        <p>Select a tool from the free tools section to get started.</p>
-      </div>
-
-      <p id="tool-status" class="form-status" role="status" aria-live="polite"></p>
-    </div>
-  </dialog>
-
-  <!-- Legal document dialog -->
-  <dialog id="legal-modal" class="site-modal" aria-labelledby="legal-modal-title">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <p class="eyebrow">WA POLICIES</p>
-          <h2 id="legal-modal-title">Platform policy</h2>
-        </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="Close dialog">✕</button>
-      </div>
-      <div id="legal-modal-body" class="legal-document">
-        <p>Policy content will be displayed here.</p>
-      </div>
-      <p class="fine-print">Policy drafts must be finalized before the related features launch.</p>
-    </div>
-  </dialog>
-
-  <!-- Notification region -->
-  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
-
-  <noscript>
-    <div class="noscript-message">
-      Wazir Aura's layout is available, but interactive tools and controls require JavaScript.
-      Please enable JavaScript in your browser.
-    </div>
-  </noscript>
-
-  <!-- Load only after the CSS file is added. -->
-  <script src="script.js" defer></script>
 </body>
 </html>
