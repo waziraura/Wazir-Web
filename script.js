@@ -1,305 +1,335 @@
 
-// ============================================
-// WAZIR AURA — WEBSITE INTERACTIONS
-// Created for Murad Wazir
-// ============================================
+/* =========================================
+   WAZIR AURA — CINEMATIC INTERACTIONS
+   ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+(() => {
+  "use strict";
+
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) =>
     Array.from(root.querySelectorAll(selector));
 
-  // ---------- Footer year ----------
+  const body = document.body;
+  const intro = $("#introScreen");
+  const siteShell = $("#siteShell");
+  const enterButton = $("#enterAura");
+  const skipButton = $("#skipIntro");
+  const soundButton = $("#soundToggle");
+  const soundLabel = $("#soundLabel");
+  const themeButton = $("#themeToggle");
+  const menuButton = $("#menuToggle");
+  const navigation = $(".main-nav");
   const year = $("#currentYear");
-  if (year) year.textContent = new Date().getFullYear();
 
-  // ---------- Welcome intro ----------
-  const splash = $("#splashScreen");
-  const skipIntro = $("#skipIntro");
-
-  function closeIntro() {
-    if (!splash) return;
-    splash.classList.add("hide");
-    document.body.classList.add("js-ready");
-    revealVisibleElements();
-  }
-
-  if (skipIntro) skipIntro.addEventListener("click", closeIntro);
-
-  // Avoid leaving visitors stuck on the intro screen.
-  if (splash) {
-    window.setTimeout(closeIntro, 6500);
-  } else {
-    document.body.classList.add("js-ready");
-  }
-
-  // ---------- Optional intro sound ----------
-  // Audio only starts after a user gesture.
-  const soundToggle = $("#soundToggle");
+  let introFinished = false;
   let soundEnabled = false;
   let audioContext = null;
+  let masterGain = null;
+  let ambientNodes = [];
+  let transitionInProgress = false;
 
-  function playWelcomeSound() {
-    if (!soundEnabled) return;
+  // Respect visitors who prefer less animation.
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  /* =========================================
+     STAR PARTICLES
+     ========================================= */
+
+  function createStars() {
+    const starContainer = $("#introStars");
+    if (!starContainer || reducedMotion) return;
+
+    const fragment = document.createDocumentFragment();
+    const count = window.innerWidth < 600 ? 35 : 75;
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement("span");
+
+      const size = Math.random() * 2 + 0.5;
+      const duration = 3 + Math.random() * 6;
+      const delay = Math.random() * -8;
+
+      Object.assign(star.style, {
+        position: "absolute",
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: "50%",
+        background: Math.random() > 0.7 ? "#a7eaff" : "#ffffff",
+        opacity: `${0.25 + Math.random() * 0.7}`,
+        boxShadow: `0 0 ${size * 5}px rgba(132, 220, 255, .8)`,
+        animation: `starTwinkle ${duration}s ${delay}s ease-in-out infinite alternate`,
+        pointerEvents: "none"
+      });
+
+      fragment.appendChild(star);
+    }
+
+    starContainer.appendChild(fragment);
+  }
+
+  /* =========================================
+     INTRO TRANSITION
+     ========================================= */
+
+  function enterWebsite() {
+    if (introFinished || transitionInProgress) return;
+
+    transitionInProgress = true;
+    introFinished = true;
+
+    // Fade the intro out and reveal the website.
+    body.classList.add("site-ready");
+
+    window.setTimeout(() => {
+      body.classList.add("intro-complete");
+
+      if (intro) {
+        intro.setAttribute("aria-hidden", "true");
+      }
+
+      // Remove the intro after the transition.
+      window.setTimeout(() => {
+        if (intro) intro.hidden = true;
+        transitionInProgress = false;
+      }, reducedMotion ? 50 : 1200);
+    }, 30);
+
+    // Sound is only started when a visitor explicitly enabled it.
+    if (soundEnabled) stopAmbientSound();
+  }
+
+  if (enterButton) {
+    enterButton.addEventListener("click", enterWebsite);
+  }
+
+  if (skipButton) {
+    skipButton.addEventListener("click", enterWebsite);
+  }
+
+  /* =========================================
+     ORIGINAL SYNTHESIZED AMBIENT SOUND
+     ========================================= */
+
+  function createAmbientSound() {
+    const AudioContextClass =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) {
+      if (soundLabel) soundLabel.textContent = "AUDIO UNSUPPORTED";
+      return false;
+    }
 
     try {
-      const AudioContextClass =
-        window.AudioContext || window.webkitAudioContext;
+      audioContext = new AudioContextClass();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.0001;
+      masterGain.connect(audioContext.destination);
 
-      if (!AudioContextClass) return;
+      // Soft, original synthesized atmospheric tones.
+      // No external audio file or copyrighted soundtrack is used.
+      const frequencies = [55, 82.41, 110, 164.81];
 
-      if (!audioContext) audioContext = new AudioContextClass();
-
-      if (audioContext.state === "suspended") {
-        audioContext.resume();
-      }
-
-      const notes = [440, 554.37, 659.25];
-
-      notes.forEach((frequency, index) => {
+      frequencies.forEach((frequency, index) => {
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
-        const start = audioContext.currentTime + index * 0.13;
+        const lowPass = audioContext.createBiquadFilter();
 
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(frequency, start);
+        oscillator.type = index === 2 ? "sine" : "triangle";
+        oscillator.frequency.value = frequency;
 
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.exponentialRampToValueAtTime(0.07, start + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+        lowPass.type = "lowpass";
+        lowPass.frequency.value = 350 + index * 120;
 
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
+        gain.gain.value = index === 0 ? 0.28 : 0.08;
 
-        oscillator.start(start);
-        oscillator.stop(start + 0.3);
+        oscillator.connect(lowPass);
+        lowPass.connect(gain);
+        gain.connect(masterGain);
+
+        oscillator.start();
+
+        ambientNodes.push({ oscillator, gain, lowPass });
       });
+
+      return true;
     } catch (error) {
-      console.warn("Welcome audio is unavailable in this browser.");
+      console.warn("Ambient audio could not be initialized.", error);
+      return false;
     }
   }
 
-  if (soundToggle) {
-    soundToggle.addEventListener("click", () => {
-      soundEnabled = !soundEnabled;
-      soundToggle.textContent = soundEnabled
-        ? "🔊 Sound On"
-        : "🔇 Sound Off";
-      soundToggle.setAttribute("aria-pressed", String(soundEnabled));
+  async function startAmbientSound() {
+    if (introFinished) return;
 
-      if (soundEnabled) playWelcomeSound();
-    });
-  }
+    if (!audioContext && !createAmbientSound()) return;
 
-  // ---------- Theme switch ----------
-  const themeToggle = $("#themeToggle");
+    try {
+      if (audioContext.state === "suspended") {
+        await audioContext.resume();
+      }
 
-  function applyTheme(theme) {
-    const isLight = theme === "light";
-    document.body.classList.toggle("light-theme", isLight);
+      if (!masterGain) return;
 
-    if (themeToggle) {
-      themeToggle.textContent = isLight ? "🌙" : "☀️";
-      themeToggle.setAttribute(
-        "aria-label",
-        isLight ? "Switch to dark theme" : "Switch to light theme"
-      );
+      const now = audioContext.currentTime;
+
+      masterGain.gain.cancelScheduledValues(now);
+      masterGain.gain.setTargetAtTime(0.12, now, 1.5);
+
+      soundEnabled = true;
+      intro?.classList.add("sound-playing");
+
+      if (soundLabel) soundLabel.textContent = "SOUND ON";
+      soundButton?.setAttribute("aria-pressed", "true");
+    } catch (error) {
+      console.warn("Please interact with the page to enable audio.", error);
     }
   }
 
-  let savedTheme = "dark";
+  function stopAmbientSound() {
+    soundEnabled = false;
+    intro?.classList.remove("sound-playing");
 
-  try {
-    savedTheme = localStorage.getItem("wazir-aura-theme") || "dark";
-  } catch (error) {
-    // Continue with the default theme if storage is blocked.
+    if (soundLabel) soundLabel.textContent = "SOUND OFF";
+    soundButton?.setAttribute("aria-pressed", "false");
+
+    if (audioContext && masterGain) {
+      const now = audioContext.currentTime;
+      masterGain.gain.cancelScheduledValues(now);
+      masterGain.gain.setTargetAtTime(0.0001, now, 0.2);
+    }
   }
 
-  applyTheme(savedTheme);
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const nextTheme = document.body.classList.contains("light-theme")
-        ? "dark"
-        : "light";
-
-      applyTheme(nextTheme);
-
-      try {
-        localStorage.setItem("wazir-aura-theme", nextTheme);
-      } catch (error) {
-        // Theme still works for this page view.
+  if (soundButton) {
+    soundButton.addEventListener("click", () => {
+      if (soundEnabled) {
+        stopAmbientSound();
+      } else {
+        startAmbientSound();
       }
     });
   }
 
-  // ---------- English / Urdu language switch ----------
-  const languageToggle = $("#languageToggle");
-  let currentLanguage = "en";
+  /* =========================================
+     SECTION NAVIGATION
+     ========================================= */
 
-  try {
-    currentLanguage = localStorage.getItem("wazir-aura-language") || "en";
-  } catch (error) {
-    // Use English if storage is unavailable.
-  }
+  function showPage(pageName) {
+    const target = $(`#page-${pageName}`);
 
-  const translations = {
-    en: {
-      "Home": "Home",
-      "Services": "Services",
-      "Marketplace": "Marketplace",
-      "Games": "Games",
-      "About": "About",
-      "Contact": "Contact"
-    },
-    ur: {
-      "Home": "ہوم",
-      "Services": "خدمات",
-      "Marketplace": "مارکیٹ پلیس",
-      "Games": "گیمز",
-      "About": "تعارف",
-      "Contact": "رابطہ"
-    }
-  };
+    if (!target) return;
 
-  function applyLanguage(language) {
-    currentLanguage = language;
-
-    document.documentElement.lang = language === "ur" ? "ur" : "en";
-    document.documentElement.dir = language === "ur" ? "rtl" : "ltr";
-
-    $$("[data-en][data-ur]").forEach((element) => {
-      element.textContent =
-        language === "ur"
-          ? element.dataset.ur
-          : element.dataset.en;
+    $$(".page-section").forEach((section) => {
+      section.classList.remove("active");
+      section.setAttribute("aria-hidden", "true");
     });
 
-    if (languageToggle) {
-      languageToggle.textContent = language === "ur" ? "EN" : "اردو";
-      languageToggle.setAttribute(
-        "aria-label",
-        language === "ur" ? "Switch to English" : "اردو میں تبدیل کریں"
-      );
-    }
-  }
+    target.classList.add("active");
+    target.setAttribute("aria-hidden", "false");
 
-  if (languageToggle) {
-    languageToggle.addEventListener("click", () => {
-      const nextLanguage = currentLanguage === "en" ? "ur" : "en";
-      applyLanguage(nextLanguage);
+    $$(".nav-link").forEach((button) => {
+      const active = button.dataset.page === pageName;
+      button.classList.toggle("active", active);
 
-      try {
-        localStorage.setItem("wazir-aura-language", nextLanguage);
-      } catch (error) {
-        // Language still changes for this page view.
+      if (active) {
+        button.setAttribute("aria-current", "page");
+      } else {
+        button.removeAttribute("aria-current");
       }
     });
+
+    closeMobileMenu();
+
+    window.scrollTo({
+      top: 0,
+      behavior: reducedMotion ? "auto" : "smooth"
+    });
   }
 
-  applyLanguage(currentLanguage);
+  $$("[data-page]").forEach((control) => {
+    control.addEventListener("click", (event) => {
+      event.preventDefault();
 
-  // ---------- Mobile navigation ----------
-  const menuToggle = $("#menuToggle");
-  const mainNav = $("#mainNav");
+      const pageName = control.dataset.page;
+      if (!pageName) return;
 
-  function closeMenu() {
-    if (!mainNav || !menuToggle) return;
+      showPage(pageName);
+    });
+  });
 
-    mainNav.classList.remove("open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Open navigation");
-    document.body.classList.remove("menu-open");
+  /* =========================================
+     MOBILE MENU
+     ========================================= */
+
+  function closeMobileMenu() {
+    navigation?.classList.remove("menu-open");
+    menuButton?.setAttribute("aria-expanded", "false");
+    menuButton?.setAttribute("aria-label", "Open navigation");
   }
 
-  if (menuToggle && mainNav) {
-    menuToggle.addEventListener("click", () => {
-      const isOpen = mainNav.classList.toggle("open");
+  if (menuButton && navigation) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = navigation.classList.toggle("menu-open");
 
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-      menuToggle.setAttribute(
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+      menuButton.setAttribute(
         "aria-label",
         isOpen ? "Close navigation" : "Open navigation"
       );
-
-      document.body.classList.toggle("menu-open", isOpen);
     });
 
-    $$("a", mainNav).forEach((link) => {
-      link.addEventListener("click", closeMenu);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeMenu();
-    });
-
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 760) closeMenu();
-    });
-  }
-
-  // ---------- Reveal animations ----------
-  const revealElements = $$(".reveal");
-
-  function revealVisibleElements() {
-    revealElements.forEach((element) => {
-      const rect = element.getBoundingClientRect();
-
-      if (rect.top < window.innerHeight * 0.92) {
-        element.classList.add("visible");
+    document.addEventListener("click", (event) => {
+      if (
+        !navigation.contains(event.target) &&
+        !menuButton.contains(event.target)
+      ) {
+        closeMobileMenu();
       }
     });
   }
 
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08 }
-    );
+  /* =========================================
+     DARK / LIGHT THEME
+     ========================================= */
 
-    revealElements.forEach((element) => observer.observe(element));
-  } else {
-    revealElements.forEach((element) => element.classList.add("visible"));
+  function updateThemeButton() {
+    const isLight = body.classList.contains("light-mode");
+
+    if (themeButton) {
+      themeButton.textContent = isLight ? "☾" : "☼";
+      themeButton.setAttribute(
+        "aria-label",
+        isLight ? "Switch to dark space theme" : "Switch to light sky theme"
+      );
+      themeButton.title = isLight
+        ? "Switch to dark space theme"
+        : "Switch to light sky theme";
+    }
+
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) {
+      themeColor.setAttribute("content", isLight ? "#edf5ff" : "#050713");
+    }
   }
 
-  window.addEventListener("scroll", revealVisibleElements, { passive: true });
-
-  // ---------- Active navigation link ----------
-  const navLinks = $$(".main-nav a");
-  const observedSections = navLinks
-    .map((link) => $(link.getAttribute("href")))
-    .filter(Boolean);
-
-  if ("IntersectionObserver" in window) {
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          navLinks.forEach((link) => {
-            const active =
-              link.getAttribute("href") === `#${entry.target.id}`;
-
-            link.classList.toggle("active", active);
-          });
-        });
-      },
-      { rootMargin: "-25% 0px -60% 0px" }
-    );
-
-    observedSections.forEach((section) => sectionObserver.observe(section));
+  if (themeButton) {
+    themeButton.addEventListener("click", () => {
+      body.classList.toggle("light-mode");
+      updateThemeButton();
+    });
   }
 
-  // ---------- Contact form ----------
+  updateThemeButton();
+
+  /* =========================================
+     CONTACT FORM
+     ========================================= */
+
   const contactForm = $("#contactForm");
-  const contactStatus = $("#contactStatus");
 
   if (contactForm) {
     contactForm.addEventListener("submit", (event) => {
@@ -308,302 +338,54 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!contactForm.reportValidity()) return;
 
       const formData = new FormData(contactForm);
+
       const name = String(formData.get("name") || "").trim();
       const email = String(formData.get("email") || "").trim();
       const subject = String(formData.get("subject") || "").trim();
       const message = String(formData.get("message") || "").trim();
 
-      const emailSubject = encodeURIComponent(
-        `[Wazir Aura Website] ${subject}`
-      );
+      const emailSubject = `Wazir Aura enquiry: ${subject}`;
 
-      const emailBody = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-      );
+      const emailBody = [
+        `Name: ${name}`,
+        `Email: ${email}`,
+        `Service: ${subject}`,
+        "",
+        "Project details:",
+        message
+      ].join("\n");
 
-      if (contactStatus) {
-        contactStatus.textContent =
-          "Your email app should open. Review the message and send it there.";
-      }
+      const mailto =
+        `mailto:zuhaibwazir558@gmail.com?subject=${encodeURIComponent(emailSubject)}` +
+        `&body=${encodeURIComponent(emailBody)}`;
 
-      window.location.href =
-        `mailto:zuhaibwazir558@gmail.com?subject=${emailSubject}&body=${emailBody}`;
+      window.location.href = mailto;
     });
   }
 
-  // ---------- Tic-Tac-Toe ----------
-  const tttBoard = $("#tttBoard");
-  const tttStatus = $("#tttStatus");
-  const tttReset = $("#tttReset");
+  /* =========================================
+     INITIALIZE
+     ========================================= */
 
-  const winningLines = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
-  ];
-
-  let tttCells = Array(9).fill("");
-  let currentPlayer = "X";
-  let tttFinished = false;
-
-  function renderTicTacToe() {
-    if (!tttBoard) return;
-
-    $$(".ttt-cell", tttBoard).forEach((cell, index) => {
-      cell.textContent = tttCells[index];
-      cell.disabled = tttFinished || tttCells[index] !== "";
-      cell.setAttribute(
-        "aria-label",
-        `Cell ${index + 1}${tttCells[index] ? `: ${tttCells[index]}` : ""}`
-      );
-    });
+  if (year) {
+    year.textContent = String(new Date().getFullYear());
   }
 
-  function resetTicTacToe() {
-    tttCells = Array(9).fill("");
-    currentPlayer = "X";
-    tttFinished = false;
+  createStars();
 
-    if (tttStatus) tttStatus.textContent = "Player X's turn";
-    renderTicTacToe();
+  // Keep the intro on screen until the visitor chooses to enter or skip.
+  // No forced timeout, so the visitor can enjoy the complete opening.
+  if (intro) {
+    intro.hidden = false;
+    intro.setAttribute("aria-hidden", "false");
   }
 
-  function saveTicTacToeResult(result) {
-    try {
-      const key = "wazir-aura-ttt-stats";
-      const stats = JSON.parse(localStorage.getItem(key) || "{}");
+  // Start with Home as the visible section.
+  showPage("home");
 
-      if (result === "X" || result === "O") {
-        stats[result] = (Number(stats[result]) || 0) + 1;
-      } else {
-        stats.draws = (Number(stats.draws) || 0) + 1;
-      }
-
-      localStorage.setItem(key, JSON.stringify(stats));
-    } catch (error) {
-      // The game still works when storage is unavailable.
-    }
+  // Make the initial view accessible even when the visitor uses
+  // the Enter button or Skip Intro.
+  if (enterButton) {
+    enterButton.setAttribute("aria-label", "Enter Wazir Aura website");
   }
-
-  if (tttBoard) {
-    $$(".ttt-cell", tttBoard).forEach((cell) => {
-      cell.addEventListener("click", () => {
-        const index = Number(cell.dataset.cell);
-
-        if (tttFinished || tttCells[index]) return;
-
-        tttCells[index] = currentPlayer;
-
-        const won = winningLines.some((line) =>
-          line.every((cellIndex) => tttCells[cellIndex] === currentPlayer)
-        );
-
-        if (won) {
-          tttFinished = true;
-          if (tttStatus) {
-            tttStatus.textContent = `Player ${currentPlayer} wins! 🎉`;
-          }
-          saveTicTacToeResult(currentPlayer);
-        } else if (tttCells.every(Boolean)) {
-          tttFinished = true;
-          if (tttStatus) tttStatus.textContent = "It's a draw!";
-          saveTicTacToeResult("draw");
-        } else {
-          currentPlayer = currentPlayer === "X" ? "O" : "X";
-          if (tttStatus) {
-            tttStatus.textContent = `Player ${currentPlayer}'s turn`;
-          }
-        }
-
-        renderTicTacToe();
-      });
-    });
-  }
-
-  if (tttReset) {
-    tttReset.addEventListener("click", resetTicTacToe);
-  }
-
-  resetTicTacToe();
-
-  // ---------- Memory Match ----------
-  const memoryBoard = $("#memoryBoard");
-  const memoryStatus = $("#memoryStatus");
-  const memoryReset = $("#memoryReset");
-
-  const memorySymbols = ["🌙", "🚀", "💎", "🌟", "🎮", "🪐", "🎨", "⚡"];
-
-  let memoryDeck = [];
-  let firstCard = null;
-  let secondCard = null;
-  let memoryLocked = false;
-  let memoryMoves = 0;
-  let memoryMatches = 0;
-  let memoryTimer = null;
-
-  function shuffle(items) {
-    const result = [...items];
-
-    for (let i = result.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [result[i], result[j]] = [result[j], result[i]];
-    }
-
-    return result;
-  }
-
-  function updateMemoryStatus() {
-    if (!memoryStatus) return;
-
-    memoryStatus.textContent =
-      memoryMatches === memorySymbols.length
-        ? `You won in ${memoryMoves} moves! 🎉`
-        : `Moves: ${memoryMoves} · Pairs: ${memoryMatches}/${memorySymbols.length}`;
-  }
-
-  function resetMemoryGame() {
-    if (memoryTimer) {
-      window.clearTimeout(memoryTimer);
-      memoryTimer = null;
-    }
-
-    memoryDeck = shuffle([...memorySymbols, ...memorySymbols]);
-    firstCard = null;
-    secondCard = null;
-    memoryLocked = false;
-    memoryMoves = 0;
-    memoryMatches = 0;
-
-    if (memoryBoard) {
-      memoryBoard.replaceChildren();
-
-      memoryDeck.forEach((symbol, index) => {
-        const card = document.createElement("button");
-
-        card.type = "button";
-        card.className = "memory-card";
-        card.textContent = "?";
-        card.dataset.symbol = symbol;
-        card.dataset.index = String(index);
-        card.setAttribute("aria-label", `Hidden card ${index + 1}`);
-
-        card.addEventListener("click", () => flipMemoryCard(card));
-
-        memoryBoard.appendChild(card);
-      });
-    }
-
-    updateMemoryStatus();
-  }
-
-  function flipMemoryCard(card) {
-    if (
-      memoryLocked ||
-      card.disabled ||
-      card.classList.contains("is-revealed") ||
-      card.classList.contains("is-matched")
-    ) {
-      return;
-    }
-
-    card.textContent = card.dataset.symbol;
-    card.classList.add("is-revealed");
-    card.setAttribute("aria-label", `Card: ${card.dataset.symbol}`);
-
-    if (!firstCard) {
-      firstCard = card;
-      return;
-    }
-
-    secondCard = card;
-    memoryMoves += 1;
-
-    if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
-      firstCard.classList.remove("is-revealed");
-      secondCard.classList.remove("is-revealed");
-
-      firstCard.classList.add("is-matched");
-      secondCard.classList.add("is-matched");
-
-      firstCard.disabled = true;
-      secondCard.disabled = true;
-
-      memoryMatches += 1;
-      firstCard = null;
-      secondCard = null;
-
-      updateMemoryStatus();
-
-      if (memoryMatches === memorySymbols.length) {
-        try {
-          const key = "wazir-aura-memory-best";
-          const previous = Number(localStorage.getItem(key));
-
-          if (!previous || memoryMoves < previous) {
-            localStorage.setItem(key, String(memoryMoves));
-          }
-        } catch (error) {
-          // Saving the best score is optional.
-        }
-      }
-
-      return;
-    }
-
-    memoryLocked = true;
-    updateMemoryStatus();
-
-    memoryTimer = window.setTimeout(() => {
-      [firstCard, secondCard].forEach((item) => {
-        if (!item) return;
-
-        item.textContent = "?";
-        item.classList.remove("is-revealed");
-        item.setAttribute(
-          "aria-label",
-          `Hidden card ${Number(item.dataset.index) + 1}`
-        );
-      });
-
-      firstCard = null;
-      secondCard = null;
-      memoryLocked = false;
-      memoryTimer = null;
-    }, 850);
-  }
-
-  if (memoryReset) {
-    memoryReset.addEventListener("click", resetMemoryGame);
-  }
-
-  resetMemoryGame();
-
-  // ---------- Smooth in-page navigation ----------
-  $$('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const href = link.getAttribute("href");
-      if (!href || href === "#") return;
-
-      const target = $(href);
-      if (!target) return;
-
-      event.preventDefault();
-      target.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-        block: "start"
-      });
-
-      if (window.location.hash !== href) {
-        history.replaceState(null, "", href);
-      }
-    });
-  });
-
-  // ---------- Final initialization ----------
-  document.body.classList.add("js-ready");
-  revealVisibleElements();
-
-  console.log("Wazir Aura frontend initialized successfully.");
-});
+})();
