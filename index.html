@@ -4,337 +4,380 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="Wazir Aura by Murad Wazir — freelance digital services including web research, data entry, copy-paste work, social media banner design and web development.">
-  <title>Wazir Aura | Digital Services by Murad Wazir</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#090b18">
+  <meta name="description" content="Wazir Aura by Murad Wazir — digital services, creative projects, web development and gaming.">
+  <title>Wazir Aura | Murad Wazir</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="splash-screen" id="splash-screen" aria-hidden="true">
-    <div class="splash-logo">MW<span>.</span></div>
-    <p>WAZIR AURA</p>
+
+  <!-- Welcome Intro -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-logo">MW</div>
+    <h1>WAZIR AURA</h1>
+    <p id="welcomeText">Welcome to a world of creativity</p>
+    <button id="skipIntro" type="button">Enter Website →</button>
+    <button id="soundToggle" type="button" aria-pressed="false">
+      🔇 Sound Off
+    </button>
   </div>
 
+  <!-- Navigation -->
   <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="#home" aria-label="Wazir Aura home">
-        <span class="brand-mark">MW<span>.</span></span>
-        <span class="brand-copy">
-          <strong>WAZIR AURA</strong>
-          <small>Digital Services Studio</small>
-        </span>
-      </a>
+    <a class="brand" href="#home" aria-label="Wazir Aura Home">
+      <span class="brand-mark">MW</span>
+      <span>WAZIR <strong>AURA</strong></span>
+    </a>
 
-      <button class="menu-toggle" id="menu-toggle" type="button"
-        aria-label="Open navigation" aria-expanded="false"
-        aria-controls="primary-navigation">
-        <span></span><span></span><span></span>
+    <button class="menu-toggle" id="menuToggle"
+      type="button" aria-label="Open navigation" aria-expanded="false">
+      ☰
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#home" data-en="Home" data-ur="ہوم">Home</a>
+      <a href="#services" data-en="Services" data-ur="خدمات">Services</a>
+      <a href="#marketplace" data-en="Marketplace" data-ur="مارکیٹ پلیس">Marketplace</a>
+      <a href="#games" data-en="Games" data-ur="گیمز">Games</a>
+      <a href="#about" data-en="About" data-ur="تعارف">About</a>
+      <a href="#contact" data-en="Contact" data-ur="رابطہ">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button id="languageToggle" type="button" aria-label="Change language">
+        اردو
       </button>
-
-      <nav id="primary-navigation" class="primary-navigation" aria-label="Main navigation">
-        <a href="#home">Home</a>
-        <a href="#services">Services</a>
-        <a href="#about">About</a>
-        <a href="#process">Process</a>
-        <a href="#contact">Contact</a>
-        <a class="nav-cta" href="https://www.fiverr.com/s/YLLjxwz" target="_blank" rel="noopener noreferrer">Hire on Fiverr ↗</a>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">
-          <span id="theme-icon">☼</span>
-        </button>
-      </nav>
+      <button id="themeToggle" type="button" aria-label="Change theme">
+        ☀️
+      </button>
     </div>
   </header>
 
   <main>
+    <!-- Hero -->
     <section class="hero section" id="home">
-      <div class="hero-glow hero-glow-one"></div>
-      <div class="hero-glow hero-glow-two"></div>
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <div class="eyebrow"><span class="status-dot"></span> FREELANCE DIGITAL SERVICES</div>
-          <h1>Smart digital work.<br><span class="gradient-text">Made with purpose.</span></h1>
-          <p class="hero-description">
-            Hi, I'm <strong>Murad Wazir</strong>. I help individuals and businesses with
-            web research, accurate data tasks, creative banner design and digital projects.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#services">Explore My Services <span>↗</span></a>
-            <a class="btn btn-secondary" href="#contact">Let's Talk</a>
-          </div>
-          <div class="hero-trust">
-            <span class="trust-icon">✦</span>
-            <span>Focused on clear communication, careful work and client requirements.</span>
-          </div>
+      <div class="hero-content reveal">
+        <span class="eyebrow">WELCOME TO WAZIR AURA</span>
+        <h1>
+          Ideas into <span class="gradient-text">Digital Reality.</span>
+        </h1>
+        <p>
+          I'm Murad Wazir. I create digital experiences, provide online
+          services and explore innovative ideas through technology.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#services">Explore Services</a>
+          <a class="btn btn-outline" href="#contact">Contact Me</a>
         </div>
-
-        <div class="hero-visual">
-          <div class="visual-card">
-            <div class="visual-top">
-              <div class="visual-brand"><span>MW</span> WAZIR AURA</div>
-              <span class="visual-indicator">DIGITAL STUDIO</span>
-            </div>
-            <div class="visual-orbit orbit-one"></div>
-            <div class="visual-orbit orbit-two"></div>
-            <div class="visual-center">
-              <span class="visual-monogram">MW</span>
-              <span class="visual-center-caption">IDEAS INTO DIGITAL WORK</span>
-            </div>
-            <div class="floating-chip chip-one"><span>⌕</span> Web Research</div>
-            <div class="floating-chip chip-two"><span>▦</span> Data Services</div>
-            <div class="floating-chip chip-three"><span>✳</span> Banner Design</div>
-            <div class="visual-bottom"><span>CREATIVE</span><span>PRECISE</span><span>PROFESSIONAL</span></div>
-          </div>
-          <div class="hero-visual-caption">Independent freelancer · Edwardes College Peshawar</div>
+        <div class="hero-note">
+          <span class="status-dot"></span>
+          Building something extraordinary
         </div>
       </div>
-      <div class="container hero-bottom">
-        <span>WHAT I CAN HELP WITH</span>
-        <div class="skill-marquee">
-          <span>Web Research</span><i>✦</i><span>Data Entry</span><i>✦</i>
-          <span>Banner Design</span><i>✦</i><span>Web Development</span><i>✦</i>
-          <span>Lead Generation</span>
-        </div>
+
+      <div class="hero-visual reveal" aria-label="Wazir Aura logo artwork">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="hero-logo">MW</div>
+        <span class="floating-tag tag-top">CREATIVE</span>
+        <span class="floating-tag tag-bottom">DIGITAL FUTURE</span>
       </div>
     </section>
 
-    <section class="section services-section" id="services">
-      <div class="container">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">SERVICES</span>
-            <h2>Practical skills.<br><span class="gradient-text">Useful results.</span></h2>
-          </div>
-          <p>Choose a service that matches your project. For availability, pricing and delivery details, contact me through Fiverr.</p>
-        </div>
+    <!-- Services -->
+    <section class="section" id="services">
+      <div class="section-heading reveal">
+        <span class="eyebrow">WHAT I DO</span>
+        <h2>My <span class="gradient-text">Services</span></h2>
+        <p>Practical digital solutions to help turn your ideas into results.</p>
+      </div>
 
-        <div class="services-grid">
-          <article class="service-card service-featured">
-            <div class="service-icon">⌕</div>
-            <span class="service-number">01 / RESEARCH</span>
-            <h3>Web Research & Lead Generation</h3>
-            <p>Online research, information gathering and organized lead lists based on your instructions and target criteria.</p>
-            <a href="https://www.fiverr.com/s/YLLjxwz" target="_blank" rel="noopener noreferrer">Explore Fiverr service <span>↗</span></a>
-          </article>
+      <div class="services-grid">
+        <article class="service-card reveal">
+          <span class="service-icon">⌨️</span>
+          <h3>Data Entry</h3>
+          <p>Accurate data entry, copy-paste tasks and organized digital records.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">▤</div>
-            <span class="service-number">02 / DATA</span>
-            <h3>Data Entry</h3>
-            <p>Careful data entry, spreadsheet updates and structured information handling for everyday business tasks.</p>
-            <a href="https://www.fiverr.com/s/BbblEe7" target="_blank" rel="noopener noreferrer">Explore Fiverr service <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">📊</span>
+          <h3>Microsoft Excel</h3>
+          <p>Spreadsheets, data formatting, tables and basic data organization.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">⧉</div>
-            <span class="service-number">03 / ORGANIZATION</span>
-            <h3>Copy-Paste & Formatting</h3>
-            <p>Copy-paste tasks, text organization, document formatting and information transfer according to your requirements.</p>
-            <a href="https://www.fiverr.com/s/YLLjxXK" target="_blank" rel="noopener noreferrer">Explore Fiverr service <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">📝</span>
+          <h3>Word & Typing</h3>
+          <p>Document formatting, typing, proofreading and professional layouts.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card service-design">
-            <div class="service-icon">✳</div>
-            <span class="service-number">04 / CREATIVE</span>
-            <h3>Social Media Banner Design</h3>
-            <p>Promotional banners and social media graphics designed around your message, brand and platform requirements.</p>
-            <a href="https://www.fiverr.com/s/odd6EZL" target="_blank" rel="noopener noreferrer">Explore Fiverr service <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">🎨</span>
+          <h3>Graphic Design</h3>
+          <p>Social media banners, promotional graphics and creative visuals.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">⌨</div>
-            <span class="service-number">05 / PRODUCTIVITY</span>
-            <h3>Typing & Office Documents</h3>
-            <p>Typing and document tasks using Microsoft Word, with attention to layout, readability and instructions.</p>
-            <a href="#contact">Discuss your project <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">🌐</span>
+          <h3>Web Development</h3>
+          <p>Responsive websites and polished interfaces for online projects.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">▦</div>
-            <span class="service-number">06 / SPREADSHEETS</span>
-            <h3>Microsoft Excel & Data Formatting</h3>
-            <p>Organizing spreadsheet data, formatting cells and presenting information in a clearer structure.</p>
-            <a href="#contact">Discuss your project <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">🔎</span>
+          <h3>Web Research</h3>
+          <p>Online research, information gathering and lead-list preparation.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">▧</div>
-            <span class="service-number">07 / PRESENTATIONS</span>
-            <h3>Microsoft PowerPoint</h3>
-            <p>Presentation formatting and slide organization to make your information easier to follow.</p>
-            <a href="#contact">Discuss your project <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">📽️</span>
+          <h3>PowerPoint</h3>
+          <p>Clean presentations with organized content and professional slides.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">⌘</div>
-            <span class="service-number">08 / DEVELOPMENT</span>
-            <h3>Web Development</h3>
-            <p>Web-based projects and responsive website interfaces, with scope and technical requirements agreed in advance.</p>
-            <a href="#contact">Discuss your project <span>↗</span></a>
-          </article>
+        <article class="service-card reveal">
+          <span class="service-icon">🎮</span>
+          <h3>2D Game Development</h3>
+          <p>Creative concepts and browser-based gaming experiences.</p>
+          <a href="#games">Explore Games ↗</a>
+        </article>
 
-          <article class="service-card">
-            <div class="service-icon">◈</div>
-            <span class="service-number">09 / GAME PROJECTS</span>
-            <h3>2D Game Development</h3>
-            <p>Academic and personal interest in game development, with project feasibility discussed before work begins.</p>
-            <a href="#contact">Discuss your project <span>↗</span></a>
-          </article>
-        </div>
-
-        <p class="services-note">Every project is different. Scope, delivery time and pricing are confirmed before work begins.</p>
+        <article class="service-card reveal">
+          <span class="service-icon">📱</span>
+          <h3>Social Media Support</h3>
+          <p>Digital content assistance and simple promotional materials.</p>
+          <a href="#contact">Request Service ↗</a>
+        </article>
       </div>
     </section>
 
+    <!-- Marketplace -->
+    <section class="section marketplace-section" id="marketplace">
+      <div class="section-heading reveal">
+        <span class="eyebrow">CONNECT & COLLABORATE</span>
+        <h2>Digital <span class="gradient-text">Marketplace</span></h2>
+        <p>A vision for bringing clients, freelancers and companies together.</p>
+      </div>
+
+      <div class="marketplace-grid">
+        <article class="feature-card reveal">
+          <span class="feature-icon">💼</span>
+          <h3>Hire for a Project</h3>
+          <p>Clients can describe their project needs and find suitable talent.</p>
+          <a class="btn btn-outline" href="#contact">Discuss a Project</a>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-icon">🚀</span>
+          <h3>Offer Your Skills</h3>
+          <p>Freelancers can showcase their expertise and work opportunities.</p>
+          <a class="btn btn-outline" href="#contact">Get in Touch</a>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-icon">🏢</span>
+          <h3>Business Collaboration</h3>
+          <p>Companies can explore services and discuss digital partnerships.</p>
+          <a class="btn btn-outline" href="#contact">Contact Wazir Aura</a>
+        </article>
+      </div>
+
+      <p class="notice">
+        Marketplace accounts, project posting, proposals, hiring and online
+        payments require a secure backend before they can operate live.
+      </p>
+    </section>
+
+    <!-- Games -->
+    <section class="section" id="games">
+      <div class="section-heading reveal">
+        <span class="eyebrow">TAKE A BREAK</span>
+        <h2>Mini <span class="gradient-text">Games</span></h2>
+        <p>Enjoy a quick game right in your browser.</p>
+      </div>
+
+      <div class="games-grid">
+        <article class="game-card reveal">
+          <div class="game-art game-art-one">⭕ × ❌</div>
+          <h3>Tic-Tac-Toe</h3>
+          <p>Challenge a friend on the same device.</p>
+          <a class="btn btn-primary" href="#ticTacToe">Play Now</a>
+        </article>
+
+        <article class="game-card reveal">
+          <div class="game-art game-art-two">🧠 ✦ 🧩</div>
+          <h3>Memory Match</h3>
+          <p>Test your memory by matching the hidden pairs.</p>
+          <a class="btn btn-primary" href="#memoryGame">Play Now</a>
+        </article>
+      </div>
+
+      <!-- Tic-Tac-Toe Game -->
+      <div class="playable-game reveal" id="ticTacToe">
+        <h3>Tic-Tac-Toe</h3>
+        <p>Two players · Same device</p>
+        <div class="ttt-board" id="tttBoard" aria-label="Tic-Tac-Toe board">
+          <button type="button" class="ttt-cell" data-cell="0" aria-label="Cell 1"></button>
+          <button type="button" class="ttt-cell" data-cell="1" aria-label="Cell 2"></button>
+          <button type="button" class="ttt-cell" data-cell="2" aria-label="Cell 3"></button>
+          <button type="button" class="ttt-cell" data-cell="3" aria-label="Cell 4"></button>
+          <button type="button" class="ttt-cell" data-cell="4" aria-label="Cell 5"></button>
+          <button type="button" class="ttt-cell" data-cell="5" aria-label="Cell 6"></button>
+          <button type="button" class="ttt-cell" data-cell="6" aria-label="Cell 7"></button>
+          <button type="button" class="ttt-cell" data-cell="7" aria-label="Cell 8"></button>
+          <button type="button" class="ttt-cell" data-cell="8" aria-label="Cell 9"></button>
+        </div>
+        <p id="tttStatus" aria-live="polite">Player X's turn</p>
+        <button class="btn btn-outline" id="tttReset" type="button">New Game</button>
+      </div>
+
+      <!-- Memory Match Game -->
+      <div class="playable-game reveal" id="memoryGame">
+        <h3>Memory Match</h3>
+        <p>Find all matching pairs.</p>
+        <div class="memory-board" id="memoryBoard"></div>
+        <p id="memoryStatus" aria-live="polite">Moves: 0</p>
+        <button class="btn btn-outline" id="memoryReset" type="button">
+          Restart Game
+        </button>
+      </div>
+
+      <p class="notice">
+        These are casual browser games. User accounts, online leaderboards
+        and public ratings require backend integration.
+      </p>
+    </section>
+
+    <!-- About -->
     <section class="section about-section" id="about">
-      <div class="container about-grid">
-        <div class="about-visual">
-          <div class="about-monogram">MW<span>.</span></div>
-          <div class="about-orbit"></div>
-          <div class="about-label">WAZIR AURA<br><small>INDEPENDENT DIGITAL BRAND</small></div>
-        </div>
-        <div class="about-content">
-          <span class="eyebrow">ABOUT ME</span>
-          <h2>Reliable work starts with <span class="gradient-text">understanding your needs.</span></h2>
-          <p>I'm Murad Wazir, the person behind Wazir Aura. My skills cover research, data-related tasks, office productivity, creative design and digital development.</p>
-          <p>I aim to understand the task first, communicate clearly and deliver work according to the agreed requirements.</p>
-          <div class="about-points">
-            <div><span class="point-check">✓</span><span><strong>Clear communication</strong><small>Understand the brief before starting.</small></span></div>
-            <div><span class="point-check">✓</span><span><strong>Detail-focused approach</strong><small>Follow instructions and check the work.</small></span></div>
-            <div><span class="point-check">✓</span><span><strong>Transparent expectations</strong><small>Agree on scope and delivery details.</small></span></div>
-          </div>
-          <a class="btn btn-primary" href="https://www.fiverr.com/s/YLLjxwz" target="_blank" rel="noopener noreferrer">View My Fiverr Service ↗</a>
+      <div class="about-visual reveal">
+        <div class="about-logo">MW</div>
+        <span>WAZIR AURA</span>
+      </div>
+
+      <div class="about-content reveal">
+        <span class="eyebrow">ABOUT THE CREATOR</span>
+        <h2>Meet <span class="gradient-text">Murad Wazir</span></h2>
+        <p>
+          Wazir Aura is a digital brand focused on creative services,
+          technology, web experiences and new opportunities.
+        </p>
+        <p>
+          The goal is to build a platform where clients can access useful
+          digital services and, over time, connect with independent talent.
+        </p>
+
+        <div class="stats-row">
+          <div><strong>01</strong><span>Creative Vision</span></div>
+          <div><strong>02</strong><span>Digital Skills</span></div>
+          <div><strong>∞</strong><span>New Ideas</span></div>
         </div>
       </div>
     </section>
 
-    <section class="section skills-section" id="skills">
-      <div class="container">
-        <div class="section-heading centered-heading">
-          <span class="eyebrow">SKILLS & TOOLS</span>
-          <h2>A versatile digital <span class="gradient-text">skill set.</span></h2>
-          <p>Skills and areas of work that support my freelance and academic projects.</p>
-        </div>
-        <div class="skills-list">
-          <span>Lead Generation</span><span>Online Research</span><span>Web-Based Research</span>
-          <span>Data Entry</span><span>Copy-Paste Work</span><span>Typing</span>
-          <span>Data Formatting</span><span>Microsoft Word</span><span>Microsoft Excel</span>
-          <span>Microsoft PowerPoint</span><span>Social Media Banners</span>
-          <span>Banner Designing</span><span>Web Development</span><span>2D Game Development</span>
-        </div>
-        <div class="education-card">
-          <div class="education-icon">⌂</div>
-          <div><span class="eyebrow">EDUCATION</span><h3>Edwardes College Peshawar</h3><p>Academic background and learning in web development and game development.</p></div>
-        </div>
+    <!-- Process -->
+    <section class="section" id="process">
+      <div class="section-heading reveal">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2>A Simple <span class="gradient-text">Process</span></h2>
+      </div>
+
+      <div class="process-grid">
+        <article class="process-card reveal">
+          <span>01</span>
+          <h3>Share Your Idea</h3>
+          <p>Tell me what you need and describe your goals.</p>
+        </article>
+        <article class="process-card reveal">
+          <span>02</span>
+          <h3>Plan the Work</h3>
+          <p>Discuss scope, delivery expectations and pricing.</p>
+        </article>
+        <article class="process-card reveal">
+          <span>03</span>
+          <h3>Create & Deliver</h3>
+          <p>Work toward a clear result and agreed deliverables.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section process-section" id="process">
-      <div class="container">
-        <div class="section-heading">
-          <div><span class="eyebrow">HOW IT WORKS</span><h2>Simple from start <span class="gradient-text">to finish.</span></h2></div>
-          <p>A clear process helps both sides understand the work before the project begins.</p>
-        </div>
-        <div class="process-grid">
-          <article class="process-card"><span>01</span><h3>Share the brief</h3><p>Explain your task, goals, files and any important requirements.</p></article>
-          <article class="process-card"><span>02</span><h3>Confirm the scope</h3><p>Discuss deliverables, pricing and timeline before starting.</p></article>
-          <article class="process-card"><span>03</span><h3>Complete the work</h3><p>Work follows the agreed instructions and project scope.</p></article>
-          <article class="process-card"><span>04</span><h3>Review & deliver</h3><p>Review the result and handle agreed revisions through the selected channel.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section opportunities-section" id="opportunities">
-      <div class="container opportunity-panel">
-        <div>
-          <span class="eyebrow">LET'S WORK TOGETHER</span>
-          <h2>Have a task in mind?<br><span class="gradient-text">Let's discuss it.</span></h2>
-          <p>Whether you need research, data assistance or a creative digital service, share your requirements and let's see if it's a good fit.</p>
-        </div>
-        <a class="btn btn-primary" href="https://www.fiverr.com/s/BbblEe7" target="_blank" rel="noopener noreferrer">Start on Fiverr ↗</a>
-      </div>
-    </section>
-
+    <!-- Contact -->
     <section class="section contact-section" id="contact">
-      <div class="container contact-grid">
-        <div class="contact-copy">
-          <span class="eyebrow">CONTACT</span>
-          <h2>Tell me about your <span class="gradient-text">project.</span></h2>
-          <p>Send your requirements using the form. Your email application will open with a prepared message for you to review and send.</p>
-          <div class="contact-method">
-            <span class="contact-method-icon">✉</span>
-            <div><small>EMAIL</small><a href="mailto:zuhaibwazir558@gmail.com">zuhaibwazir558@gmail.com</a></div>
-          </div>
-          <div class="contact-method">
-            <span class="contact-method-icon">↗</span>
-            <div><small>FREELANCE PROFILE</small><a href="https://www.fiverr.com/s/YLLjxwz" target="_blank" rel="noopener noreferrer">Find me on Fiverr</a></div>
-          </div>
-        </div>
-
-        <form class="contact-form" id="contact-form">
-          <div class="form-heading"><h3>Project inquiry</h3><p>Fields marked * are required.</p></div>
-          <div class="form-row">
-            <div class="form-field"><label for="contact-name">Your name *</label><input id="contact-name" name="name" type="text" placeholder="Enter your name" required maxlength="100"></div>
-            <div class="form-field"><label for="contact-email">Email address *</label><input id="contact-email" name="email" type="email" placeholder="you@example.com" required maxlength="150"></div>
-          </div>
-          <div class="form-row">
-            <div class="form-field"><label for="contact-service">Service *</label>
-              <select id="contact-service" name="service" required>
-                <option value="">Choose a service</option>
-                <option>Lead Generation & Web Research</option>
-                <option>Data Entry</option>
-                <option>Copy-Paste & Formatting</option>
-                <option>Social Media Banner Design</option>
-                <option>Typing & Microsoft Word</option>
-                <option>Microsoft Excel & Data Formatting</option>
-                <option>Microsoft PowerPoint</option>
-                <option>Web Development</option>
-                <option>2D Game Development</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-field"><label for="contact-budget">Budget (optional)</label>
-              <select id="contact-budget" name="budget">
-                <option value="">Prefer to discuss</option>
-                <option>Under $25</option><option>$25–$50</option>
-                <option>$50–$100</option><option>$100+</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-field"><label for="contact-message">Project details *</label><textarea id="contact-message" name="message" rows="5" placeholder="Describe what you need..." required maxlength="3000"></textarea></div>
-          <button class="btn btn-primary form-submit" type="submit">Prepare Email Inquiry <span>↗</span></button>
-          <p class="form-status" id="contact-status" role="status" aria-live="polite"></p>
-          <p class="form-disclaimer">This static website does not transmit or store your inquiry. Your email app will open so you can send it yourself.</p>
-        </form>
+      <div class="section-heading reveal">
+        <span class="eyebrow">LET'S CONNECT</span>
+        <h2>Start Something <span class="gradient-text">Great</span></h2>
+        <p>Have a project or question? Send an inquiry.</p>
       </div>
-    </section>
 
-    <section class="section social-section" id="social">
-      <div class="container social-inner">
-        <div><span class="eyebrow">FIND ME ONLINE</span><h2>Connect with <span class="gradient-text">Wazir Aura.</span></h2></div>
-        <div class="social-links">
-          <a href="https://www.fiverr.com/s/YLLjxwz" target="_blank" rel="noopener noreferrer">Fiverr <span>↗</span></a>
-          <a href="https://linkedin.com/in/murad-wazir-bbb0b541a" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a>
-          <a href="https://x.com/waziraura553" target="_blank" rel="noopener noreferrer">X <span>↗</span></a>
-          <a href="https://www.instagram.com/waziraura553/" target="_blank" rel="noopener noreferrer">Instagram <span>↗</span></a>
-          <a href="https://www.facebook.com/profile.php?id=61578311048454" target="_blank" rel="noopener noreferrer">Facebook <span>↗</span></a>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <h3>Contact Details</h3>
+          <p>For service inquiries and collaborations, reach out by email.</p>
+          <a href="mailto:zuhaibwazir558@gmail.com">
+            ✉️ zuhaibwazir558@gmail.com
+          </a>
+          <a href="mailto:wazirlab@proton.me">
+            ✉️ wazirlab@proton.me
+          </a>
+          <p class="small-note">
+            Please don't include passwords or sensitive financial information.
+          </p>
         </div>
+
+        <form class="contact-form reveal" id="contactForm">
+          <label for="contactName">Your Name</label>
+          <input id="contactName" name="name" type="text"
+            placeholder="Enter your name" required>
+
+          <label for="contactEmail">Email Address</label>
+          <input id="contactEmail" name="email" type="email"
+            placeholder="you@example.com" required>
+
+          <label for="contactSubject">Subject</label>
+          <input id="contactSubject" name="subject" type="text"
+            placeholder="How can I help?" required>
+
+          <label for="contactMessage">Your Message</label>
+          <textarea id="contactMessage" name="message" rows="5"
+            placeholder="Tell me about your project..." required></textarea>
+
+          <button class="btn btn-primary" type="submit">Prepare Email ↗</button>
+          <p class="form-status" id="contactStatus" aria-live="polite">
+            This form opens your email application; it does not store messages.
+          </p>
+        </form>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <a class="brand footer-brand" href="#home"><span class="brand-mark">MW<span>.</span></span><span class="brand-copy"><strong>WAZIR AURA</strong><small>Digital Services Studio</small></span></a>
-      <p>Independent freelance services by Murad Wazir.</p>
-      <span>© <span id="current-year"></span> Wazir Aura</span>
+    <a class="brand footer-brand" href="#home">
+      <span class="brand-mark">MW</span>
+      <span>WAZIR <strong>AURA</strong></span>
+    </a>
+
+    <p>Creating possibilities through digital experiences.</p>
+
+    <div class="social-links">
+      <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
     </div>
-    <div class="container footer-note">Login, online reviews, payments and the admin dashboard require a secure backend and are not enabled on this static website.</div>
+
+    <p class="copyright">
+      © <span id="currentYear"></span> Wazir Aura. Created by Murad Wazir.
+    </p>
   </footer>
 
-  <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 </body>
 </html>
