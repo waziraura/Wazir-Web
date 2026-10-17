@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090a0b">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080912">
   <meta name="description" content="Wazir Aura by Murad Wazir — creative frontend development and immersive digital experiences.">
   <title>Wazir Aura — Digital Experiences</title>
 
@@ -12,9 +11,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
 
-  <!-- Three.js browser module -->
+  <!-- Replace the Site Key placeholder with your PUBLIC Turnstile Site Key. -->
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit"
+    async
+    defer>
+  </script>
+
   <script type="importmap">
     {
       "imports": {
@@ -23,387 +28,363 @@
     }
   </script>
 
-  <script type="module" src="script.js"></script>
+  <script type="module" src="./script.js"></script>
 </head>
 
 <body class="theme-space">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- WebGL background -->
-  <div class="scene-wrap" aria-hidden="true">
-    <canvas id="webgl-scene"></canvas>
-    <div class="scene-vignette"></div>
-  </div>
+  <canvas id="webgl-scene" aria-hidden="true"></canvas>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- CINEMATIC WELCOME -->
+  <section id="welcomeScreen" class="welcome-screen" aria-label="Welcome to Wazir Aura">
+    <div class="welcome-orbit orbit-one" aria-hidden="true"></div>
+    <div class="welcome-orbit orbit-two" aria-hidden="true"></div>
+    <div class="welcome-stars" aria-hidden="true"></div>
+
+    <div class="welcome-content">
+      <p class="welcome-overline">AN IMMERSIVE DIGITAL EXPERIENCE</p>
+
+      <div class="welcome-monogram" aria-hidden="true">
+        <span>W</span>
+        <span class="monogram-m">M</span>
+      </div>
+
+      <p class="welcome-small">WELCOME TO</p>
+      <h1 class="welcome-title">WAZIR <span>AURA</span></h1>
+      <p class="welcome-tagline">Ideas beyond the ordinary.</p>
+
+      <div class="welcome-progress" aria-hidden="true">
+        <span></span>
+      </div>
+
+      <button id="welcomeEnter" class="welcome-enter" type="button">
+        <span>ENTER EXPERIENCE</span>
+        <span aria-hidden="true">↗</span>
+      </button>
+
+      <button id="welcomeSkip" class="welcome-skip" type="button">
+        Skip intro
+      </button>
+
+      <p class="welcome-footer">DESIGNED WITH PURPOSE · BUILT WITH CURIOSITY</p>
+    </div>
+  </section>
 
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Wazir Aura home">
-      <span class="brand-mark">WA</span>
-      <span class="brand-name">WAZIR <i>AURA</i></span>
+      <span class="brand-mark">W<span>A</span></span>
+      <span class="brand-copy">
+        <strong>WAZIR AURA</strong>
+        <small>DIGITAL EXPERIENCES</small>
+      </span>
     </a>
 
-    <button class="menu-toggle" id="menuToggle"
-      aria-label="Toggle navigation" aria-expanded="false">
+    <button id="menuToggle" class="menu-toggle" type="button"
+      aria-label="Open navigation" aria-expanded="false" aria-controls="mainNav">
       <span></span><span></span>
     </button>
 
-    <nav class="main-nav" id="mainNav">
+    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
       <a href="#home">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
       <a href="#work">Work</a>
       <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="header-actions">
-      <button class="theme-toggle" id="themeToggle" type="button">
-        <span class="toggle-orb"></span>
-        <span id="themeLabel">SPACE MODE</span>
+      <button id="themeToggle" class="theme-toggle" type="button"
+        aria-label="Switch visual theme">
+        <span aria-hidden="true">✳</span>
+        <span id="themeLabel">Space mode</span>
       </button>
-    </div>
+    </nav>
   </header>
 
-  <main>
+  <main id="main">
     <!-- HERO -->
-    <section class="hero section-shell" id="home">
-      <div class="hero-copy reveal">
-        <p class="eyebrow">
-          <span class="eyebrow-dot"></span>
-          INDEPENDENT FRONTEND DEVELOPER
-        </p>
+    <section id="home" class="hero section-shell">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> FREELANCE DIGITAL SERVICES</p>
 
         <h1>
-          Digital worlds,<br>
-          <em>built with feeling.</em>
+          Smart digital work.
+          <span class="gradient-text">Made with purpose.</span>
         </h1>
 
         <p class="hero-description">
-          I'm Murad Wazir — shaping thoughtful ideas into immersive,
-          responsive web experiences under the name Wazir Aura.
+          I'm Murad Wazir. I turn ideas into thoughtful digital experiences
+          through frontend development, research, data services and creative work.
         </p>
 
         <div class="hero-actions">
           <a class="button button-primary" href="#work">
-            Explore my work <span class="button-arrow">↗</span>
+            Explore the work <span aria-hidden="true">↗</span>
           </a>
-          <a class="button button-quiet" href="#about">
-            Meet the creator <span class="button-arrow">↓</span>
+          <a class="button button-secondary" href="#contact">
+            Start a conversation
           </a>
         </div>
 
-        <div class="hero-footnote">
-          <span class="scroll-line"></span>
-          SCROLL TO DISCOVER
+        <div class="hero-note">
+          <span class="note-line"></span>
+          <p>Independent freelancer · Edwardes College Peshawar</p>
         </div>
       </div>
 
-      <aside class="hero-side-note reveal">
-        <span class="side-index">01 / 05</span>
-        <span class="side-rule"></span>
-        <p>Design is the first impression. Experience is what stays.</p>
-      </aside>
-
-      <div class="scene-hint">
-        <span class="hint-ring">↗</span>
-        <span>MOVE YOUR POINTER</span>
+      <div class="hero-visual" aria-label="Abstract 3D digital artwork">
+        <div class="visual-halo"></div>
+        <div class="visual-ring ring-a"></div>
+        <div class="visual-ring ring-b"></div>
+        <div class="visual-core">
+          <span>MW</span>
+          <small>IDEAS INTO DIGITAL WORK</small>
+        </div>
+        <div class="floating-label label-top">CREATIVE / 01</div>
+        <div class="floating-label label-bottom">PRECISE · PROFESSIONAL</div>
+        <div class="visual-chip chip-one">Frontend</div>
+        <div class="visual-chip chip-two">Digital craft</div>
       </div>
+
+      <a class="scroll-cue" href="#about">
+        <span></span> SCROLL TO EXPLORE
+      </a>
     </section>
 
-    <!-- MOVING BRAND STRIP -->
-    <section class="intro-strip" aria-label="Our philosophy">
-      <div class="ticker-track">
-        <span>DESIGN WITH INTENTION</span><b>✳</b>
-        <span>BUILD WITH PURPOSE</span><b>✳</b>
-        <span>DETAILS THAT MATTER</span><b>✳</b>
-        <span>DESIGN WITH INTENTION</span><b>✳</b>
-        <span>BUILD WITH PURPOSE</span><b>✳</b>
+    <!-- TICKER -->
+    <div class="ticker" aria-label="Services">
+      <div class="ticker-track" aria-hidden="true">
+        <span>WEB DEVELOPMENT</span><i>✳</i>
+        <span>WEB RESEARCH</span><i>✳</i>
+        <span>DATA SERVICES</span><i>✳</i>
+        <span>BANNER DESIGN</span><i>✳</i>
+        <span>2D GAME DEVELOPMENT</span><i>✳</i>
+        <span>WEB DEVELOPMENT</span><i>✳</i>
+        <span>WEB RESEARCH</span><i>✳</i>
+        <span>DATA SERVICES</span><i>✳</i>
+        <span>BANNER DESIGN</span><i>✳</i>
       </div>
-    </section>
+    </div>
 
     <!-- ABOUT -->
-    <section class="content-section section-shell" id="about">
-      <div class="section-kicker">
-        <span>01</span><span class="kicker-line"></span>
-        <span>A LITTLE ABOUT ME</span>
+    <section id="about" class="section section-shell">
+      <div class="section-heading reveal">
+        <p class="eyebrow">01 — THE PERSON BEHIND THE PIXELS</p>
+        <h2>Good work starts with <span class="gradient-text">good thinking.</span></h2>
       </div>
 
       <div class="about-grid">
-        <div class="section-heading reveal">
-          <h2>Ideas first.<br><em>Impact always.</em></h2>
-        </div>
-
-        <div class="about-copy reveal">
-          <p class="large-copy">
-            My name is Murad Wazir. I'm a frontend web developer who
-            enjoys turning clear ideas into expressive digital experiences.
-          </p>
-
+        <article class="about-card glass-card reveal">
+          <span class="card-index">A / APPROACH</span>
+          <h3>Understand first.<br>Build with purpose.</h3>
           <p>
-            Wazir Aura is my creative identity: a place for thoughtful
-            interfaces, smooth interactions, strong visual direction,
-            and websites that feel memorable without losing usability.
+            Wazir Aura is my digital services space. I focus on understanding
+            the brief, communicating clearly and creating work around real
+            requirements—not unnecessary complexity.
           </p>
-
-          <button class="inline-link detail-trigger" data-modal="about">
+          <button class="text-link" type="button" data-modal="about">
             More about my approach <span>↗</span>
           </button>
-        </div>
-      </div>
-
-      <div class="principle-row">
-        <article class="principle-card reveal">
-          <span class="principle-num">01</span>
-          <h3>Clarity</h3>
-          <p>A beautiful experience should still feel effortless to use.</p>
         </article>
 
-        <article class="principle-card reveal">
-          <span class="principle-num">02</span>
-          <h3>Character</h3>
-          <p>Visual details give a brand its own recognizable voice.</p>
-        </article>
-
-        <article class="principle-card reveal">
-          <span class="principle-num">03</span>
-          <h3>Motion</h3>
-          <p>Animation should guide attention, not compete with it.</p>
+        <article class="about-card about-card-accent glass-card reveal">
+          <span class="card-index">B / PRINCIPLES</span>
+          <ul class="principle-list">
+            <li><span>01</span><div><strong>Clear communication</strong><p>Understand the brief and expectations.</p></div></li>
+            <li><span>02</span><div><strong>Attention to detail</strong><p>Follow requirements and check the work.</p></div></li>
+            <li><span>03</span><div><strong>Transparent scope</strong><p>Agree on deliverables and timelines.</p></div></li>
+          </ul>
         </article>
       </div>
     </section>
 
     <!-- SERVICES -->
-    <section class="content-section services-section section-shell" id="services">
-      <div class="section-kicker">
-        <span>02</span><span class="kicker-line"></span>
-        <span>WHAT I CAN HELP WITH</span>
-      </div>
-
-      <div class="section-title-row reveal">
-        <h2>Made for the<br><em>next impression.</em></h2>
-        <p>
-          Focused services for brands and people who want their online
-          presence to feel considered, current, and distinctly theirs.
+    <section id="services" class="section section-shell">
+      <div class="section-heading reveal">
+        <p class="eyebrow">02 — WHAT I CAN HELP WITH</p>
+        <h2>Different skills.<br><span class="gradient-text">One thoughtful process.</span></h2>
+        <p class="section-intro">
+          Each project is different. Scope, delivery time and pricing are
+          discussed before work begins.
         </p>
       </div>
 
       <div class="service-list">
         <article class="service-row reveal">
-          <span class="service-count">01</span>
-          <div>
-            <h3>Frontend Development</h3>
-            <p>Responsive pages with clean structure and careful implementation.</p>
-          </div>
-          <button class="round-arrow detail-trigger" data-modal="frontend"
-            aria-label="Frontend development details">↗</button>
+          <span class="service-number">01</span>
+          <div class="service-main"><h3>Frontend & Web Development</h3><p>Responsive interfaces, website layouts and interactive web experiences.</p></div>
+          <button class="round-link" data-modal="frontend" aria-label="Learn about frontend development">↗</button>
         </article>
 
         <article class="service-row reveal">
-          <span class="service-count">02</span>
-          <div>
-            <h3>Interactive UI</h3>
-            <p>Micro-interactions, motion, polished states, and intuitive navigation.</p>
-          </div>
-          <button class="round-arrow detail-trigger" data-modal="ui"
-            aria-label="Interactive UI details">↗</button>
+          <span class="service-number">02</span>
+          <div class="service-main"><h3>Web Research & Lead Generation</h3><p>Online research, information gathering and organised lead lists.</p></div>
+          <button class="round-link" data-modal="research" aria-label="Learn about research services">↗</button>
         </article>
 
         <article class="service-row reveal">
-          <span class="service-count">03</span>
-          <div>
-            <h3>Creative Landing Pages</h3>
-            <p>Distinctive first impressions for portfolios, products, and campaigns.</p>
-          </div>
-          <button class="round-arrow detail-trigger" data-modal="landing"
-            aria-label="Landing page details">↗</button>
+          <span class="service-number">03</span>
+          <div class="service-main"><h3>Data Entry & Formatting</h3><p>Structured data handling, spreadsheet updates and accurate formatting.</p></div>
+          <button class="round-link" data-modal="data" aria-label="Learn about data services">↗</button>
         </article>
 
         <article class="service-row reveal">
-          <span class="service-count">04</span>
-          <div>
-            <h3>Web Research & Data Work</h3>
-            <p>Organized online research, data entry, and document formatting.</p>
-          </div>
-          <button class="round-arrow detail-trigger" data-modal="research"
-            aria-label="Research service details">↗</button>
+          <span class="service-number">04</span>
+          <div class="service-main"><h3>Social Media Banner Design</h3><p>Promotional banners and social graphics based on your brief.</p></div>
+          <button class="round-link" data-modal="design" aria-label="Learn about design services">↗</button>
+        </article>
+
+        <article class="service-row reveal">
+          <span class="service-number">05</span>
+          <div class="service-main"><h3>Office Documents</h3><p>Typing, Word documents, Excel formatting and PowerPoint presentations.</p></div>
+          <button class="round-link" data-modal="office" aria-label="Learn about office services">↗</button>
+        </article>
+
+        <article class="service-row reveal">
+          <span class="service-number">06</span>
+          <div class="service-main"><h3>2D Game Development</h3><p>Small interactive concepts and learning-focused game projects.</p></div>
+          <button class="round-link" data-modal="games" aria-label="Learn about game development">↗</button>
         </article>
       </div>
     </section>
 
     <!-- WORK -->
-    <section class="content-section work-section section-shell" id="work">
-      <div class="section-kicker">
-        <span>03</span><span class="kicker-line"></span>
-        <span>SELECTED DIRECTIONS</span>
-      </div>
-
-      <div class="section-title-row reveal">
-        <h2>A glimpse of<br><em>what's possible.</em></h2>
-        <p>
-          Concept directions showing how storytelling, structure, and
-          interaction can work together. Concept cards are not claimed
-          client projects.
-        </p>
+    <section id="work" class="section section-shell">
+      <div class="section-heading reveal">
+        <p class="eyebrow">03 — EXPERIMENTS & IDEAS</p>
+        <h2>Digital concepts with <span class="gradient-text">room to explore.</span></h2>
+        <p class="section-intro">A glimpse into the kind of visual directions and interactive concepts I enjoy exploring.</p>
       </div>
 
       <div class="project-grid">
-        <article class="project-card project-space reveal">
-          <div class="project-art">
-            <div class="art-orbit orbit-a"></div>
-            <div class="art-orbit orbit-b"></div>
-            <div class="art-planet"></div>
-            <span class="art-label">01 / DIGITAL WORLD</span>
-          </div>
+        <button class="project-card project-space reveal" data-modal="project-space">
+          <span class="project-art" aria-hidden="true"><span class="project-planet"></span><span class="project-orbit"></span></span>
+          <span class="project-meta">CONCEPT / 01</span>
+          <span class="project-title">Beyond the Orbit</span>
+          <span class="project-description">A cinematic space-inspired web concept.</span>
+          <span class="project-open">Explore concept ↗</span>
+        </button>
 
-          <div class="project-meta">
-            <div>
-              <span>INTERACTIVE CONCEPT</span>
-              <h3>Beyond the Ordinary</h3>
-            </div>
-            <button class="inline-link detail-trigger" data-modal="project-space">
-              View concept ↗
-            </button>
-          </div>
-        </article>
-
-        <article class="project-card project-garden reveal">
-          <div class="project-art">
-            <div class="art-sun"></div>
-            <div class="art-hill hill-a"></div>
-            <div class="art-hill hill-b"></div>
-            <div class="art-flower flower-a">✿</div>
-            <div class="art-flower flower-b">✿</div>
-            <span class="art-label">02 / LIVING BRAND</span>
-          </div>
-
-          <div class="project-meta">
-            <div>
-              <span>VISUAL STORYTELLING</span>
-              <h3>Field Notes</h3>
-            </div>
-            <button class="inline-link detail-trigger" data-modal="project-garden">
-              View concept ↗
-            </button>
-          </div>
-        </article>
+        <button class="project-card project-garden reveal" data-modal="project-garden">
+          <span class="garden-art" aria-hidden="true"><span class="garden-sun"></span><span class="garden-hill hill-one"></span><span class="garden-hill hill-two"></span></span>
+          <span class="project-meta">CONCEPT / 02</span>
+          <span class="project-title">Quiet Digital Garden</span>
+          <span class="project-description">A softer, nature-inspired visual experience.</span>
+          <span class="project-open">Explore concept ↗</span>
+        </button>
       </div>
     </section>
 
     <!-- DIGITAL LAB -->
-    <section class="lab-section section-shell">
-      <div class="lab-panel reveal">
-        <div class="lab-orb" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </div>
-
-        <div class="lab-content">
-          <div class="section-kicker">
-            <span>04</span><span class="kicker-line"></span>
-            <span>DIGITAL EXPERIMENTS</span>
-          </div>
-
-          <h2>Curiosity is<br><em>part of the craft.</em></h2>
-
+    <section class="section section-shell lab-section">
+      <div class="lab-card glass-card reveal">
+        <div class="lab-orb" aria-hidden="true"><span></span></div>
+        <div>
+          <p class="eyebrow">04 — THE DIGITAL LAB</p>
+          <h2>Curiosity keeps<br><span class="gradient-text">the work evolving.</span></h2>
           <p>
-            I explore ways to combine motion, depth, and technology into
-            interfaces that feel alive — while keeping performance and
-            accessibility in mind.
+            I enjoy exploring interface ideas, animation, frontend techniques
+            and small game-development experiments. New tools are useful when
+            they help turn an idea into a better result.
           </p>
-
-          <button class="button button-outline detail-trigger" data-modal="lab">
-            Inside the digital lab <span class="button-arrow">↗</span>
-          </button>
+          <button class="button button-secondary" type="button" data-modal="lab">Inside the lab ↗</button>
         </div>
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section class="content-section contact-section section-shell" id="contact">
-      <div class="section-kicker">
-        <span>05</span><span class="kicker-line"></span>
-        <span>LET'S MAKE SOMETHING</span>
+    <section id="contact" class="section section-shell contact-section">
+      <div class="section-heading reveal">
+        <p class="eyebrow">05 — LET'S TALK</p>
+        <h2>Have an idea?<br><span class="gradient-text">Let's give it direction.</span></h2>
+        <p class="section-intro">
+          Share a few details about your project. I'll review the brief and
+          get back to you.
+        </p>
       </div>
 
       <div class="contact-grid">
-        <div class="contact-heading reveal">
-          <h2>Have an idea?<br><em>Let's shape it.</em></h2>
-          <p>
-            Tell me a little about what you're building. I'll get back
-            to you by email.
-          </p>
+        <aside class="contact-aside reveal">
+          <div class="contact-aside-mark">MW<span>.</span></div>
+          <h3>Wazir Aura</h3>
+          <p>Independent digital services by Murad Wazir.</p>
+          <div class="contact-detail"><span>EMAIL</span><a href="mailto:zuhaibwazir558@gmail.com">zuhaibwazir558@gmail.com</a></div>
+          <div class="contact-detail"><span>WORK WITH ME</span><a href="https://www.fiverr.com/s/RVVGDbN" target="_blank" rel="noopener noreferrer">Visit my Fiverr ↗</a></div>
+          <p class="contact-small">Project scope, price and timeline are confirmed before work starts.</p>
+        </aside>
 
-          <a class="email-link" href="mailto:zuhaibwazir558@gmail.com">
-            zuhaibwazir558@gmail.com <span>↗</span>
-          </a>
-        </div>
-
-        <form class="contact-form reveal" id="contactForm">
-          <label for="name">Your name</label>
-          <input id="name" name="name" autocomplete="name"
-            maxlength="100" required placeholder="Name">
-
-          <label for="email">Email address</label>
-          <input id="email" name="email" type="email"
-            autocomplete="email" maxlength="254"
-            required placeholder="you@example.com">
-
-          <label for="subject">What's it about?</label>
-          <input id="subject" name="subject" maxlength="160"
-            required placeholder="Website, collaboration, question…">
-
-          <label for="message">A few details</label>
-          <textarea id="message" name="message" rows="4"
-            minlength="10" maxlength="5000" required
-            placeholder="Tell me about your idea…"></textarea>
-
-          <div class="form-bottom">
-            <p id="formStatus" role="status" aria-live="polite">
-              Send your inquiry directly through this form.
-            </p>
-
-            <button class="button button-primary" type="submit" id="submitButton">
-              Send message <span class="button-arrow">↗</span>
-            </button>
+        <form id="contactForm" class="contact-form glass-card reveal">
+          <div class="form-row">
+            <label for="name">Your name
+              <input id="name" name="name" type="text" autocomplete="name" maxlength="100" required placeholder="Full name">
+            </label>
+            <label for="email">Email address
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com">
+            </label>
           </div>
+
+          <label for="subject">What is this about?
+            <input id="subject" name="subject" type="text" maxlength="160" required placeholder="Project or service">
+          </label>
+
+          <label for="message">Tell me about your project
+            <textarea id="message" name="message" minlength="10" maxlength="5000" required rows="5" placeholder="A few details about your idea, requirements and timeline..."></textarea>
+          </label>
+
+          <div class="turnstile-wrap">
+            <p class="turnstile-label">SECURITY VERIFICATION</p>
+            <div
+              id="turnstileWidget"
+              class="cf-turnstile"
+              data-sitekey="PASTE_YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY_HERE"
+              data-theme="dark"
+              data-callback="onTurnstileSuccess"
+              data-expired-callback="onTurnstileExpired"
+              data-error-callback="onTurnstileError">
+            </div>
+            <p class="form-hint">Please complete the verification before sending.</p>
+          </div>
+
+          <button id="submitButton" class="button button-primary submit-button" type="submit">
+            <span>Send your message</span><span aria-hidden="true">↗</span>
+          </button>
+
+          <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+          <p class="form-privacy">Your details are used to respond to your enquiry.</p>
         </form>
       </div>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer section-shell">
-    <a class="brand" href="#home">
-      <span class="brand-mark">WA</span>
-      <span class="brand-name">WAZIR <i>AURA</i></span>
+    <a class="brand footer-brand" href="#home">
+      <span class="brand-mark">W<span>A</span></span>
+      <span class="brand-copy"><strong>WAZIR AURA</strong><small>DIGITAL EXPERIENCES</small></span>
     </a>
 
-    <p>© <span id="year"></span> Wazir Aura · Murad Wazir</p>
+    <p>Independent work. Intentional experiences.</p>
 
-    <div class="social-links">
-      <a href="https://www.linkedin.com/in/murad-wazir-bbb0b541a/"
-         target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
-      <a href="https://www.instagram.com/waziraura553/"
-         target="_blank" rel="noopener noreferrer">Instagram ↗</a>
-      <a href="https://www.fiverr.com/s/RVVGDbN"
-         target="_blank" rel="noopener noreferrer">Fiverr ↗</a>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/murad-wazir-bbb0b541a/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="https://www.instagram.com/waziraura553/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+      <a href="https://www.fiverr.com/s/RVVGDbN" target="_blank" rel="noopener noreferrer">Fiverr ↗</a>
     </div>
+
+    <small>© <span id="year"></span> Wazir Aura</small>
   </footer>
 
-  <!-- Reusable detail popup -->
-  <dialog class="detail-dialog" id="detailDialog">
-    <button class="dialog-close" id="dialogClose"
-      type="button" aria-label="Close details">×</button>
-
-    <p class="eyebrow">
-      <span class="eyebrow-dot"></span> WAZIR AURA / DETAILS
-    </p>
-
-    <h2 id="dialogTitle">Details</h2>
-    <div id="dialogBody"></div>
-
-    <a class="button button-primary" href="#contact" id="dialogContact">
-      Let's talk <span class="button-arrow">↗</span>
-    </a>
+  <!-- DETAILS DIALOG -->
+  <dialog id="detailDialog" class="detail-dialog">
+    <div class="dialog-top">
+      <span class="eyebrow">WAZIR AURA / DETAILS</span>
+      <button id="dialogClose" class="dialog-close" type="button" aria-label="Close dialog">✕</button>
+    </div>
+    <h2 id="dialogTitle">Explore</h2>
+    <div id="dialogBody" class="dialog-body"></div>
+    <a id="dialogContact" class="button button-primary" href="#contact">Discuss a project ↗</a>
   </dialog>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
