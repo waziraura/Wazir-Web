@@ -1,140 +1,409 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#070914" />
-  <meta name="description" content="Wazir Aura — creative web development, digital experiences and modern design." />
-  <title>Wazir Aura — Beyond Ordinary</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js" defer></script>
-</head>
-<body>
-  <canvas id="spaceCanvas" aria-hidden="true"></canvas>
-  <div class="nebula nebula-one"></div>
-  <div class="nebula nebula-two"></div>
-  <div class="planet planet-one" aria-hidden="true"></div>
-  <div class="planet planet-two" aria-hidden="true"></div>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090a0b">
+  <meta name="description" content="Wazir Aura by Murad Wazir — creative frontend development and immersive digital experiences.">
+  <title>Wazir Aura — Digital Experiences</title>
 
-  <header class="header">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js browser module -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.166.1/build/three.module.js"
+      }
+    }
+  </script>
+
+  <script type="module" src="script.js"></script>
+</head>
+
+<body class="theme-space">
+
+  <!-- WebGL background -->
+  <div class="scene-wrap" aria-hidden="true">
+    <canvas id="webgl-scene"></canvas>
+    <div class="scene-vignette"></div>
+  </div>
+
+  <header class="site-header">
     <a class="brand" href="#home" aria-label="Wazir Aura home">
-      <span class="brand-mark"><svg viewBox="0 0 64 64" role="img" aria-label="MW logo">
-        <defs><linearGradient id="mwGradient" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#78f5e5"/><stop offset="1" stop-color="#8a75ff"/></linearGradient></defs>
-        <path d="M7 15 L18 49 L31 27 L43 49 L57 15" fill="none" stroke="url(#mwGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M22 15 L32 7 L42 15" fill="none" stroke="url(#mwGradient)" stroke-width="3" stroke-linecap="round"/>
-      </svg></span>
-      <span class="brand-name">WAZIR <b>AURA</b><small>DIGITAL EXPERIENCES</small></span>
+      <span class="brand-mark">WA</span>
+      <span class="brand-name">WAZIR <i>AURA</i></span>
     </a>
 
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+    <button class="menu-toggle" id="menuToggle"
+      aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span>
+    </button>
 
-    <nav class="nav" id="mainNav">
-      <a class="nav-link active" href="#home">Home</a>
-      <a class="nav-link" href="#services">Services</a>
-      <a class="nav-link" href="#portfolio">Portfolio</a>
-      <a class="nav-link" href="#marketplace">Explore</a>
-      <a class="nav-link" href="#about">About</a>
-      <a class="nav-link" href="#faq">FAQ</a>
-      <a class="nav-link nav-contact" href="#contact">Let's Talk <span>↗</span></a>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme">☼</button>
+    <nav class="main-nav" id="mainNav">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#contact">Contact</a>
     </nav>
+
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" type="button">
+        <span class="toggle-orb"></span>
+        <span id="themeLabel">SPACE MODE</span>
+      </button>
+    </div>
   </header>
 
   <main>
-    <section class="hero section" id="home">
+    <!-- HERO -->
+    <section class="hero section-shell" id="home">
       <div class="hero-copy reveal">
-        <div class="eyebrow"><span class="status-dot"></span> INDEPENDENT DIGITAL CREATIVE</div>
-        <h1>Ideas from<br />another <span class="gradient-text">universe.</span></h1>
-        <p class="hero-description">I build modern websites and digital experiences where thoughtful design meets purposeful technology.</p>
+        <p class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          INDEPENDENT FRONTEND DEVELOPER
+        </p>
+
+        <h1>
+          Digital worlds,<br>
+          <em>built with feeling.</em>
+        </h1>
+
+        <p class="hero-description">
+          I'm Murad Wazir — shaping thoughtful ideas into immersive,
+          responsive web experiences under the name Wazir Aura.
+        </p>
+
         <div class="hero-actions">
-          <a class="button button-primary" href="#portfolio">Explore my work <span>↗</span></a>
-          <a class="button button-ghost" href="#contact"><span class="play-icon">↗</span> Start a project</a>
+          <a class="button button-primary" href="#work">
+            Explore my work <span class="button-arrow">↗</span>
+          </a>
+          <a class="button button-quiet" href="#about">
+            Meet the creator <span class="button-arrow">↓</span>
+          </a>
         </div>
-        <div class="hero-meta"><span>✦ DESIGN</span><i></i><span>✦ DEVELOPMENT</span><i></i><span>✦ IDEAS</span></div>
+
+        <div class="hero-footnote">
+          <span class="scroll-line"></span>
+          SCROLL TO DISCOVER
+        </div>
       </div>
 
-      <div class="hero-art reveal">
-        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
-        <div class="hero-core"><div class="core-ring"></div><div class="core-logo">MW</div><span class="core-caption">CREATE BEYOND</span></div>
-        <div class="float-card card-top"><span class="mini-icon">✳</span><div><b>Creative thinking</b><small>Ideas into experiences</small></div></div>
-        <div class="float-card card-bottom"><span class="mini-check">✓</span><div><b>Built with purpose</b><small>Detail. Function. Feeling.</small></div></div>
-        <span class="art-star star-a">✦</span><span class="art-star star-b">✧</span><span class="art-star star-c">✦</span>
-      </div>
-      <a href="#services" class="scroll-cue"><span></span> SCROLL TO EXPLORE</a>
-    </section>
+      <aside class="hero-side-note reveal">
+        <span class="side-index">01 / 05</span>
+        <span class="side-rule"></span>
+        <p>Design is the first impression. Experience is what stays.</p>
+      </aside>
 
-    <section class="section intro-strip reveal">
-      <span class="strip-label">THE AURA APPROACH</span>
-      <p>Not just a website. <span>A digital experience worth remembering.</span></p>
-    </section>
-
-    <section class="section content-section" id="services">
-      <div class="section-heading reveal"><div><span class="eyebrow">WHAT I DO</span><h2>Built to make<br /><span class="gradient-text">an impression.</span></h2></div><p>From the first idea to the final interaction, every detail has a purpose.</p></div>
-      <div class="service-grid">
-        <article class="service-card reveal"><span class="service-number">01 / DESIGN</span><div class="service-icon">✳</div><h3>Web Design</h3><p>Clean layouts, strong visual identity and intuitive journeys that make your brand stand out.</p><a href="#contact" class="text-link">Discuss design <span>↗</span></a></article>
-        <article class="service-card reveal"><span class="service-number">02 / BUILD</span><div class="service-icon">⌘</div><h3>Frontend Development</h3><p>Responsive, accessible interfaces built with modern HTML, CSS and JavaScript.</p><a href="#contact" class="text-link">Build something <span>↗</span></a></article>
-        <article class="service-card reveal"><span class="service-number">03 / CONNECT</span><div class="service-icon">◈</div><h3>Web Experiences</h3><p>Interactive websites, useful features and backend integrations powered by Supabase.</p><a href="#contact" class="text-link">Explore ideas <span>↗</span></a></article>
+      <div class="scene-hint">
+        <span class="hint-ring">↗</span>
+        <span>MOVE YOUR POINTER</span>
       </div>
     </section>
 
-    <section class="section content-section" id="portfolio">
-      <div class="section-heading reveal"><div><span class="eyebrow">SELECTED WORK</span><h2>Projects with<br /><span class="gradient-text">a point of view.</span></h2></div><p>A selection of featured projects. Connect Supabase to load your live portfolio.</p></div>
-      <div class="portfolio-toolbar reveal"><div class="filter-group" id="projectFilters"><button class="filter-btn active" data-filter="all">All projects</button><button class="filter-btn" data-filter="web">Websites</button><button class="filter-btn" data-filter="ui">UI / UX</button><button class="filter-btn" data-filter="creative">Creative</button></div><span class="project-count" id="projectCount">Featured projects</span></div>
-      <div class="project-grid" id="projectGrid">
-        <article class="project-card reveal" data-category="web"><div class="project-art art-aurora"><span class="project-art-label">01 — DIGITAL EXPERIENCE</span><div class="mock-window"><div class="mock-dots">● ● ●</div><div class="mock-content"><span>MAKE IT<br /><b>MATTER.</b></span><div class="mock-shape"></div></div></div></div><div class="project-info"><div><h3>Aurora Digital</h3><p>Brand website · Concept</p></div><span class="project-arrow">↗</span></div></article>
-        <article class="project-card reveal" data-category="ui"><div class="project-art art-orbit"><span class="project-art-label">02 — INTERFACE DESIGN</span><div class="dashboard"><div class="dash-head"></div><div class="dash-chart"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="dash-lines"><i></i><i></i><i></i></div></div></div><div class="project-info"><div><h3>Orbit Dashboard</h3><p>UI / UX · Concept</p></div><span class="project-arrow">↗</span></div></article>
-        <article class="project-card reveal" data-category="creative"><div class="project-art art-prism"><span class="project-art-label">03 — CREATIVE DIRECTION</span><div class="prism-shape">A<span>URA</span></div><span class="prism-caption">LESS ORDINARY.<br />MORE YOU.</span></div><div class="project-info"><div><h3>Prism Studio</h3><p>Creative identity · Concept</p></div><span class="project-arrow">↗</span></div></article>
-      </div>
-      <p class="section-note">The sample cards above are design concepts, not claims of completed client work. Replace them with your real projects.</p>
-    </section>
-
-    <section class="section content-section explore-section" id="marketplace">
-      <div class="section-heading reveal"><div><span class="eyebrow">THE EXPLORER</span><h2>Discover the<br /><span class="gradient-text">Aura universe.</span></h2></div><p>Explore the digital side of the studio, from experiments to useful resources.</p></div>
-      <div class="explore-grid">
-        <a href="#portfolio" class="explore-card reveal"><span class="explore-symbol">⌘</span><span class="explore-tag">01 / WORK</span><h3>Project Gallery</h3><p>Explore website concepts, interface experiments and digital ideas.</p><span class="explore-arrow">↗</span></a>
-        <a href="#services" class="explore-card reveal"><span class="explore-symbol">✧</span><span class="explore-tag">02 / SERVICES</span><h3>Creative Services</h3><p>Find the right starting point for your next digital project.</p><span class="explore-arrow">↗</span></a>
-        <a href="#contact" class="explore-card reveal"><span class="explore-symbol">◈</span><span class="explore-tag">03 / COLLABORATE</span><h3>Work Together</h3><p>Bring your idea, goals and questions. Let's shape the next step.</p><span class="explore-arrow">↗</span></a>
+    <!-- MOVING BRAND STRIP -->
+    <section class="intro-strip" aria-label="Our philosophy">
+      <div class="ticker-track">
+        <span>DESIGN WITH INTENTION</span><b>✳</b>
+        <span>BUILD WITH PURPOSE</span><b>✳</b>
+        <span>DETAILS THAT MATTER</span><b>✳</b>
+        <span>DESIGN WITH INTENTION</span><b>✳</b>
+        <span>BUILD WITH PURPOSE</span><b>✳</b>
       </div>
     </section>
 
-    <section class="section about-section" id="about">
-      <div class="about-visual reveal"><div class="about-orbit"></div><div class="about-monogram">MW<span>✦</span></div><div class="about-caption">DESIGN WITH INTENTION</div></div>
-      <div class="about-copy reveal"><span class="eyebrow">BEHIND THE AURA</span><h2>Human ideas.<br /><span class="gradient-text">Digital craft.</span></h2><p>Wazir Aura is a creative space for turning ideas into thoughtful digital experiences. I focus on frontend development, visual detail and interactions that feel natural.</p><p>My process combines independent ideas, careful implementation and modern tools to create websites that look considered and work smoothly.</p><div class="skill-list"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Supabase</span><span>Responsive UI</span></div><a class="button button-primary" href="#contact">Let's create something <span>↗</span></a></div>
-    </section>
+    <!-- ABOUT -->
+    <section class="content-section section-shell" id="about">
+      <div class="section-kicker">
+        <span>01</span><span class="kicker-line"></span>
+        <span>A LITTLE ABOUT ME</span>
+      </div>
 
-    <section class="section content-section faq-section" id="faq">
-      <div class="section-heading reveal"><div><span class="eyebrow">GOOD TO KNOW</span><h2>Questions, <span class="gradient-text">answered.</span></h2></div><p>A few things you might want to know before starting.</p></div>
-      <div class="faq-list">
-        <article class="faq-item reveal"><button class="faq-question" aria-expanded="false">What kind of websites do you build?<span>+</span></button><div class="faq-answer"><p>Modern portfolio sites, landing pages, brand websites and interactive frontend experiences tailored to a project's goals.</p></div></article>
-        <article class="faq-item reveal"><button class="faq-question" aria-expanded="false">Can you connect a website to a database?<span>+</span></button><div class="faq-answer"><p>Yes. Supabase can provide a database, APIs and other backend features. Database permissions must be configured carefully.</p></div></article>
-        <article class="faq-item reveal"><button class="faq-question" aria-expanded="false">Will the website work on mobile?<span>+</span></button><div class="faq-answer"><p>The layout is responsive and adapts to desktop, tablet and mobile screens. Always test on your target devices before publishing.</p></div></article>
-        <article class="faq-item reveal"><button class="faq-question" aria-expanded="false">How can I start a project?<span>+</span></button><div class="faq-answer"><p>Send a message through the contact form with your idea, desired features and any timeline or reference links.</p></div></article>
+      <div class="about-grid">
+        <div class="section-heading reveal">
+          <h2>Ideas first.<br><em>Impact always.</em></h2>
+        </div>
+
+        <div class="about-copy reveal">
+          <p class="large-copy">
+            My name is Murad Wazir. I'm a frontend web developer who
+            enjoys turning clear ideas into expressive digital experiences.
+          </p>
+
+          <p>
+            Wazir Aura is my creative identity: a place for thoughtful
+            interfaces, smooth interactions, strong visual direction,
+            and websites that feel memorable without losing usability.
+          </p>
+
+          <button class="inline-link detail-trigger" data-modal="about">
+            More about my approach <span>↗</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="principle-row">
+        <article class="principle-card reveal">
+          <span class="principle-num">01</span>
+          <h3>Clarity</h3>
+          <p>A beautiful experience should still feel effortless to use.</p>
+        </article>
+
+        <article class="principle-card reveal">
+          <span class="principle-num">02</span>
+          <h3>Character</h3>
+          <p>Visual details give a brand its own recognizable voice.</p>
+        </article>
+
+        <article class="principle-card reveal">
+          <span class="principle-num">03</span>
+          <h3>Motion</h3>
+          <p>Animation should guide attention, not compete with it.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section contact-section" id="contact">
-      <div class="contact-copy reveal"><span class="eyebrow">YOUR IDEA STARTS HERE</span><h2>Have a big idea?<br /><span class="gradient-text">Let's make it real.</span></h2><p>Tell me what you're imagining. Send a message and let's discuss what comes next.</p><div class="contact-detail"><span class="contact-detail-icon">✉</span><div><small>PROJECT ENQUIRIES</small><b>Use the contact form</b></div></div><div class="contact-detail"><span class="contact-detail-icon">⌁</span><div><small>BUILT FOR</small><b>Creative collaborations</b></div></div></div>
-      <form class="contact-form reveal" id="contactForm">
-        <div class="form-heading"><h3>Start a conversation</h3><span class="form-status-dot"></span></div>
-        <label for="name">Your name</label><input id="name" name="name" type="text" placeholder="What should I call you?" maxlength="100" required />
-        <label for="email">Email address</label><input id="email" name="email" type="email" placeholder="you@example.com" maxlength="254" required />
-        <label for="projectType">What do you have in mind?</label><select id="projectType" name="projectType" required><option value="">Select a project type</option><option>Website design</option><option>Frontend development</option><option>Portfolio website</option><option>Supabase integration</option><option>Other project</option></select>
-        <label for="message">Tell me about your project</label><textarea id="message" name="message" rows="4" maxlength="5000" placeholder="A little about your idea, goals and features..." required></textarea>
-        <button class="button button-primary submit-button" id="submitButton" type="submit">Send message <span>↗</span></button>
-        <p class="form-status" id="formStatus" role="status" aria-live="polite">Your message will be sent securely through the configured Supabase connection.</p>
-      </form>
+    <!-- SERVICES -->
+    <section class="content-section services-section section-shell" id="services">
+      <div class="section-kicker">
+        <span>02</span><span class="kicker-line"></span>
+        <span>WHAT I CAN HELP WITH</span>
+      </div>
+
+      <div class="section-title-row reveal">
+        <h2>Made for the<br><em>next impression.</em></h2>
+        <p>
+          Focused services for brands and people who want their online
+          presence to feel considered, current, and distinctly theirs.
+        </p>
+      </div>
+
+      <div class="service-list">
+        <article class="service-row reveal">
+          <span class="service-count">01</span>
+          <div>
+            <h3>Frontend Development</h3>
+            <p>Responsive pages with clean structure and careful implementation.</p>
+          </div>
+          <button class="round-arrow detail-trigger" data-modal="frontend"
+            aria-label="Frontend development details">↗</button>
+        </article>
+
+        <article class="service-row reveal">
+          <span class="service-count">02</span>
+          <div>
+            <h3>Interactive UI</h3>
+            <p>Micro-interactions, motion, polished states, and intuitive navigation.</p>
+          </div>
+          <button class="round-arrow detail-trigger" data-modal="ui"
+            aria-label="Interactive UI details">↗</button>
+        </article>
+
+        <article class="service-row reveal">
+          <span class="service-count">03</span>
+          <div>
+            <h3>Creative Landing Pages</h3>
+            <p>Distinctive first impressions for portfolios, products, and campaigns.</p>
+          </div>
+          <button class="round-arrow detail-trigger" data-modal="landing"
+            aria-label="Landing page details">↗</button>
+        </article>
+
+        <article class="service-row reveal">
+          <span class="service-count">04</span>
+          <div>
+            <h3>Web Research & Data Work</h3>
+            <p>Organized online research, data entry, and document formatting.</p>
+          </div>
+          <button class="round-arrow detail-trigger" data-modal="research"
+            aria-label="Research service details">↗</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="content-section work-section section-shell" id="work">
+      <div class="section-kicker">
+        <span>03</span><span class="kicker-line"></span>
+        <span>SELECTED DIRECTIONS</span>
+      </div>
+
+      <div class="section-title-row reveal">
+        <h2>A glimpse of<br><em>what's possible.</em></h2>
+        <p>
+          Concept directions showing how storytelling, structure, and
+          interaction can work together. Concept cards are not claimed
+          client projects.
+        </p>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card project-space reveal">
+          <div class="project-art">
+            <div class="art-orbit orbit-a"></div>
+            <div class="art-orbit orbit-b"></div>
+            <div class="art-planet"></div>
+            <span class="art-label">01 / DIGITAL WORLD</span>
+          </div>
+
+          <div class="project-meta">
+            <div>
+              <span>INTERACTIVE CONCEPT</span>
+              <h3>Beyond the Ordinary</h3>
+            </div>
+            <button class="inline-link detail-trigger" data-modal="project-space">
+              View concept ↗
+            </button>
+          </div>
+        </article>
+
+        <article class="project-card project-garden reveal">
+          <div class="project-art">
+            <div class="art-sun"></div>
+            <div class="art-hill hill-a"></div>
+            <div class="art-hill hill-b"></div>
+            <div class="art-flower flower-a">✿</div>
+            <div class="art-flower flower-b">✿</div>
+            <span class="art-label">02 / LIVING BRAND</span>
+          </div>
+
+          <div class="project-meta">
+            <div>
+              <span>VISUAL STORYTELLING</span>
+              <h3>Field Notes</h3>
+            </div>
+            <button class="inline-link detail-trigger" data-modal="project-garden">
+              View concept ↗
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DIGITAL LAB -->
+    <section class="lab-section section-shell">
+      <div class="lab-panel reveal">
+        <div class="lab-orb" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+
+        <div class="lab-content">
+          <div class="section-kicker">
+            <span>04</span><span class="kicker-line"></span>
+            <span>DIGITAL EXPERIMENTS</span>
+          </div>
+
+          <h2>Curiosity is<br><em>part of the craft.</em></h2>
+
+          <p>
+            I explore ways to combine motion, depth, and technology into
+            interfaces that feel alive — while keeping performance and
+            accessibility in mind.
+          </p>
+
+          <button class="button button-outline detail-trigger" data-modal="lab">
+            Inside the digital lab <span class="button-arrow">↗</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="content-section contact-section section-shell" id="contact">
+      <div class="section-kicker">
+        <span>05</span><span class="kicker-line"></span>
+        <span>LET'S MAKE SOMETHING</span>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-heading reveal">
+          <h2>Have an idea?<br><em>Let's shape it.</em></h2>
+          <p>
+            Tell me a little about what you're building. I'll get back
+            to you by email.
+          </p>
+
+          <a class="email-link" href="mailto:zuhaibwazir558@gmail.com">
+            zuhaibwazir558@gmail.com <span>↗</span>
+          </a>
+        </div>
+
+        <form class="contact-form reveal" id="contactForm">
+          <label for="name">Your name</label>
+          <input id="name" name="name" autocomplete="name"
+            maxlength="100" required placeholder="Name">
+
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email"
+            autocomplete="email" maxlength="254"
+            required placeholder="you@example.com">
+
+          <label for="subject">What's it about?</label>
+          <input id="subject" name="subject" maxlength="160"
+            required placeholder="Website, collaboration, question…">
+
+          <label for="message">A few details</label>
+          <textarea id="message" name="message" rows="4"
+            minlength="10" maxlength="5000" required
+            placeholder="Tell me about your idea…"></textarea>
+
+          <div class="form-bottom">
+            <p id="formStatus" role="status" aria-live="polite">
+              Send your inquiry directly through this form.
+            </p>
+
+            <button class="button button-primary" type="submit" id="submitButton">
+              Send message <span class="button-arrow">↗</span>
+            </button>
+          </div>
+        </form>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <a class="brand footer-brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M7 15 L18 49 L31 27 L43 49 L57 15" fill="none" stroke="#78f5e5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="brand-name">WAZIR <b>AURA</b><small>DIGITAL EXPERIENCES</small></span></a>
-    <p>Thoughtful ideas. Digital worlds. © <span id="currentYear"></span> Wazir Aura.</p>
-    <a class="back-top" href="#home">Back to top ↑</a>
+  <!-- FOOTER -->
+  <footer class="site-footer section-shell">
+    <a class="brand" href="#home">
+      <span class="brand-mark">WA</span>
+      <span class="brand-name">WAZIR <i>AURA</i></span>
+    </a>
+
+    <p>© <span id="year"></span> Wazir Aura · Murad Wazir</p>
+
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/murad-wazir-bbb0b541a/"
+         target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+      <a href="https://www.instagram.com/waziraura553/"
+         target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+      <a href="https://www.fiverr.com/s/RVVGDbN"
+         target="_blank" rel="noopener noreferrer">Fiverr ↗</a>
+    </div>
   </footer>
+
+  <!-- Reusable detail popup -->
+  <dialog class="detail-dialog" id="detailDialog">
+    <button class="dialog-close" id="dialogClose"
+      type="button" aria-label="Close details">×</button>
+
+    <p class="eyebrow">
+      <span class="eyebrow-dot"></span> WAZIR AURA / DETAILS
+    </p>
+
+    <h2 id="dialogTitle">Details</h2>
+    <div id="dialogBody"></div>
+
+    <a class="button button-primary" href="#contact" id="dialogContact">
+      Let's talk <span class="button-arrow">↗</span>
+    </a>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 </body>
 </html>
