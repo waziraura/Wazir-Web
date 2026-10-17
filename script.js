@@ -1,395 +1,325 @@
-
 import * as THREE from "three";
+import { submitContactMessage } from "./supabase.js";
 
-const canvas = document.querySelector("#webgl-scene");
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
 const body = document.body;
-const reducedMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)"
-).matches;
-const touchDevice = window.matchMedia("(pointer: coarse)").matches;
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-const state = {
-  theme: "space",
-  pointerX: 0,
-  pointerY: 0,
-  targetX: 0,
-  targetY: 0
-};
+/* -----------------------------
+   CINEMATIC WELCOME
+----------------------------- */
+const welcomeScreen = $("#welcomeScreen");
+const welcomeEnter = $("#welcomeEnter");
+const welcomeSkip = $("#welcomeSkip");
 
-let renderer;
-let scene;
-let camera;
-let clock;
-let spaceGroup;
-let gardenGroup;
-let planet;
-let planetRing;
-let starField;
-let flowers;
+function enterExperience() {
+  if (!welcomeScreen || welcomeScreen.classList.contains("is-leaving")) return;
+
+  welcomeScreen.classList.add("is-leaving");
+  welcomeEnter?.setAttribute("aria-expanded", "false");
+
+  window.setTimeout(() => {
+    welcomeScreen.hidden = true;
+  }, reducedMotion ? 0 : 1050);
+
+  showToast("Welcome to Wazir Aura.");
+}
+
+welcomeEnter?.addEventListener("click", enterExperience);
+welcomeSkip?.addEventListener("click", enterExperience);
+
+welcomeScreen?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") enterExperience();
+});
+
+/* -----------------------------
+   TOAST
+----------------------------- */
+const toast = $("#toast");
+let toastTimeout;
 
 function showToast(message) {
-  const toast = document.querySelector("#toast");
   if (!toast) return;
 
   toast.textContent = message;
   toast.classList.add("show");
 
-  window.setTimeout(() => {
+  window.clearTimeout(toastTimeout);
+  toastTimeout = window.setTimeout(() => {
     toast.classList.remove("show");
-  }, 4000);
+  }, 3000);
 }
 
-/* ---------- THREE.JS INITIALIZATION ---------- */
+/* -----------------------------
+   THREE.JS BACKGROUND
+----------------------------- */
+const canvas = $("#webgl-scene");
+let renderer;
+let scene;
+let camera;
+let starField;
+let planet;
+let planetMaterial;
+let planetGroup;
+let gardenObjects = [];
+let animationFrame = 0;
+let sceneReady = false;
 
-function initScene() {
-  try {
-    renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: !touchDevice,
-      alpha: false,
-      powerPreference: "high-performance"
-    });
-
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio || 1, touchDevice ? 1.25 : 1.7)
-    );
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color("#08090d");
-
-    camera = new THREE.PerspectiveCamera(
-      42,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      120
-    );
-
-    camera.position.set(0, 0.4, 12);
-    clock = new THREE.Clock();
-
-    buildSpace();
-    buildGarden();
-
-    gardenGroup.visible = false;
-
-    window.addEventListener("resize", resizeScene);
-    window.addEventListener("pointermove", onPointerMove, {
-      passive: true
-    });
-
-    animate();
-    setTheme("space");
-  } catch (error) {
-    console.error("WebGL scene initialization failed:", error);
-    showToast(
-      "The 3D scene could not start. The rest of the website is still available."
-    );
-  }
-}
-
-/* ---------- SPACE SCENE ---------- */
-
-function buildSpace() {
-  spaceGroup = new THREE.Group();
-  scene.add(spaceGroup);
-
-  // Star field
-  const count = touchDevice ? 800 : 1700;
+function createStarField() {
+  const count = 1400;
   const positions = new Float32Array(count * 3);
 
   for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 48;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 30;
-    positions[i * 3 + 2] = -Math.random() * 35 - 2;
+    positions[i * 3] = (Math.random() - 0.5) * 90;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 65;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 65;
   }
 
-  const starGeometry = new THREE.BufferGeometry();
-  starGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(positions, 3)
-  );
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
-  const starMaterial = new THREE.PointsMaterial({
-    color: 0xf4e6c8,
-    size: 0.045,
+  const material = new THREE.PointsMaterial({
+    color: 0xc5c5ff,
+    size: 0.075,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.8,
     sizeAttenuation: true
   });
 
-  starField = new THREE.Points(starGeometry, starMaterial);
-  spaceGroup.add(starField);
-
-  spaceGroup.add(new THREE.AmbientLight(0xaaa5a0, 1.2));
-
-  const goldLight = new THREE.PointLight(0xffd69a, 110, 35, 2);
-  goldLight.position.set(-4, 4, 5);
-  spaceGroup.add(goldLight);
-
-  const rimLight = new THREE.PointLight(0x9ba7ba, 60, 30, 2);
-  rimLight.position.set(5, -1, -1);
-  spaceGroup.add(rimLight);
-
-  // Main planet
-  const planetGeometry = new THREE.SphereGeometry(
-    2.1,
-    touchDevice ? 40 : 72,
-    touchDevice ? 40 : 72
-  );
-
-  const planetMaterial = new THREE.MeshStandardMaterial({
-    color: 0xc8a773,
-    roughness: 0.9,
-    metalness: 0.04
-  });
-
-  planet = new THREE.Mesh(planetGeometry, planetMaterial);
-  planet.position.set(3.5, 0.25, -1.5);
-  spaceGroup.add(planet);
-
-  // Procedural banded surface texture
-  const textureCanvas = document.createElement("canvas");
-  textureCanvas.width = 512;
-  textureCanvas.height = 256;
-
-  const context = textureCanvas.getContext("2d");
-  const bands = context.createLinearGradient(0, 0, 0, 256);
-
-  bands.addColorStop(0, "#493b2a");
-  bands.addColorStop(0.17, "#b99a68");
-  bands.addColorStop(0.29, "#806547");
-  bands.addColorStop(0.44, "#ddc18d");
-  bands.addColorStop(0.58, "#8a704f");
-  bands.addColorStop(0.73, "#c4a775");
-  bands.addColorStop(1, "#41372b");
-
-  context.fillStyle = bands;
-  context.fillRect(0, 0, 512, 256);
-
-  for (let i = 0; i < 36; i++) {
-    context.globalAlpha = Math.random() * 0.14;
-    context.fillStyle = i % 2 ? "#f4dca9" : "#29241e";
-    context.fillRect(0, Math.random() * 256, 512, Math.random() * 6 + 1);
-  }
-
-  context.globalAlpha = 1;
-
-  const surfaceTexture = new THREE.CanvasTexture(textureCanvas);
-  surfaceTexture.colorSpace = THREE.SRGBColorSpace;
-  planet.material.map = surfaceTexture;
-  planet.material.color.set("#ffffff");
-  planet.material.needsUpdate = true;
-
-  // Planet rings
-  const ringGeometry = new THREE.RingGeometry(2.55, 3.5, 144);
-  const ringMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd9c39a,
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.68,
-    roughness: 0.8,
-    depthWrite: false
-  });
-
-  planetRing = new THREE.Mesh(ringGeometry, ringMaterial);
-  planetRing.position.copy(planet.position);
-  planetRing.rotation.x = Math.PI * 0.38;
-  planetRing.rotation.y = -0.12;
-  spaceGroup.add(planetRing);
-
-  // Distant small planet
-  const distantPlanet = new THREE.Mesh(
-    new THREE.SphereGeometry(0.58, 32, 32),
-    new THREE.MeshStandardMaterial({
-      color: 0x9a7254,
-      roughness: 0.96
-    })
-  );
-
-  distantPlanet.position.set(-7, 3.1, -8);
-  spaceGroup.add(distantPlanet);
-
-  // Soft nebula made as a generated texture, not a blurry filter
-  const nebulaCanvas = document.createElement("canvas");
-  nebulaCanvas.width = 256;
-  nebulaCanvas.height = 256;
-
-  const nebulaContext = nebulaCanvas.getContext("2d");
-  const nebulaGradient = nebulaContext.createRadialGradient(
-    128, 128, 3, 128, 128, 128
-  );
-
-  nebulaGradient.addColorStop(0, "rgba(155,110,62,.22)");
-  nebulaGradient.addColorStop(0.5, "rgba(80,60,45,.12)");
-  nebulaGradient.addColorStop(1, "rgba(10,10,20,0)");
-
-  nebulaContext.fillStyle = nebulaGradient;
-  nebulaContext.fillRect(0, 0, 256, 256);
-
-  const nebulaTexture = new THREE.CanvasTexture(nebulaCanvas);
-  const nebula = new THREE.Sprite(
-    new THREE.SpriteMaterial({
-      map: nebulaTexture,
-      transparent: true,
-      depthWrite: false
-    })
-  );
-
-  nebula.scale.set(19, 13, 1);
-  nebula.position.set(0, 1, -15);
-  spaceGroup.add(nebula);
+  return new THREE.Points(geometry, material);
 }
 
-/* ---------- GARDEN SCENE ---------- */
+function createSpaceObjects() {
+  planetGroup = new THREE.Group();
 
-function buildGarden() {
-  gardenGroup = new THREE.Group();
-  scene.add(gardenGroup);
-
-  const sky = new THREE.Mesh(
-    new THREE.SphereGeometry(55, 32, 24),
-    new THREE.MeshBasicMaterial({
-      color: 0xc8dfb3,
-      side: THREE.BackSide
-    })
-  );
-
-  gardenGroup.add(sky);
-
-  // Sun
-  const sun = new THREE.Mesh(
-    new THREE.SphereGeometry(1.05, 32, 32),
-    new THREE.MeshBasicMaterial({ color: 0xffe7a0 })
-  );
-
-  sun.position.set(5.7, 4.4, -8);
-  gardenGroup.add(sun);
-
-  const sunLight = new THREE.PointLight(0xffe5a3, 60, 35, 2);
-  sunLight.position.copy(sun.position);
-  gardenGroup.add(sunLight);
-
-  gardenGroup.add(
-    new THREE.HemisphereLight(0xe9f7d9, 0x59794c, 2.2)
-  );
-
-  const daylight = new THREE.DirectionalLight(0xfff0ce, 2.2);
-  daylight.position.set(-3, 8, 6);
-  gardenGroup.add(daylight);
-
-  // Ground
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
-    new THREE.MeshStandardMaterial({
-      color: 0x739b5a,
-      roughness: 1
-    })
-  );
-
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -2.8;
-  gardenGroup.add(ground);
-
-  // Rolling landscape hills
-  const hills = [
-    { x: -7, y: -2.2, z: -7, sx: 9, sy: 2.1, sz: 4, c: 0x8fae73 },
-    { x: 3, y: -2.4, z: -9, sx: 11, sy: 2.4, sz: 4.5, c: 0x72965c },
-    { x: 10, y: -2.5, z: -4, sx: 8, sy: 2.7, sz: 4, c: 0x9ebd7b },
-    { x: -12, y: -2.6, z: -4, sx: 8, sy: 2.5, sz: 5, c: 0x688c55 }
-  ];
-
-  hills.forEach(hill => {
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 32, 22),
-      new THREE.MeshStandardMaterial({
-        color: hill.c,
-        roughness: 1
-      })
-    );
-
-    mesh.position.set(hill.x, hill.y, hill.z);
-    mesh.scale.set(hill.sx, hill.sy, hill.sz);
-    gardenGroup.add(mesh);
+  const geometry = new THREE.SphereGeometry(3.6, 64, 64);
+  planetMaterial = new THREE.MeshStandardMaterial({
+    color: 0x6355ac,
+    roughness: 0.78,
+    metalness: 0.12,
+    emissive: 0x171238,
+    emissiveIntensity: 0.6
   });
 
-  // Flowers
-  flowers = new THREE.Group();
-  gardenGroup.add(flowers);
+  planet = new THREE.Mesh(geometry, planetMaterial);
+  planetGroup.add(planet);
 
-  const petalColors = [
-    0xf0a5bd, 0xffe59a, 0xe9e4dc,
-    0xc6a8e8, 0xf5a36b, 0xf8c6d7
-  ];
+  const ringGeometry = new THREE.TorusGeometry(5.1, 0.035, 3, 180);
+  const ringMaterial = new THREE.MeshBasicMaterial({
+    color: 0x8d91ff,
+    transparent: true,
+    opacity: 0.55
+  });
 
-  const flowerCount = touchDevice ? 36 : 68;
+  const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+  ring.rotation.x = Math.PI * 0.36;
+  ring.rotation.y = Math.PI * 0.1;
+  planetGroup.add(ring);
 
-  for (let i = 0; i < flowerCount; i++) {
-    const flower = new THREE.Group();
-    const size = 0.14 + Math.random() * 0.22;
+  const outerRing = new THREE.Mesh(
+    new THREE.TorusGeometry(6.2, 0.018, 3, 180),
+    new THREE.MeshBasicMaterial({
+      color: 0x65e4ff,
+      transparent: true,
+      opacity: 0.3
+    })
+  );
 
-    flower.position.set(
-      (Math.random() - 0.5) * 25,
-      -2.65,
-      -Math.random() * 13 + 1
-    );
+  outerRing.rotation.x = Math.PI * 0.45;
+  outerRing.rotation.y = -Math.PI * 0.2;
+  planetGroup.add(outerRing);
 
-    flower.userData.phase = Math.random() * Math.PI * 2;
+  planetGroup.position.set(4.5, 0, -8);
+  scene.add(planetGroup);
+
+  const pointLight = new THREE.PointLight(0x8c75ff, 25, 30);
+  pointLight.position.set(2, 4, 0);
+  scene.add(pointLight);
+
+  const blueLight = new THREE.PointLight(0x53dfff, 16, 25);
+  blueLight.position.set(-7, -2, -5);
+  scene.add(blueLight);
+}
+
+function createGardenObjects() {
+  const groundGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+  const groundMaterial = new THREE.MeshStandardMaterial({
+    color: 0x0d2b20,
+    roughness: 1,
+    metalness: 0
+  });
+
+  const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -5;
+  scene.add(ground);
+  gardenObjects.push(ground);
+
+  const flowerColors = [0x86e5b3, 0x8b9eff, 0xffd5a2, 0xc8aaff];
+
+  for (let i = 0; i < 60; i++) {
+    const flowerGroup = new THREE.Group();
 
     const stem = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.012, 0.022, 0.45 + size, 6),
-      new THREE.MeshStandardMaterial({ color: 0x456c3b })
+      new THREE.CylinderGeometry(0.018, 0.025, 0.65, 5),
+      new THREE.MeshStandardMaterial({ color: 0x4a9b70 })
     );
-
-    stem.position.y = 0.23;
-    flower.add(stem);
+    stem.position.y = 0.3;
+    flowerGroup.add(stem);
 
     const petalMaterial = new THREE.MeshStandardMaterial({
-      color: petalColors[Math.floor(Math.random() * petalColors.length)],
-      roughness: 0.8
+      color: flowerColors[i % flowerColors.length],
+      emissive: flowerColors[i % flowerColors.length],
+      emissiveIntensity: 0.18,
+      roughness: 0.5
     });
 
-    for (let p = 0; p < 6; p++) {
-      const angle = p / 6 * Math.PI * 2;
+    const center = new THREE.Mesh(
+      new THREE.SphereGeometry(0.11, 10, 10),
+      petalMaterial
+    );
+    center.position.y = 0.68;
+    flowerGroup.add(center);
 
+    for (let j = 0; j < 5; j++) {
       const petal = new THREE.Mesh(
-        new THREE.SphereGeometry(size * 0.44, 10, 8),
+        new THREE.SphereGeometry(0.12, 8, 8),
         petalMaterial
       );
 
+      const angle = (j / 5) * Math.PI * 2;
       petal.position.set(
-        Math.cos(angle) * size * 0.58,
-        0.47 + size * 0.1,
-        Math.sin(angle) * size * 0.58
+        Math.cos(angle) * 0.16,
+        0.68,
+        Math.sin(angle) * 0.16
       );
-
-      petal.scale.set(1, 0.55, 1);
-      flower.add(petal);
+      petal.scale.set(1, 0.55, 0.8);
+      flowerGroup.add(petal);
     }
 
-    const center = new THREE.Mesh(
-      new THREE.SphereGeometry(size * 0.28, 10, 8),
-      new THREE.MeshStandardMaterial({
-        color: 0xffd76b,
-        roughness: 0.7
-      })
+    flowerGroup.position.set(
+      (Math.random() - 0.5) * 42,
+      -4.5,
+      -Math.random() * 30
     );
 
-    center.position.y = 0.49 + size * 0.1;
-    flower.add(center);
-    flowers.add(flower);
+    flowerGroup.rotation.y = Math.random() * Math.PI;
+    flowerGroup.userData.phase = Math.random() * Math.PI * 2;
+    scene.add(flowerGroup);
+    gardenObjects.push(flowerGroup);
+  }
+
+  const gardenLight = new THREE.PointLight(0x65d9a1, 28, 45);
+  gardenLight.position.set(-4, 7, -8);
+  scene.add(gardenLight);
+}
+
+function initScene() {
+  if (!canvas || sceneReady || reducedMotion) return;
+
+  try {
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: !coarsePointer,
+      powerPreference: "low-power"
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
+
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x080912, 0.008);
+
+    camera = new THREE.PerspectiveCamera(
+      48,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      150
+    );
+    camera.position.set(0, 0, 19);
+
+    scene.add(new THREE.AmbientLight(0x9e9dca, 1.5));
+
+    starField = createStarField();
+    scene.add(starField);
+
+    createSpaceObjects();
+    createGardenObjects();
+
+    sceneReady = true;
+    applyTheme(body.classList.contains("theme-garden") ? "garden" : "space");
+    animateScene();
+  } catch (error) {
+    console.warn("3D background unavailable; the website will remain usable.", error);
+    canvas.style.display = "none";
   }
 }
 
-/* ---------- POINTER AND CAMERA ---------- */
+function applyTheme(theme) {
+  const gardenMode = theme === "garden";
 
-function onPointerMove(event) {
-  state.targetX = (event.clientX / window.innerWidth - 0.5) * 2;
-  state.targetY = (event.clientY / window.innerHeight - 0.5) * 2;
+  body.classList.toggle("theme-garden", gardenMode);
+  body.classList.toggle("theme-space", !gardenMode);
+
+  const label = $("#themeLabel");
+  const toggle = $("#themeToggle");
+
+  if (label) label.textContent = gardenMode ? "Garden mode" : "Space mode";
+  if (toggle) {
+    toggle.setAttribute(
+      "aria-label",
+      gardenMode ? "Switch to space theme" : "Switch to garden theme"
+    );
+  }
+
+  if (planetMaterial) {
+    planetMaterial.color.set(gardenMode ? 0x397a60 : 0x6355ac);
+    planetMaterial.emissive.set(gardenMode ? 0x0c3321 : 0x171238);
+  }
+
+  if (starField?.material) {
+    starField.material.color.set(gardenMode ? 0xb5f2ce : 0xc5c5ff);
+  }
+
+  if (scene?.fog) {
+    scene.fog.color.set(gardenMode ? 0x08130f : 0x080912);
+  }
+
+  if (renderer) {
+    renderer.setClearColor(gardenMode ? 0x08130f : 0x080912, 0);
+  }
+}
+
+function animateScene() {
+  if (!renderer || !scene || !camera) return;
+
+  animationFrame = requestAnimationFrame(animateScene);
+  const time = performance.now() * 0.0002;
+
+  if (starField) {
+    starField.rotation.y = time * 0.22;
+    starField.rotation.x = Math.sin(time) * 0.04;
+  }
+
+  if (planetGroup) {
+    planetGroup.rotation.y = time * 0.5;
+    planetGroup.rotation.z = Math.sin(time * 0.7) * 0.04;
+    planetGroup.position.y = Math.sin(time * 1.5) * 0.3;
+  }
+
+  gardenObjects.forEach((object) => {
+    if (object.userData.phase !== undefined) {
+      object.rotation.z = Math.sin(time * 2 + object.userData.phase) * 0.08;
+    }
+  });
+
+  renderer.render(scene, camera);
 }
 
 function resizeScene() {
@@ -397,231 +327,139 @@ function resizeScene() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-
-  renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio || 1, touchDevice ? 1.25 : 1.7)
-  );
-
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
 }
 
-/* ---------- ANIMATION LOOP ---------- */
-
-function animate() {
-  if (!renderer) return;
-
-  requestAnimationFrame(animate);
-
-  const elapsed = clock.getElapsedTime();
-  const motion = reducedMotion ? 0 : 1;
-
-  state.pointerX += (state.targetX - state.pointerX) * 0.025;
-  state.pointerY += (state.targetY - state.pointerY) * 0.025;
-
-  if (spaceGroup) {
-    spaceGroup.rotation.y = state.pointerX * 0.035;
-    starField.rotation.y = state.pointerX * 0.018;
-    starField.rotation.x = state.pointerY * 0.012;
-
-    planet.rotation.y = elapsed * 0.035 * motion;
-    planetRing.rotation.z = Math.sin(elapsed * 0.16) * 0.035 * motion;
-  }
-
-  if (flowers) {
-    flowers.children.forEach(flower => {
-      flower.rotation.z =
-        Math.sin(elapsed * 0.7 * motion + flower.userData.phase) * 0.07;
-    });
-  }
-
-  const cameraX = state.pointerX * 0.22;
-  const cameraY = 0.4 - state.pointerY * 0.12;
-
-  camera.position.x += (cameraX - camera.position.x) * 0.018;
-  camera.position.y += (cameraY - camera.position.y) * 0.018;
-
-  camera.lookAt(state.theme === "space" ? 0.6 : 0, 0, -3);
-
-  renderer.render(scene, camera);
-}
-
-/* ---------- THEME SWITCH ---------- */
-
-function setTheme(theme) {
-  state.theme = theme;
-
-  body.classList.toggle("theme-space", theme === "space");
-  body.classList.toggle("theme-garden", theme === "garden");
-
-  const label = document.querySelector("#themeLabel");
-  const button = document.querySelector("#themeToggle");
-
-  if (label) {
-    label.textContent = theme === "space" ? "SPACE MODE" : "GARDEN MODE";
-  }
-
-  if (button) {
-    button.setAttribute(
-      "aria-label",
-      theme === "space" ? "Switch to garden theme" : "Switch to space theme"
-    );
-  }
-
-  if (scene) {
-    scene.background = new THREE.Color(
-      theme === "space" ? "#08090d" : "#c8dfb3"
-    );
-
-    spaceGroup.visible = theme === "space";
-    gardenGroup.visible = theme === "garden";
-
-    camera.position.z = theme === "space" ? 12 : 13;
-  }
-}
-
-document.querySelector("#themeToggle")?.addEventListener("click", () => {
-  setTheme(state.theme === "space" ? "garden" : "space");
+$("#themeToggle")?.addEventListener("click", () => {
+  const nextTheme = body.classList.contains("theme-garden") ? "space" : "garden";
+  applyTheme(nextTheme);
 });
 
-/* ---------- DETAIL POPUPS ---------- */
+window.addEventListener("resize", resizeScene, { passive: true });
 
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    cancelAnimationFrame(animationFrame);
+  } else if (sceneReady && !reducedMotion) {
+    animateScene();
+  }
+});
+
+/* -----------------------------
+   MOBILE NAVIGATION
+----------------------------- */
+const menuToggle = $("#menuToggle");
+const mainNav = $("#mainNav");
+
+function closeMenu() {
+  menuToggle?.setAttribute("aria-expanded", "false");
+  menuToggle?.setAttribute("aria-label", "Open navigation");
+  mainNav?.classList.remove("is-open");
+}
+
+menuToggle?.addEventListener("click", () => {
+  const open = menuToggle.getAttribute("aria-expanded") !== "true";
+
+  menuToggle.setAttribute("aria-expanded", String(open));
+  menuToggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  mainNav?.classList.toggle("is-open", open);
+});
+
+$$(".main-nav a").forEach((link) => {
+  link.addEventListener("click", closeMenu);
+});
+
+/* -----------------------------
+   DETAIL MODALS
+----------------------------- */
 const details = {
   about: {
-    title: "My approach",
-    body: `
-      <p>I start by understanding the goal, the audience, and the feeling
-      a brand should leave behind.</p>
-      <ul>
-        <li>Clear content hierarchy</li>
-        <li>Responsive layouts</li>
-        <li>Motion that supports the story</li>
-        <li>Careful implementation and testing</li>
-      </ul>`
+    title: "The approach behind Wazir Aura",
+    body: "I’m Murad Wazir. My work spans frontend development, web research, data services, office productivity and creative digital projects. I focus on understanding the brief, communicating clearly and delivering against agreed requirements."
   },
-
   frontend: {
-    title: "Frontend development",
-    body: `
-      <p>Responsive interfaces built with attention to semantic HTML,
-      accessibility, clean CSS, and maintainable JavaScript.</p>
-      <ul>
-        <li>Responsive pages and navigation</li>
-        <li>Consistent visual systems</li>
-        <li>Cross-device checks</li>
-      </ul>`
+    title: "Frontend & Web Development",
+    body: "Responsive interfaces, layouts, interactive elements and visual website concepts. The technical scope, design direction and deliverables are agreed before work starts."
   },
-
-  ui: {
-    title: "Interactive UI",
-    body: `
-      <p>Thoughtful interactions make websites feel intuitive and polished.</p>
-      <ul>
-        <li>Micro-interactions and hover states</li>
-        <li>Scroll reveal animations</li>
-        <li>Keyboard-friendly controls</li>
-      </ul>`
-  },
-
-  landing: {
-    title: "Creative landing pages",
-    body: `
-      <p>Landing pages designed to communicate the offer, build trust,
-      and guide visitors towards a clear next step.</p>
-      <ul>
-        <li>Strong hero sections</li>
-        <li>Brand-focused visual direction</li>
-        <li>Responsive call-to-action sections</li>
-      </ul>`
-  },
-
   research: {
-    title: "Web research and data work",
-    body: `
-      <p>Organized online research, accurate data entry, and document
-      formatting based on the agreed project scope.</p>
-      <p>Delivery details and pricing are confirmed before work begins.</p>`
+    title: "Web Research & Lead Generation",
+    body: "Structured online research, information gathering and organised lead lists based on your target criteria. The sources, fields and expected format are confirmed in advance."
   },
-
+  data: {
+    title: "Data Entry & Formatting",
+    body: "Accurate data entry, spreadsheet updates, copy-paste tasks and information formatting. Share your preferred structure and validation requirements before work begins."
+  },
+  design: {
+    title: "Social Media Banner Design",
+    body: "Promotional banners and social graphics shaped around your content, brand direction and intended platform."
+  },
+  office: {
+    title: "Office Documents",
+    body: "Typing, Microsoft Word formatting, Excel data organisation and PowerPoint presentation support. The required files and final format are agreed in advance."
+  },
+  games: {
+    title: "2D Game Development",
+    body: "Small interactive concepts and learning-focused 2D game projects. Feasibility and technical scope should be discussed before committing to a delivery."
+  },
   "project-space": {
-    title: "Beyond the Ordinary",
-    body: `
-      <p>A concept for a cinematic digital brand, combining a cosmic
-      palette, 3D depth, and restrained movement.</p>
-      <p><strong>Status:</strong> Concept direction, not a client project.</p>`
+    title: "Beyond the Orbit",
+    body: "A space-inspired visual concept exploring depth, glowing orbits, atmospheric lighting and immersive web presentation. This is a concept direction, not a claim of a completed client project."
   },
-
   "project-garden": {
-    title: "Field Notes",
-    body: `
-      <p>A concept for a natural brand world using landscape colors,
-      organic forms, and an open visual layout.</p>
-      <p><strong>Status:</strong> Concept direction, not a client project.</p>`
+    title: "Quiet Digital Garden",
+    body: "A nature-inspired interface concept with softer colour, organic shapes and calm motion. It explores how the same digital experience can feel different through visual direction."
   },
-
   lab: {
-    title: "Inside the digital lab",
-    body: `
-      <p>The hero scene uses Three.js, which renders interactive 3D
-      graphics through WebGL in the browser.</p>
-      <p>The space and garden scenes are real-time stylized 3D graphics,
-      not pre-rendered photorealistic video.</p>`
+    title: "Inside the Digital Lab",
+    body: "The lab is where I explore frontend techniques, 3D effects, interface animation, responsive design and small game concepts. I use tools—including AI tools—where they help implement and refine my own ideas."
   }
 };
 
-const dialog = document.querySelector("#detailDialog");
-const dialogTitle = document.querySelector("#dialogTitle");
-const dialogBody = document.querySelector("#dialogBody");
+const detailDialog = $("#detailDialog");
+const dialogTitle = $("#dialogTitle");
+const dialogBody = $("#dialogBody");
+const dialogClose = $("#dialogClose");
+const dialogContact = $("#dialogContact");
 
-document.querySelectorAll(".detail-trigger").forEach(button => {
-  button.addEventListener("click", () => {
-    const item = details[button.dataset.modal];
-    if (!item || !dialog) return;
+function openDetails(key) {
+  const item = details[key];
+  if (!item || !detailDialog) return;
 
-    dialogTitle.textContent = item.title;
-    dialogBody.innerHTML = item.body;
+  dialogTitle.textContent = item.title;
+  dialogBody.textContent = item.body;
 
-    if (typeof dialog.showModal === "function") {
-      dialog.showModal();
-    } else {
-      showToast(item.title);
-    }
-  });
+  if (typeof detailDialog.showModal === "function") {
+    detailDialog.showModal();
+  } else {
+    detailDialog.setAttribute("open", "");
+  }
+}
+
+$$("[data-modal]").forEach((button) => {
+  button.addEventListener("click", () => openDetails(button.dataset.modal));
 });
 
-document.querySelector("#dialogClose")?.addEventListener("click", () => {
-  dialog?.close();
+dialogClose?.addEventListener("click", () => detailDialog?.close());
+
+detailDialog?.addEventListener("click", (event) => {
+  if (event.target === detailDialog) detailDialog.close();
 });
 
-document.querySelector("#dialogContact")?.addEventListener("click", () => {
-  dialog?.close();
+dialogContact?.addEventListener("click", () => {
+  detailDialog?.close();
 });
 
-dialog?.addEventListener("click", event => {
-  if (event.target === dialog) dialog.close();
-});
+/* -----------------------------
+   SCROLL REVEAL
+----------------------------- */
+const revealElements = $$(".reveal");
 
-/* ---------- MOBILE NAVIGATION ---------- */
-
-const nav = document.querySelector("#mainNav");
-const menuToggle = document.querySelector("#menuToggle");
-
-menuToggle?.addEventListener("click", () => {
-  const opened = nav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(opened));
-});
-
-nav?.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", () => {
-    nav.classList.remove("open");
-    menuToggle?.setAttribute("aria-expanded", "false");
-  });
-});
-
-/* ---------- SCROLL REVEALS ---------- */
-
-if ("IntersectionObserver" in window && !reducedMotion) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
+if (reducedMotion || !("IntersectionObserver" in window)) {
+  revealElements.forEach((element) => element.classList.add("is-visible"));
+} else {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
         observer.unobserve(entry.target);
@@ -629,67 +467,160 @@ if ("IntersectionObserver" in window && !reducedMotion) {
     });
   }, { threshold: 0.12 });
 
-  document.querySelectorAll(".reveal").forEach(element => {
-    observer.observe(element);
-  });
-} else {
-  document.querySelectorAll(".reveal").forEach(element => {
-    element.classList.add("is-visible");
-  });
+  revealElements.forEach((element) => revealObserver.observe(element));
 }
 
-/* ---------- FOOTER YEAR ---------- */
+/* -----------------------------
+   CLOUDFLARE TURNSTILE
+----------------------------- */
+let turnstileToken = "";
+let turnstileWidgetId = null;
+let turnstileReady = false;
 
-document.querySelector("#year").textContent = new Date().getFullYear();
+window.onTurnstileSuccess = (token) => {
+  turnstileToken = String(token || "");
+  const status = $("#formStatus");
 
-/* ---------- CONTACT FORM MODULE ---------- */
-/* Supabase connection lives in supabase.js. */
-import { submitContactMessage } from "./supabase.js";
+  if (status?.classList.contains("error") &&
+      status.textContent.includes("verification")) {
+    status.textContent = "";
+    status.className = "form-status";
+  }
+};
 
-const contactForm = document.querySelector("#contactForm");
-const formStatus = document.querySelector("#formStatus");
-const submitButton = document.querySelector("#submitButton");
+window.onTurnstileExpired = () => {
+  turnstileToken = "";
+};
 
-contactForm?.addEventListener("submit", async event => {
+window.onTurnstileError = () => {
+  turnstileToken = "";
+  const status = $("#formStatus");
+
+  if (status) {
+    status.textContent = "Security verification failed. Please reload the verification and try again.";
+    status.className = "form-status error";
+  }
+};
+
+window.onTurnstileLoad = () => {
+  const widget = $("#turnstileWidget");
+  if (!widget || !window.turnstile) return;
+
+  const siteKey = widget.dataset.sitekey?.trim();
+
+  if (!siteKey ||
+      siteKey === "PASTE_YOUR_CLOUDFLARE_TURNSTILE_SITE_KEY_HERE") {
+    console.warn("Add your public Cloudflare Turnstile Site Key in index.html.");
+    return;
+  }
+
+  try {
+    turnstileWidgetId = window.turnstile.render(widget, {
+      sitekey: siteKey,
+      theme: "dark",
+      callback: window.onTurnstileSuccess,
+      "expired-callback": window.onTurnstileExpired,
+      "error-callback": window.onTurnstileError
+    });
+
+    turnstileReady = true;
+  } catch (error) {
+    console.error("Could not initialise Turnstile.", error);
+  }
+};
+
+/* -----------------------------
+   CONTACT FORM
+----------------------------- */
+const contactForm = $("#contactForm");
+const submitButton = $("#submitButton");
+const formStatus = $("#formStatus");
+
+function setFormStatus(message, type = "") {
+  if (!formStatus) return;
+  formStatus.textContent = message;
+  formStatus.className = `form-status ${type}`.trim();
+}
+
+function resetTurnstile() {
+  turnstileToken = "";
+
+  if (window.turnstile && turnstileWidgetId !== null) {
+    try {
+      window.turnstile.reset(turnstileWidgetId);
+    } catch (error) {
+      console.warn("Turnstile reset failed.", error);
+    }
+  }
+}
+
+contactForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   if (!contactForm.reportValidity()) return;
 
-  const originalLabel = submitButton.innerHTML;
-  submitButton.disabled = true;
-  submitButton.style.opacity = "0.65";
-  formStatus.textContent = "Sending your message…";
+  if (!turnstileReady || !window.turnstile) {
+    setFormStatus(
+      "Security verification is not configured yet. Please try again later or email zuhaibwazir558@gmail.com.",
+      "error"
+    );
+    return;
+  }
 
-  const formData = new FormData(contactForm);
+  if (!turnstileToken) {
+    setFormStatus("Please complete the security verification first.", "error");
+    $("#turnstileWidget")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
+    return;
+  }
+
+  const originalButtonText = submitButton?.innerHTML;
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.innerHTML = "<span>Sending securely…</span><span>↗</span>";
+  }
+
+  setFormStatus("Sending your message…");
 
   const payload = {
-    name: String(formData.get("name") || "").trim(),
-    email: String(formData.get("email") || "").trim(),
-    subject: String(formData.get("subject") || "").trim(),
-    message: String(formData.get("message") || "").trim()
+    name: $("#name")?.value.trim(),
+    email: $("#email")?.value.trim(),
+    subject: $("#subject")?.value.trim(),
+    message: $("#message")?.value.trim(),
+    turnstileToken
   };
 
   try {
     await submitContactMessage(payload);
 
     contactForm.reset();
-    formStatus.textContent =
-      "Message sent successfully. Thank you — I'll get back to you by email.";
-
-    showToast("Your message has been sent.");
+    resetTurnstile();
+    setFormStatus("Your message has been sent. Thank you for reaching out!", "success");
+    showToast("Message sent successfully.");
   } catch (error) {
-    console.error("Contact form error:", error);
+    console.error("Contact submission failed.", error);
 
-    formStatus.textContent =
-      "Message could not be sent. Please email zuhaibwazir558@gmail.com directly.";
+    setFormStatus(
+      error instanceof Error
+        ? error.message
+        : "Your message could not be sent. Please try again or email zuhaibwazir558@gmail.com.",
+      "error"
+    );
 
-    showToast("Sending failed. Please use the email link instead.");
+    // A token may be single-use, so request a fresh verification.
+    resetTurnstile();
   } finally {
-    submitButton.disabled = false;
-    submitButton.style.opacity = "";
-    submitButton.innerHTML = originalLabel;
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = originalButtonText || "<span>Send your message</span><span>↗</span>";
+    }
   }
 });
 
-/* Start the 3D experience. */
+/* -----------------------------
+   FOOTER + START
+----------------------------- */
+const year = $("#year");
+if (year) year.textContent = String(new Date().getFullYear());
+
 initScene();
